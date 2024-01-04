@@ -185,8 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               images[index],
                               height: 25,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
+                            SizedBox(width: 12),
+                            Expanded(child: Container(
                               child: Text(
                                 title[index],
                                 style: TextStyle(
@@ -194,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     color: Colors.black54,
                                     fontSize: 17),
                               ),
-                            ),
+                            )),
                           ],
                         ),
                       ),
