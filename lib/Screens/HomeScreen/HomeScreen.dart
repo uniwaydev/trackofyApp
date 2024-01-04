@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trackofyapp/Screens/DashboardScreen/DashboardScreen.dart';
 import 'package:trackofyapp/Screens/DashboardScreen/NewDashboardScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/Geofence/GeofenceScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/NotificationsScreen.dart';
