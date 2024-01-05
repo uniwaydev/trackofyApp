@@ -78,7 +78,7 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
                 "Configure Driver Performance",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 20,
                   color: ThemeColor.primarycolor,
                 ),
               ),

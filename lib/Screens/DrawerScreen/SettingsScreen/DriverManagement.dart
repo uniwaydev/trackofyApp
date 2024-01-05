@@ -72,57 +72,67 @@ class _DriverManagementState extends State<DriverManagement> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => AddDriverScreen());
-                  },
-                  child: Container(
-                    height: Get.size.height * 0.06,
-                    width: Get.size.width * 0.25,
-                    decoration: BoxDecoration(color: Color(0xffd6d7d7)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/Untitled_design__4_-removebg-preview.png",
-                          height: 23,
-                        ),
-                        Text(
-                          "ADD DRIVER",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13),
-                        )
-                      ],
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => AddDriverScreen());
+                    },
+                    child: Container(
+                      height: Get.size.height * 0.08,
+                      //           width: Get.size.width * 0.2,
+                      decoration: BoxDecoration(
+                          color: Color(0xffd6d7d7),
+                          borderRadius: BorderRadius.circular(05)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/Untitled_design__4_-removebg-preview.png",
+                            height: 23,
+                          ),
+                          Text(
+                            "ADD DRIVER",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13),
+                          )
+                        ],
+                      ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  width: Get.size.width * 0.02,
                 ),
                 GestureDetector(
                   onTap: () {
                     Get.to(() => ConfigureDriver());
                   },
                   child: Container(
-                    height: Get.size.height * 0.06,
-                    width: Get.size.width * 0.55,
+                    height: Get.size.height * 0.08,
+                    // width: Get.size.width * 0.55,
                     decoration: BoxDecoration(
                         color: Color(0xffd6d7d7),
                         borderRadius: BorderRadius.circular(05)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/Untitled_design__4_-removebg-preview.png",
-                          height: 23,
-                        ),
-                        Text(
-                          "CONFIGURE DRIVER PERFORMANCE",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13),
-                        )
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/Untitled_design__4_-removebg-preview.png",
+                            height: 23,
+                          ),
+                          Text(
+                            "CONFIGURE DRIVER PERFORMANCE",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

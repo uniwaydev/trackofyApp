@@ -221,52 +221,54 @@ class _DistanceChartState extends State<DistanceChart> {
               ],
             ),
           ),
-          Container(
-            height: Get.size.height * 0.68,
-            child: ListView.builder(
-              itemCount: vehiclesData.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, int index) {
-                final vehicle = vehiclesData[index];
-                return Card(
-                  elevation: 1,
-                  child: Container(
-                    width: Get.size.width * 0.95,
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              "assets/images/car.png",
-                              height: 70,
-                            ),
-                            Text(
-                              vehicle['veh_name'],
-                              style: TextStyle(
-                                  color: Color(0xff222222), fontSize: 20),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15.0),
-                          child: Text(
-                            vehicle['distance'].truncate().toString(),
-                            style: TextStyle(
-                                color: Color(0xff1666c0),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+          SingleChildScrollView(
+            child: Container(
+              height: Get.size.height * 0.65,
+              child: ListView.builder(
+                itemCount: vehiclesData.length,
+                shrinkWrap: true,
+                //   scrollDirection: Axis.vertical,
+                itemBuilder: (BuildContext context, int index) {
+                  final vehicle = vehiclesData[index];
+                  return Card(
+                    elevation: 1,
+                    child: Container(
+                      width: Get.size.width * 0.95,
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                "assets/images/car.png",
+                                height: 70,
+                              ),
+                              Text(
+                                vehicle['veh_name'],
+                                style: TextStyle(
+                                    color: Color(0xff222222), fontSize: 20),
+                              )
+                            ],
                           ),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15.0),
+                            child: Text(
+                              vehicle['distance'].truncate().toString(),
+                              style: TextStyle(
+                                  color: Color(0xff1666c0),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
+          )
         ],
       ),
     );

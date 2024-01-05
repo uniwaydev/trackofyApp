@@ -141,27 +141,58 @@ class _HumidityReportState extends State<HumidityReport> {
                         print("Date is not selected");
                       }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          startDate,
-                          style: TextStyle(fontSize: 13, color: Colors.white),
-                        ),
-                        SizedBox(width: 24),
-                        Text(
-                          "to",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.white),
-                        ),
-                        SizedBox(width: 24),
-                        Text(
-                          endDate,
-                          style: TextStyle(fontSize: 13, color: Colors.white),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 90,
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                Text(
+                                  startDate,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Text(
+                            "to",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
+                          ),
+                          SizedBox(width: 15),
+                          SizedBox(
+                            width: 90,
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                Text(
+                                  endDate,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   MaterialButton(

@@ -239,11 +239,15 @@ class _TripReportState extends State<TripReport> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        startDate,
-                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                          startDate,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: Colors.white),
+                        ),
                       ),
-                      SizedBox(width: 24),
+                      SizedBox(width: 15),
                       Text(
                         "to",
                         style: TextStyle(
@@ -251,10 +255,14 @@ class _TripReportState extends State<TripReport> {
                             fontSize: 15,
                             color: Colors.white),
                       ),
-                      SizedBox(width: 24),
-                      Text(
-                        endDate,
-                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      SizedBox(width: 15),
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                          endDate,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: Colors.white),
+                        ),
                       ),
                     ],
                   ),

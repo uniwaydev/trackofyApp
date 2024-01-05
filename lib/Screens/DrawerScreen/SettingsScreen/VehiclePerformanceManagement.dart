@@ -94,7 +94,7 @@ class _VehiclePerformanceManagementState
                   "Vehicle Performance Setting",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                    fontSize: 20,
                     color: ThemeColor.primarycolor,
                   ),
                 ),
@@ -303,7 +303,7 @@ class _VehiclePerformanceManagementState
 
 minmaxtextfield(context, txt, ctrl) {
   return Container(
-    height: Get.size.height * 0.04,
+    // height: Get.size.height * 0.04,
     width: Get.size.width * 0.30,
     decoration: BoxDecoration(
       border: Border.all(
@@ -312,9 +312,10 @@ minmaxtextfield(context, txt, ctrl) {
       ),
     ),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: TextFormField(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: TextField(
         controller: ctrl,
+        style: TextStyle(fontSize: 15),
         decoration: InputDecoration(
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,

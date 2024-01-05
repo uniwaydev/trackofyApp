@@ -139,7 +139,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
           child: Column(
             children: [
               Column(
@@ -147,12 +147,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Material(
                     elevation: 2,
                     child: Container(
-                      height: Get.size.height * 0.35,
+                      height: Get.size.height * 0.48,
                       width: Get.size.width * 0.95,
                       child: Column(
                         children: [
                           Container(
-                            height: Get.size.height * 0.05,
+                            height: Get.size.height * 0.06,
                             width: Get.size.width * 0.95,
                             color: Color(0xff0973a3),
                             child: Padding(
@@ -191,7 +191,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      height: Get.size.height * 0.05,
+                                      height: Get.size.height * 0.07,
                                       width: Get.size.width * 0.95,
                                       color: colors[index],
                                       child: Padding(
@@ -240,12 +240,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Material(
                     elevation: 2,
                     child: Container(
-                      height: Get.size.height * 0.25,
+                      height: Get.size.height * 0.35,
                       width: Get.size.width * 0.95,
                       child: Column(
                         children: [
                           Container(
-                            height: Get.size.height * 0.05,
+                            height: Get.size.height * 0.06,
                             width: Get.size.width * 0.95,
                             color: Color(0xff0973a3),
                             child: Padding(
@@ -280,7 +280,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      height: Get.size.height * 0.05,
+                                      height: Get.size.height * 0.07,
                                       width: Get.size.width * 0.95,
                                       color: colors2[index],
                                       child: Padding(
@@ -329,12 +329,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Material(
                     elevation: 2,
                     child: Container(
-                      height: Get.size.height * 0.20,
+                      height: Get.size.height * 0.2,
                       width: Get.size.width * 0.95,
                       child: Column(
                         children: [
                           Container(
-                            height: Get.size.height * 0.05,
+                            height: Get.size.height * 0.06,
                             width: Get.size.width * 0.95,
                             color: Color(0xff0973a3),
                             child: Padding(
@@ -367,7 +367,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      height: Get.size.height * 0.05,
+                                      height: Get.size.height * 0.07,
                                       width: Get.size.width * 0.95,
                                       color: colors3[index],
                                       child: Padding(

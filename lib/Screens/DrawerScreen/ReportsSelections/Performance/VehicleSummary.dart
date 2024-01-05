@@ -78,15 +78,10 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                   color: Color(0xffe2e2e2),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 3),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Center(
                       child: searchbox2(
-                          context,
-                          () {},
-                          "Select Vehicle",
-                          Get.size.height * 0.05,
-                          Get.size.width * 0.95,
-                          Colors.white)),
+                          context, () {}, "Select Vehicle", Colors.white)),
                 )
               ],
             ),
@@ -147,13 +142,17 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                       }
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          startDate,
-                          style: TextStyle(fontSize: 13, color: Colors.white),
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            startDate,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13, color: Colors.white),
+                          ),
                         ),
-                        SizedBox(width: 24),
+                        SizedBox(width: 15),
                         Text(
                           "to",
                           style: TextStyle(
@@ -161,10 +160,14 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                               fontSize: 15,
                               color: Colors.white),
                         ),
-                        SizedBox(width: 24),
-                        Text(
-                          endDate,
-                          style: TextStyle(fontSize: 13, color: Colors.white),
+                        SizedBox(width: 15),
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            endDate,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
