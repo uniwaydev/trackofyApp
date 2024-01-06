@@ -103,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 child: Container(
                   height: Get.size.height * 0.03,
-                  width: Get.size.width * 0.26,
+                  width: 120,
                   color: ThemeColor.primarycolor,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -186,7 +186,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 25,
                             ),
                             SizedBox(width: 12),
-                            Expanded(child: Container(
+                            Expanded(
+                                child: Container(
                               child: Text(
                                 title[index],
                                 style: TextStyle(

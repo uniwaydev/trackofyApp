@@ -97,7 +97,7 @@ class _ControlLocationState extends State<ControlLocation> {
                   onTap: () => setState(() => isVisible = !isVisible),
                   child: Container(
                     width: Get.size.width * 0.47,
-                    height: Get.size.height * 0.09,
+                    height: Get.size.height * 0.11,
                     decoration: BoxDecoration(color: Color(0xffd6d7d7)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -138,9 +138,9 @@ class _ControlLocationState extends State<ControlLocation> {
                       (e) => Padding(
                         padding: const EdgeInsets.only(top: 7.0),
                         child: Material(
-                          elevation: 2,
+                          elevation: 5,
                           child: Container(
-                            height: Get.size.height * 0.14,
+                            height: Get.size.height * 0.15,
                             width: Get.size.width * 0.95,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -180,7 +180,7 @@ class _ControlLocationState extends State<ControlLocation> {
                                       child: Row(
                                         children: [
                                           Container(
-                                            height: Get.size.height * 0.06,
+                                            height: Get.size.height * 0.12,
                                             width: Get.size.width * 0.20,
                                             child: Center(
                                               child: Text(

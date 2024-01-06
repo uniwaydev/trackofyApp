@@ -426,7 +426,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   children: [
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -507,7 +507,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -589,7 +589,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -670,7 +670,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -751,7 +751,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -828,7 +828,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -905,7 +905,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 150,
+                      width: 160,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -1084,7 +1084,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
               SizedBox(height: 20),
               Container(
                 margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 16),
                 decoration: BoxDecoration(
                   color: Colors.blueGrey[900],
                   borderRadius: BorderRadius.circular(16),
@@ -1105,131 +1105,143 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.blueGrey[700],
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
+                        SizedBox(
+                          width: Get.size.width * 0.22,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[700],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.blueGrey,
+                                  ),
+                                  child: Icon(Icons.settings,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                child: Icon(Icons.settings,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(height: 10),
-                              Text("Device",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 16)),
-                              SizedBox(height: 8),
-                              Text(
-                                  "${serviceLimitCount != null ? serviceLimitCount["device_limit_left"] + "/" + serviceLimitCount["device_limit"] : "N/A"}",
-                                  style: TextStyle(color: Colors.grey[300])),
-                            ],
+                                SizedBox(height: 10),
+                                Text("Device",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16)),
+                                SizedBox(height: 8),
+                                Text(
+                                    "${serviceLimitCount != null ? serviceLimitCount["device_limit_left"] + "/" + serviceLimitCount["device_limit"] : "N/A"}",
+                                    style: TextStyle(color: Colors.grey[300])),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.blueGrey[700],
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
+                        SizedBox(width: 5),
+                        SizedBox(
+                          width: Get.size.width * 0.22,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[700],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.blueGrey,
+                                  ),
+                                  child: Icon(Icons.group,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                child: Icon(Icons.group,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(height: 10),
-                              Text("Subuser",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 16)),
-                              SizedBox(height: 8),
-                              Text(
-                                  "${serviceLimitCount != null ? serviceLimitCount["user_limit_left"] + "/" + serviceLimitCount["user_limit"] : "N/A"}",
-                                  style: TextStyle(color: Colors.grey[300])),
-                            ],
+                                SizedBox(height: 10),
+                                Text("Subuser",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16)),
+                                SizedBox(height: 8),
+                                Text(
+                                    "${serviceLimitCount != null ? serviceLimitCount["user_limit_left"] + "/" + serviceLimitCount["user_limit"] : "N/A"}",
+                                    style: TextStyle(color: Colors.grey[300])),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.blueGrey[700],
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
+                        SizedBox(width: 5),
+                        SizedBox(
+                          width: Get.size.width * 0.22,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[700],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.blueGrey,
+                                  ),
+                                  child: Icon(Icons.sms,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                child: Icon(Icons.sms,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(height: 10),
-                              Text("SMS",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 16)),
-                              SizedBox(height: 8),
-                              Text(
-                                  "${serviceLimitCount != null ? serviceLimitCount["message_limit_left"] + "/" + serviceLimitCount["message_limit"] : "N/A"}",
-                                  style: TextStyle(color: Colors.grey[300])),
-                            ],
+                                SizedBox(height: 10),
+                                Text("SMS",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16)),
+                                SizedBox(height: 8),
+                                Text(
+                                    "${serviceLimitCount != null ? serviceLimitCount["message_limit_left"] + "/" + serviceLimitCount["message_limit"] : "N/A"}",
+                                    style: TextStyle(color: Colors.grey[300])),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.blueGrey[700],
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
+                        SizedBox(width: 5),
+                        SizedBox(
+                          width: Get.size.width * 0.22,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[700],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.blueGrey,
+                                  ),
+                                  child: Icon(Icons.email,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                child: Icon(Icons.email,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(height: 10),
-                              Text("Email",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 16)),
-                              SizedBox(height: 8),
-                              Text(
-                                  "${serviceLimitCount != null ? serviceLimitCount["email_limit_left"] + "/" + serviceLimitCount["email_limit"] : "N/A"}",
-                                  style: TextStyle(color: Colors.grey[300])),
-                            ],
+                                SizedBox(height: 10),
+                                Text("Email",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16)),
+                                SizedBox(height: 8),
+                                Text(
+                                    "${serviceLimitCount != null ? serviceLimitCount["email_limit_left"] + "/" + serviceLimitCount["email_limit"] : "N/A"}",
+                                    style: TextStyle(color: Colors.grey[300])),
+                              ],
+                            ),
                           ),
                         ),
                       ],

@@ -140,7 +140,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Container(
-                  height: Get.size.height * 0.12,
+                  //   height: Get.size.height * 0.12,
                   width: Get.size.width * 0.95,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -151,7 +151,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                     child: Column(
                       children: [
                         Container(
-                          height: Get.size.height * 0.04,
+                          //     height: Get.size.height * 0.04,
                           color: Colors.white,
                           child: textField3(
                               context, "Enter DL Issue date*", dlIssueDateCtrl),
@@ -159,7 +159,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Container(
-                            height: Get.size.height * 0.04,
+                            //      height: Get.size.height * 0.04,
                             color: Colors.white,
                             child: textField3(context, "Enter DL Expiry date*",
                                 dlExpireDateCtrl),
@@ -261,58 +261,60 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
 
   textField2(context, txt) {
     return Container(
-      height: Get.size.height * 0.06,
+      //  height: Get.size.height * 0.06,
       width: Get.size.width * 0.95,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Color(0xffcbd5d5)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
         child: Container(
           color: Colors.white,
-          child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextField(
-                controller: dateinput, //editing controller of this TextField
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: txt,
-                  hintStyle: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.grey.shade500), //label text of field
+          child: Center(
+            child: TextField(
+              controller: dateinput, //editing controller of this TextField
+              decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide.none,
                 ),
-                readOnly:
-                    true, //set it true, so that user will not able to edit text
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(
-                          2000), //DateTime.now() - not to allow to choose before today.
-                      lastDate: DateTime(2101));
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
 
-                  if (pickedDate != null) {
-                    print(
-                        pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                    String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
-                    print(
-                        formattedDate); //formatted date output using intl package =>  2021-03-16
-                    //you can implement different kind of Date Format here according to your requirement
+                hintText: txt,
+                hintStyle: TextStyle(
+                    //    alignment: Alignment.centerLeft,
+                    fontSize: 15.0,
+                    color: Colors.grey.shade500), //label text of field
+              ),
+              readOnly:
+                  true, //set it true, so that user will not able to edit text
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(
+                        2000), //DateTime.now() - not to allow to choose before today.
+                    lastDate: DateTime(2101));
 
-                    setState(() {
-                      dateinput.text =
-                          formattedDate; //set output date to TextField value.
-                    });
-                  } else {
-                    print("Date is not selected");
-                  }
-                },
-              )),
+                if (pickedDate != null) {
+                  print(
+                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(pickedDate);
+                  print(
+                      formattedDate); //formatted date output using intl package =>  2021-03-16
+                  //you can implement different kind of Date Format here according to your requirement
+
+                  setState(() {
+                    dateinput.text =
+                        formattedDate; //set output date to TextField value.
+                  });
+                } else {
+                  print("Date is not selected");
+                }
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -392,7 +394,7 @@ textField1(context, txt, ctrl) {
 
 textField4(context, txt, ctrl) {
   return Container(
-    height: Get.size.height * 0.06,
+    //  height: Get.size.height * 0.06,
     width: Get.size.width * 0.95,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10), color: Color(0xffcbd5d5)),

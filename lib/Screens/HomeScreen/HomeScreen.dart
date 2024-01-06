@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trackofyapp/Screens/DashboardScreen/DashboardScreen.dart';
 import 'package:trackofyapp/Screens/DashboardScreen/NewDashboardScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/Geofence/GeofenceScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/NotificationsScreen.dart';
@@ -13,7 +12,6 @@ import 'package:trackofyapp/Screens/DrawerScreen/TrackingScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/VehicleScreen.dart';
 import 'package:trackofyapp/Screens/OnboardingScreen/LoginScreen.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
-import 'package:trackofyapp/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -33,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/images/report.png',
     'assets/images/locationcar.png',
     'assets/images/locationred.png',
-    'assets/images/dashboard_new.png',
+    'assets/images/ic_setting_icon.png',
     'assets/images/exit.png',
   ];
   List<String> txt = [
@@ -102,60 +100,71 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            height: Get.size.height * 0.25,
-            child: GridView.builder(
-              itemCount: 10,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 3,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: Get.height * 0.4 / Get.width),
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    if (index == 0) {
-                      Get.to(() => NewDashboardScreen());
-                    } else if (index == 1) {
-                      Get.to(() => ProfileScreen());
-                    } else if (index == 2) {
-                      Get.to(() => VehicleScreen());
-                    } else if (index == 3) {
-                      Get.to(() => TrackingScreen());
-                    } else if (index == 4) {
-                      Get.to(() => ReportsScreen());
-                    } else if (index == 5) {
-                      Get.to(() => ScheduleScreen());
-                    } else if (index == 6) {
-                      Get.to(() => GeofenceScreen());
-                    } else if (index == 7) {
-                      Get.to(() => PoiScreen());
-                    } else if (index == 8) {
-                      Get.to(() => SettingsScreen());
-                    } else if (index == 9) {
-                      Get.to(() => LoginScreen());
-                    }
-                  },
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 13.0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 30,
-                          child: Image.asset(
-                            images[index],
-                            fit: BoxFit.cover,
+            height: Get.size.height * 0.33,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: GridView.builder(
+                itemCount: 10,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 3,
+                    mainAxisSpacing: 0,
+                    childAspectRatio: Get.height * 0.4 / Get.width),
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      if (index == 0) {
+                        Get.to(() => NewDashboardScreen());
+                      } else if (index == 1) {
+                        Get.to(() => ProfileScreen());
+                      } else if (index == 2) {
+                        Get.to(() => VehicleScreen());
+                      } else if (index == 3) {
+                        Get.to(() => TrackingScreen());
+                      } else if (index == 4) {
+                        Get.to(() => ReportsScreen());
+                      } else if (index == 5) {
+                        Get.to(() => ScheduleScreen());
+                      } else if (index == 6) {
+                        Get.to(() => GeofenceScreen());
+                      } else if (index == 7) {
+                        Get.to(() => PoiScreen());
+                      } else if (index == 8) {
+                        Get.to(() => SettingsScreen());
+                      } else if (index == 9) {
+                        Get.to(() => LoginScreen());
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 30,
+                            child: Image.asset(
+                              images[index],
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        txt[index],
-                        style: TextStyle(fontSize: 10, color: Colors.black87),
-                      )
-                    ],
-                  ),
-                );
-              },
+                        Container(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  txt[index],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.black87),
+                                ),
+                              ]),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],

@@ -228,9 +228,23 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        startDate,
-                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            Text(
+                              startDate,
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(width: 24),
                       Text(
@@ -241,9 +255,19 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                             color: Colors.white),
                       ),
                       SizedBox(width: 24),
-                      Text(
-                        endDate,
-                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.calendar_month,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          Text(
+                            endDate,
+                            style: TextStyle(fontSize: 13, color: Colors.white),
+                          ),
+                        ],
                       ),
                     ],
                   ),

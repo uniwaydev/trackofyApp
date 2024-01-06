@@ -139,15 +139,16 @@ searchbox(context, onpressed, txt, h, w, c) {
   );
 }
 
-searchbox2(context, onpressed, txt, h, w, c) {
+searchbox2(context, onpressed, txt, c) {
   return Container(
-    height: h,
-    width: w,
+    // height: h,
+    width: Get.size.width * 0.9,
     decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(8)),
     child: Padding(
-      padding: const EdgeInsets.only(top: 6, left: 15),
+      padding: const EdgeInsets.only(left: 15),
       child: TextFormField(
         decoration: InputDecoration(
+          isDense: true,
           hintText: "Search Vehicle",
           hintStyle: TextStyle(color: Color(0xffadadad)),
           focusedBorder: InputBorder.none,

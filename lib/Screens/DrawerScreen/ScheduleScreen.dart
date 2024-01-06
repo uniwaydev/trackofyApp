@@ -455,19 +455,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       controller: email1Ctrl,
-                      decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        isDense: true,
-                        label: Text(
-                          "Email 1*",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ),
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Email 1*',
+                          hintStyle: TextStyle(color: Colors.grey[500])),
                     ),
                   ),
                 ),
@@ -492,19 +482,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       controller: email2Ctrl,
-                      decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        isDense: true,
-                        label: Text(
-                          "Email 2*",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ),
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Email 2*',
+                          hintStyle: TextStyle(color: Colors.grey[500])),
                     ),
                   ),
                 ),
@@ -529,19 +509,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       controller: email3Ctrl,
-                      decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        isDense: true,
-                        label: Text(
-                          "Email 3*",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ),
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Email 3*',
+                          hintStyle: TextStyle(color: Colors.grey[500])),
                     ),
                   ),
                 ),

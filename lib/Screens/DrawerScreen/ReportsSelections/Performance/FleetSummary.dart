@@ -111,7 +111,7 @@ class _FleetSummaryState extends State<FleetSummary> {
             ),
           ),
           Container(
-            height: Get.size.height * 0.80,
+            height: Get.size.height * 0.78,
             child: ListView.builder(
               itemCount: vehiclesData.length,
               shrinkWrap: true,
@@ -121,7 +121,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                 return Card(
                   elevation: 3,
                   child: Container(
-                    // height: Get.size.height * 0.16,
+                    height: Get.size.height * 0.26,
                     width: Get.size.width * 0.95,
                     color: Colors.white,
                     child: Padding(
@@ -168,7 +168,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Container(
-                              height: Get.size.height * 0.05,
+                              height: Get.size.height * 0.1,
                               width: Get.size.width * 0.90,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -176,8 +176,8 @@ class _FleetSummaryState extends State<FleetSummary> {
                               child: Row(
                                 children: [
                                   Container(
-                                    height: Get.size.height * 0.05,
-                                    width: Get.size.width * 0.22,
+                                    height: Get.size.height * 0.1,
+                                    width: Get.size.width * 0.2,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 6.0),
                                       child: Column(
@@ -188,6 +188,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                         children: [
                                           Text(
                                             "Speed",
+                                            textAlign: TextAlign.center,
                                             style: TextStyle(
                                               color: Color(0xff828282),
                                               fontSize: 15,
@@ -210,7 +211,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                     color: Colors.black,
                                   ),
                                   Container(
-                                    height: Get.size.height * 0.05,
+                                    height: Get.size.height * 0.1,
                                     width: Get.size.width * 0.22,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 6.0),
@@ -246,7 +247,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                     color: Colors.black,
                                   ),
                                   Container(
-                                    height: Get.size.height * 0.05,
+                                    height: Get.size.height * 0.1,
                                     width: Get.size.width * 0.22,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 6.0),
@@ -280,7 +281,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                     color: Colors.black,
                                   ),
                                   Container(
-                                    // height: Get.size.height * 0.05,
+                                    height: Get.size.height * 0.1,
                                     width: Get.size.width * 0.22,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 6.0),
