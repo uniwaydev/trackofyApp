@@ -773,6 +773,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "20.4.54"
+  syncfusion_flutter_maps:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_maps
+      sha256: "1c95924e2dee5bbad922c2d2f1d5fb1b13ce4548c34a6d30fe6bf8821dfcfcd6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.4.54"
   term_glyph:
     dependency: transitive
     description:

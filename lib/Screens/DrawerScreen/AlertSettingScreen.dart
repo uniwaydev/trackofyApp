@@ -57,6 +57,7 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
           elevation: 0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
+          titleSpacing: 0,
           leading: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -95,50 +96,52 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
         padding: EdgeInsets.all(8),
         width: double.infinity,
         height: double.infinity,
-        child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              var alertData = data[index];
-              return Container(
-                margin: EdgeInsets.only(bottom: 8),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 10,
-                    )
-                  ],
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(alertData["alert_name"]),
-                      ],
-                    ),
-                    Switch(
-                      onChanged: (value) {
-                        alertData["alert_type"] = value ? 1 : 0;
-                        updateAlert(alertData["alert_id"], value);
-                        setState(() {});
-                      },
-                      value: alertData["alert_type"] == 1,
-                      activeColor: Color(0xff524f54),
-                      activeTrackColor: Color(0xffa8b8c7),
-                      inactiveThumbColor: Color(0xffececec),
-                      inactiveTrackColor: Color(0xff8ea0ad),
-                    ),
-                  ],
-                ),
-              );
-            }),
+        child: SingleChildScrollView(
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                var alertData = data[index];
+                return Container(
+                  margin: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 10,
+                      )
+                    ],
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(alertData["alert_name"]),
+                        ],
+                      ),
+                      Switch(
+                        onChanged: (value) {
+                          alertData["alert_type"] = value ? 1 : 0;
+                          updateAlert(alertData["alert_id"], value);
+                          setState(() {});
+                        },
+                        value: alertData["alert_type"] == 1,
+                        activeColor: Color(0xff524f54),
+                        activeTrackColor: Color(0xffa8b8c7),
+                        inactiveThumbColor: Color(0xffececec),
+                        inactiveTrackColor: Color(0xff8ea0ad),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }

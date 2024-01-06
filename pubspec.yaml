@@ -51,6 +51,7 @@ dependencies:
   flutter_google_places:
   # geocoder:
   image_picker:
+  syncfusion_flutter_maps: ^20.4.54
 
 dev_dependencies:
   flutter_test:

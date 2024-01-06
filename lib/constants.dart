@@ -9,3 +9,5 @@ class ThemeColor {
   static const Color bluecolor = Color(0xff2196f3);
   static const Color darkblue = Color(0xff193063);
 }
+
+const String BING_MAP_KEY = "AmEmJG_uzsyIoT7hE_8hiUxBQeJfoRcykwHfWOZ-2OeHEZWQ4P4Z4Oom2Hyrawgv";

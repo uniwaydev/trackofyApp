@@ -66,14 +66,11 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
       print("~~~~~~~~~~~~~");
       print(e);
       print("~~~~~~~~~~~~~");
-      // final Uint8List markIcons = await getImages(e["icon"], 100);
+      BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(), "assets/images/red_car.png");
       _markers.add(Marker(
         markerId: MarkerId(e["vehicle_name"]),
-        // icon: await MarkerIcon.downloadResizePictureCircle(e["icon"],
-        //     size: 100,
-        //     addBorder: true,
-        //     borderColor: Colors.white,
-        //     borderSize: 15),
+        icon: markerIcon,
         position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
       ));
       mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
@@ -106,6 +103,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
           elevation: 0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
+          titleSpacing: 0,
           leading: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
