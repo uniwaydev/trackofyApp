@@ -43,11 +43,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   var vehicleData;
   var selected;
   late List selectedList;
+  double vLat = 19.018255973653343, vLng = 72.84793849278007;
+  bool isExpand = false;
 
   @override
   void initState() {
     super.initState();
     // SmartDialog.showLoading(msg: "Loading...");
+    fetchData();
   }
 
   void fetchData() async {
@@ -73,6 +76,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
           LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
       SmartDialog.dismiss();
+      vLat = double.parse(e["lat"]);
+      vLng = double.parse(e["lng"]);
       setState(() {});
     }
   }
@@ -302,7 +307,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
             GestureDetector(
               onVerticalDragStart: (details) {
-                print("asd");
+                setState(() {
+                  isExpand = !isExpand;
+                });
               },
               child: Container(
                 padding: EdgeInsets.all(8),
@@ -370,199 +377,204 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               height: 1,
               color: Colors.grey,
             ),
-            Container(
-              color: Colors.grey,
-              child: Row(
+            if (isExpand)
+              Column(
                 children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Odometer (km)",
-                            style: TextStyle(fontSize: 10),
+                  Container(
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Odometer (km)",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("1.72")
+                              ],
+                            ),
                           ),
-                          Text("1.72")
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 1),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Today Distance (km)",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, color: Colors.grey),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Speed (kmph)",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("0")
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 1),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Today Distance (km)",
-                            style: TextStyle(fontSize: 10),
+                  Container(
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Last Parked",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
                           ),
-                          Text("N/A")
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 1),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Idle Since",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, color: Colors.grey),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Max Speed (kmph)",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(width: 1, color: Colors.grey),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Speed (kmph)",
-                            style: TextStyle(fontSize: 10),
+                  Container(
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Vehicle Status",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
                           ),
-                          Text("0")
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 1),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Unit Battery",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, color: Colors.grey),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Permit",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Insurance",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("1.72")
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 1),
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Pollution",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text("N/A")
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, color: Colors.grey),
+                        Expanded(
+                          child: Container(color: Colors.white),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              color: Colors.grey,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Last Parked",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Idle Since",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(width: 1, color: Colors.grey),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Max Speed (kmph)",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.grey,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Vehicle Status",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Unit Battery",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(width: 1, color: Colors.grey),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Permit",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.grey,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Insurance",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("1.72")
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Pollution",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text("N/A")
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(width: 1, color: Colors.grey),
-                  Expanded(
-                    child: SizedBox.shrink(),
-                  ),
-                ],
-              ),
-            ),
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -753,12 +765,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   MapTileLayer(
                     initialZoomLevel: 14,
                     zoomPanBehavior: MapZoomPanBehavior(),
-                    initialFocalLatLng: MapLatLng(28.644800, 77.216721),
+                    initialFocalLatLng: MapLatLng(vLat, vLng),
                     initialMarkersCount: 1,
                     markerBuilder: (BuildContext context, int index) {
                       return MapMarker(
-                        latitude: 28.644800,
-                        longitude: 77.216721,
+                        latitude: vLat,
+                        longitude: vLng,
                         iconColor: Colors.white,
                         iconStrokeColor: Colors.black,
                         iconStrokeWidth: 2,
@@ -785,13 +797,13 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         MapTileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           initialZoomLevel: 14,
-          initialFocalLatLng: MapLatLng(28.644800, 77.216721),
+          initialFocalLatLng: MapLatLng(vLat, vLng),
           zoomPanBehavior: MapZoomPanBehavior(),
           initialMarkersCount: 1,
           markerBuilder: (BuildContext context, int index) {
             return MapMarker(
-              latitude: 28.644800,
-              longitude: 77.216721,
+              latitude: vLat,
+              longitude: vLng,
               iconColor: Colors.white,
               iconStrokeColor: Colors.black,
               iconStrokeWidth: 2,
