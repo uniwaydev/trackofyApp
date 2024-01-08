@@ -14,6 +14,7 @@ import 'package:trackofyapp/Widgets/drawer.dart';
 import 'package:trackofyapp/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
   var serviceId;
@@ -273,7 +274,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,
                       mini: true,
-                      onPressed: () {},
+                      onPressed: () {
+                        gotoNavigation();
+                      },
                       child: Icon(
                         Icons.car_repair,
                         size: 27,
@@ -816,5 +819,17 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         ),
       ],
     );
+  }
+
+  gotoNavigation() async {
+    final uri = Uri(
+        scheme: "google.navigation",
+        // host: '"0,0"',  {here we can put host}
+        queryParameters: {'q': '$vLat, $vLng'});
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('An error occurred');
+    }
   }
 }

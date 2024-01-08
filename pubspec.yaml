@@ -52,6 +52,7 @@ dependencies:
   # geocoder:
   image_picker:
   syncfusion_flutter_maps: ^20.4.54
+  url_launcher: ^6.2.2
 
 dev_dependencies:
   flutter_test:
