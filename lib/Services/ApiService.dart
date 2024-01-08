@@ -456,10 +456,15 @@ class ApiService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getVehicleAlerts() async {
+  static Future<List<Map<String, dynamic>>> getVehicleAlerts(sysId) async {
     try {
-      var response = await client.get(
-          Uri.parse(BASE_URL + "/API/trackofy_app.php?method=get_all_alerts"));
+      var response = await client.post(
+          Uri.parse(
+              BASE_URL + "/API/trackofy_app.php?method=get_vehicle_alerts"),
+          body: {
+            "user_id": currentUser?.id.toString(),
+            "sys_service_id": sysId
+          });
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

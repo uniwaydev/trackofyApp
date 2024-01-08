@@ -15,6 +15,7 @@ import 'package:trackofyapp/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
   var serviceId;
@@ -46,6 +47,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   late List selectedList;
   double vLat = 19.018255973653343, vLng = 72.84793849278007;
   bool isExpand = false;
+  bool isFirstPanel = true;
 
   @override
   void initState() {
@@ -245,9 +247,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       backgroundColor: Colors.white,
                       mini: true,
                       onPressed: () {
-                        Get.to(() => PlaybackScreen(
-                              serviceId: widget.serviceId,
-                            ));
+                        if (selectedMap == "Google") {
+                          mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
+                              LatLng(vLat, vLng), 14));
+                        }
                       },
                       child: Icon(
                         Icons.my_location,
@@ -261,7 +264,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,
                       mini: true,
-                      onPressed: () {},
+                      onPressed: () {
+                        onShareLocation();
+                      },
                       child: Icon(
                         Icons.share,
                         size: 27,
@@ -383,195 +388,591 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             if (isExpand)
               Column(
                 children: [
-                  Container(
-                    color: Colors.grey,
-                    child: Row(
+                  if (isFirstPanel)
+                    Column(
                       children: [
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Odometer (km)",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/meter.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Odometer (km)",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("1.72")
+                                    ],
+                                  ),
                                 ),
-                                Text("1.72")
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_distance.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Today Distance (km)",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_speed_new.PNG",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Speed (kmph)",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("0")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(width: 1),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Today Distance (km)",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_last_parking.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Last Parked",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
                                 ),
-                                Text("N/A")
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_idle.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Idle Since",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_today_halt_new.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Max Speed (kmph)",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(width: 1, color: Colors.grey),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Speed (kmph)",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_car_status.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Vehicle Status",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
                                 ),
-                                Text("0")
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_car_battery.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Unit Battery",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/Untitled_design__10_-removebg-preview.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Permit",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/Untitled_design__4_-removebg-preview.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Insurance",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("1.72")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_co2.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Pollution",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    color: Colors.grey,
-                    child: Row(
+                  if (!isFirstPanel)
+                    Column(
                       children: [
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Last Parked",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_today_halt_new.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Total Parked",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("1.72")
+                                    ],
+                                  ),
                                 ),
-                                Text("N/A")
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_idle.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Today Idle",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/meter.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Today Running",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("0")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(width: 1),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Idle Since",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/meter.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Today Inactive",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
                                 ),
-                                Text("N/A")
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 1),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_equator.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Latitude",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          RotatedBox(
+                                            quarterTurns: 90,
+                                            child: Image.asset(
+                                              "assets/images/ic_equator.png",
+                                              width: 15,
+                                            ),
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Longitude",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(width: 1, color: Colors.grey),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Max Speed (kmph)",
-                                  style: TextStyle(fontSize: 10),
+                        Container(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/ic_fitness.png",
+                                            width: 15,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Fitness",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                      Text("N/A")
+                                    ],
+                                  ),
                                 ),
-                                Text("N/A")
-                              ],
-                            ),
+                              ),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(child: SizedBox.shrink()),
+                              Container(width: 1, color: Colors.grey),
+                              Expanded(child: SizedBox.shrink()),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
                   Container(
-                    color: Colors.grey,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Vehicle Status",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text("N/A")
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 1),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Unit Battery",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text("N/A")
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(width: 1, color: Colors.grey),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Permit",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text("N/A")
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
                     ),
-                  ),
-                  Container(
-                    color: Colors.grey,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Container(
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isFirstPanel = true;
+                            });
+                          },
+                          child: Icon(
+                            Icons.chevron_left,
                             color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Insurance",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text("1.72")
-                              ],
-                            ),
+                            size: 15,
                           ),
                         ),
-                        SizedBox(width: 1),
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Pollution",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text("N/A")
-                              ],
-                            ),
-                          ),
+                        SizedBox(
+                          width: 10,
                         ),
-                        Container(width: 1, color: Colors.grey),
-                        Expanded(
-                          child: Container(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isFirstPanel = false;
+                            });
+                          },
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                            size: 15,
+                          ),
                         ),
                       ],
                     ),
@@ -822,14 +1223,45 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   gotoNavigation() async {
-    final uri = Uri(
-        scheme: "google.navigation",
-        // host: '"0,0"',  {here we can put host}
-        queryParameters: {'q': '$vLat, $vLng'});
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      debugPrint('An error occurred');
-    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Vehicle Navigation"),
+            titlePadding: EdgeInsets.all(16),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+            content: Text("Are you sure want to navigate to your vehicle?"),
+            actionsPadding: EdgeInsets.symmetric(horizontal: 16),
+            actions: [
+              TextButton(
+                child: Text("NO"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: Text("YES"),
+                onPressed: () async {
+                  final uri = Uri(
+                      scheme: "google.navigation",
+                      // host: '"0,0"',  {here we can put host}
+                      queryParameters: {'q': '$vLat, $vLng'});
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
+                  } else {
+                    debugPrint('An error occurred');
+                    SmartDialog.showToast(
+                        "Please install Google Navigator App.");
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  onShareLocation() async {
+    Share.share('Lat: $vLat, Lng: $vLng');
   }
 }

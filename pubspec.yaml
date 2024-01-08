@@ -53,6 +53,7 @@ dependencies:
   image_picker:
   syncfusion_flutter_maps: ^20.4.54
   url_launcher: ^6.2.2
+  share_plus: ^6.0.0
 
 dev_dependencies:
   flutter_test:

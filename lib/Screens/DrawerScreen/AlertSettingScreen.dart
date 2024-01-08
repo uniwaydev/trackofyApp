@@ -33,7 +33,10 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
     print(widget.serviceId);
     print("======");
     SmartDialog.showLoading(msg: "Loading...");
-    data = await ApiService.getVehicleAlerts();
+    data = await ApiService.getVehicleAlerts(widget.serviceId.toString());
+    print("======");
+    print(data);
+    print("======");
     SmartDialog.dismiss();
 
     setState(() {});
