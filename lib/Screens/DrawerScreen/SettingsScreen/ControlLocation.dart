@@ -135,108 +135,102 @@ class _ControlLocationState extends State<ControlLocation> {
               Column(
                 children: data
                     .map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Material(
-                          elevation: 5,
-                          child: Container(
-                            height: Get.size.height * 0.15,
-                            width: Get.size.width * 0.95,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(() =>
-                                          AssignVehicle(locationId: e["id"]));
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        width: Get.size.width * 0.32,
-                                        height: Get.size.height * 0.05,
-                                        decoration: BoxDecoration(
-                                            color: Color(0xffd6d7d7)),
-                                        child: Center(
-                                            child: Text(
-                                          "ASSIGN VEHICLE",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        )),
-                                      ),
+                      (e) => Material(
+                        elevation: 5,
+                        child: Container(
+                          height: Get.size.height * 0.15,
+                          width: Get.size.width * 0.95,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() =>
+                                        AssignVehicle(locationId: e["id"]));
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      width: Get.size.width * 0.32,
+                                      height: Get.size.height * 0.05,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffd6d7d7)),
+                                      child: Center(
+                                          child: Text(
+                                        "ASSIGN VEHICLE",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      )),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Container(
-                                      height: Get.size.height * 0.06,
-                                      width: Get.size.width * 0.92,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1.0, color: Colors.black)),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: Get.size.height * 0.12,
-                                            width: Get.size.width * 0.20,
-                                            child: Center(
-                                              child: Text(
-                                                "ID:${e["id"]}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Container(
+                                    height: Get.size.height * 0.06,
+                                    width: Get.size.width * 0.92,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1.0, color: Colors.black)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: Get.size.height * 0.12,
+                                          width: Get.size.width * 0.20,
+                                          child: Center(
+                                            child: Text(
+                                              "ID:${e["id"]}",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                          VerticalDivider(
-                                            thickness: 1,
-                                            width: 1,
-                                            color: Colors.black,
-                                          ),
-                                          Container(
-                                            height: Get.size.height * 0.06,
-                                            width: Get.size.width * 0.36,
-                                            child: Center(
-                                              child: Text(
-                                                "Created On:${e["created_date"]}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                        ),
+                                        VerticalDivider(
+                                          thickness: 1,
+                                          width: 1,
+                                          color: Colors.black,
+                                        ),
+                                        Container(
+                                          height: Get.size.height * 0.06,
+                                          width: Get.size.width * 0.36,
+                                          child: Center(
+                                            child: Text(
+                                              "Created On:${e["created_date"]}",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                          VerticalDivider(
-                                            thickness: 1,
-                                            width: 1,
-                                            color: Colors.black,
-                                          ),
-                                          Container(
-                                            height: Get.size.height * 0.06,
-                                            width: Get.size.width * 0.31,
-                                            child: Center(
-                                              child: Text(
-                                                "${e["location"]}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                        ),
+                                        VerticalDivider(
+                                          thickness: 1,
+                                          width: 1,
+                                          color: Colors.black,
+                                        ),
+                                        Container(
+                                          height: Get.size.height * 0.06,
+                                          width: Get.size.width * 0.31,
+                                          child: Center(
+                                            child: Text(
+                                              "${e["location"]}",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -267,7 +261,7 @@ class _ControlLocationState extends State<ControlLocation> {
         },
         child: Container(
           width: Get.size.width * 0.95,
-          height: Get.size.height * 0.14,
+          height: Get.size.height * 0.17,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: color,
@@ -292,7 +286,7 @@ class _ControlLocationState extends State<ControlLocation> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Container(
-                    height: Get.size.height * 0.04,
+                    height: Get.size.height * 0.05,
                     width: Get.size.width * 0.95,
                     child: MaterialButton(
                       color: ThemeColor.darkblue,
