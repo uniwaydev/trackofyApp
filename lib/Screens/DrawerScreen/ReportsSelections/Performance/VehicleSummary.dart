@@ -187,9 +187,9 @@ class _VehicleSummaryState extends State<VehicleSummary> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: Container(
-                  height: Get.size.height * 0.72,
+                  //  height: Get.size.height,
                   width: Get.size.width * 0.92,
                   color: Colors.white,
                   child: !isApply
