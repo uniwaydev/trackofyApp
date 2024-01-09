@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else if (index == 8) {
                         Get.to(() => SettingsScreen());
                       } else if (index == 9) {
-                        Get.to(() => LoginScreen());
+                        Get.offAll(() => LoginScreen());
                       }
                     },
                     child: Column(

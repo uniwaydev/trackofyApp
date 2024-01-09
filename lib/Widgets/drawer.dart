@@ -120,7 +120,7 @@ class DrawerClass extends StatelessWidget {
                     cancelTextColor: Colors.white,
                     buttonColor: ThemeColor.secondarycolor,
                     onConfirm: () {
-                      Get.to(() => LoginScreen());
+                      Get.offAll(() => LoginScreen());
                     },
                     middleText: "");
               },

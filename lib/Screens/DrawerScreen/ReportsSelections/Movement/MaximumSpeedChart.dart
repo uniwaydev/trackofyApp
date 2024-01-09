@@ -346,6 +346,7 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                                   'imei': item['imei'],
                                   'mobileNo': item['mobile_no'],
                                   'mobileNo1': item['mobile_no1'],
+                                  'location': item['location'],
                                   'is_selected': false,
                                 }));
                         print(groupInfo);
@@ -407,6 +408,17 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                                                   .add(vehicleInfo["vehReg"]);
                                               selectedVehicleIds.add(
                                                   "${vehicleInfo["serviceId"]}");
+
+                                              bool isCheckedAll = true;
+                                              for (var gInfo in groupVehicles) {
+                                                if (!selectedVehicle.contains(
+                                                    gInfo["vehReg"])) {
+                                                  isCheckedAll = false;
+                                                }
+                                              }
+                                              if (isCheckedAll) {
+                                                selectedGroups.add(vehicleInfo["location"]);
+                                              }
                                             } else {
                                               selectedVehicle.removeWhere(
                                                   (element) =>
@@ -416,6 +428,21 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                                                   (element) =>
                                                       element ==
                                                       "${vehicleInfo["serviceId"]}");
+
+                                              bool isCheckedAll = true;
+                                              for (var gInfo in groupVehicles) {
+                                                if (!selectedVehicle.contains(
+                                                    gInfo["vehReg"])) {
+                                                  isCheckedAll = false;
+                                                }
+                                              }
+                                              if (!isCheckedAll) {
+                                                selectedGroups.removeWhere(
+                                                    (element) =>
+                                                        element ==
+                                                        vehicleInfo[
+                                                            "location"]);
+                                              }
                                             }
                                             alertState(() {});
                                           }),
