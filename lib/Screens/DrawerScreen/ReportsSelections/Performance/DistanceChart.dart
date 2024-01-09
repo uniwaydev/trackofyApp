@@ -182,7 +182,13 @@ class _DistanceChartState extends State<DistanceChart> {
                 ),
                 MaterialButton(
                   color: Color(0xffd6d7d7),
-                  onPressed: () {},
+                  onPressed: () {
+                    // setState(() {
+                    //   filteredItems = vehiclesData
+                    //       .sort()
+                    //       .toList();
+                    // });
+                  },
                   child: Text(
                     "APPLY",
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),

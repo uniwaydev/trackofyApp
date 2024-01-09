@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -28,7 +29,9 @@ class _IdleSummaryState extends State<IdleSummary> {
   }
 
   void fetchVehicle() async {
+    SmartDialog.showLoading(msg: "Loading...");
     vehicles = await ApiService.vehicles();
+    SmartDialog.dismiss();
   }
 
   void fetchData() async {
@@ -165,11 +168,14 @@ class _IdleSummaryState extends State<IdleSummary> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                              selectedVehicle.isEmpty
-                                  ? "Select Vehicle"
-                                  : selectedVehicle.join(","),
-                              style: TextStyle(color: Color(0xffadadad))),
+                          Expanded(
+                            child: Text(
+                                selectedVehicle.isEmpty
+                                    ? "Select Vehicle"
+                                    : selectedVehicle.join(","),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Color(0xffadadad))),
+                          )
                         ],
                       ),
                     ),
@@ -323,7 +329,7 @@ class _IdleSummaryState extends State<IdleSummary> {
                 : SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: data.map((e) => stoppageItem(e)).toList(),
+                      children: data.map((e) => IdelpageItem(e)).toList(),
                     ),
                   ),
           )
@@ -332,7 +338,7 @@ class _IdleSummaryState extends State<IdleSummary> {
     );
   }
 
-  Widget stoppageItem(e) {
+  Widget IdelpageItem(e) {
     return Container(
       margin: EdgeInsets.all(8),
       padding: EdgeInsets.all(8),

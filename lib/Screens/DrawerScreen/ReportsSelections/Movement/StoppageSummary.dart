@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -28,7 +29,9 @@ class _StoppageSummaryState extends State<StoppageSummary> {
   }
 
   void fetchVehicle() async {
+    SmartDialog.showLoading(msg: 'Loading...');
     vehicles = await ApiService.vehicles();
+    SmartDialog.dismiss();
   }
 
   void fetchData() async {
@@ -165,11 +168,14 @@ class _StoppageSummaryState extends State<StoppageSummary> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                              selectedVehicle.isEmpty
-                                  ? "Select Vehicle"
-                                  : selectedVehicle.join(","),
-                              style: TextStyle(color: Color(0xffadadad))),
+                          Expanded(
+                            child: Text(
+                                selectedVehicle.isEmpty
+                                    ? "Select Vehicle"
+                                    : selectedVehicle.join(","),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Color(0xffadadad))),
+                          )
                         ],
                       ),
                     ),

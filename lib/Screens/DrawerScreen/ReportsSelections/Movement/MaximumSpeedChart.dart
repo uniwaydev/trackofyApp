@@ -30,7 +30,9 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
   }
 
   void fetchData() async {
+    SmartDialog.showLoading(msg: 'Loading...');
     vehicles = await ApiService.vehicles();
+    SmartDialog.dismiss();
   }
 
   void fetchMaxSpeed() async {
@@ -169,11 +171,14 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                              selectedVehicle.isEmpty
-                                  ? "Select Vehicle"
-                                  : selectedVehicle.join(","),
-                              style: TextStyle(color: Color(0xffadadad))),
+                          Expanded(
+                            child: Text(
+                                selectedVehicle.isEmpty
+                                    ? "Select Vehicle"
+                                    : selectedVehicle.join(","),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Color(0xffadadad))),
+                          )
                         ],
                       ),
                     ),
