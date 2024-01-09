@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -14,6 +15,9 @@ class VehicleSummary extends StatefulWidget {
 
 class _VehicleSummaryState extends State<VehicleSummary> {
   List<Map<String, dynamic>> data = [];
+  List<Map<String, dynamic>> vehicles = [];
+  List<String> selectedVehicle = [];
+  List<String> selectedVehicleIds = [];
   String startDate = "";
   String endDate = "";
   bool isApply = false;
@@ -23,15 +27,51 @@ class _VehicleSummaryState extends State<VehicleSummary> {
     super.initState();
 
     startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    fetchData();
   }
 
   void fetchData() async {
-    data = await ApiService.vehicleSummaryReport(startDate, endDate);
+    SmartDialog.showLoading(msg: 'Loading...');
+    vehicles = await ApiService.vehicles();
+    SmartDialog.dismiss();
+  }
 
+  void fetchVehicleSummary() async {
+    if (selectedVehicleIds.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select Vehicles")));
+      return;
+    }
+    SmartDialog.showLoading(msg: "Loading...");
+    data = await ApiService.vehicleSummaryReport(startDate, endDate);
+    SmartDialog.dismiss();
+    print(data);
     setState(() {
       this.isApply = true;
     });
   }
+
+  // void search(String query) {
+  //   setState(
+  //     () {
+  //       data = data
+  //           .where(
+  //             (item) => item['veh_name'].toLowerCase().contains(
+  //                   query.toLowerCase(),
+  //                 ),
+  //           )
+  //           .toList();
+  //     },
+  //   );
+  // }
+
+  // void fetchData() async {
+  //   data = await ApiService.vehicleSummaryReport(startDate, endDate);
+
+  //   setState(() {
+  //     this.isApply = true;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +118,101 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                   color: Color(0xffe2e2e2),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Center(
-                      child: searchbox2(
-                          context, () {}, "Select Vehicle", Colors.white)),
-                )
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Select Vehicle"),
+                                content: Container(
+                                  width: 300,
+                                  height: 400,
+                                  child: StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter alertState) {
+                                    return ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: vehicles.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return CheckboxListTile(
+                                              value: selectedVehicle.contains(
+                                                  vehicles[index]["vehReg"]),
+                                              title: Text(
+                                                  vehicles[index]["vehReg"]),
+                                              onChanged: (bool? value) {
+                                                if (value == true) {
+                                                  selectedVehicle.add(
+                                                      vehicles[index]
+                                                          ["vehReg"]);
+                                                  selectedVehicleIds.add(
+                                                      "${vehicles[index]["serviceId"]}");
+                                                } else {
+                                                  selectedVehicle.removeWhere(
+                                                      (element) =>
+                                                          element ==
+                                                          vehicles[index]
+                                                              ["vehReg"]);
+                                                  selectedVehicleIds
+                                                      .removeWhere((element) =>
+                                                          element ==
+                                                          "${vehicles[index]["serviceId"]}");
+                                                }
+                                                alertState(() {
+                                                  vehicles[index]
+                                                      ["is_selected"] = value;
+                                                });
+                                              });
+                                        });
+                                  }),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Cancel")),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      },
+                                      child: Text("Confirm")),
+                                ],
+                              );
+                            });
+                      },
+                      child: Center(
+                          child: Container(
+                        // height: h,
+                        width: Get.size.width * 0.9,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 12),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  selectedVehicle.isEmpty
+                                      ? "Select Vehicle"
+                                      : selectedVehicle.join(","),
+                                  style: TextStyle(color: Color(0xffadadad))),
+                            ],
+                          ),
+                        ),
+                      )),
+                    ))
               ],
             ),
             Container(
@@ -175,7 +305,7 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                   MaterialButton(
                     color: Color(0xffd6d7d7),
                     onPressed: () {
-                      fetchData();
+                      fetchVehicleSummary();
                     },
                     child: Text(
                       "APPLY",
@@ -187,13 +317,14 @@ class _VehicleSummaryState extends State<VehicleSummary> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: Container(
-                  height: Get.size.height * 0.72,
+                  //  height: Get.size.height,
                   width: Get.size.width * 0.92,
                   color: Colors.white,
                   child: !isApply
                       ? Column(
+                          mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(

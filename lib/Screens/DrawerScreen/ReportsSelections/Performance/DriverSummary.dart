@@ -188,6 +188,7 @@ class _DriverSummaryState extends State<DriverSummary> {
             color: Color(0xffeeeeee),
             child: Center(
               child: PopupMenuButton(
+                position: PopupMenuPosition.under,
                 onSelected: (item) {
                   selectedDriver = item;
                 },
@@ -216,7 +217,7 @@ class _DriverSummaryState extends State<DriverSummary> {
           Padding(
             padding: const EdgeInsets.only(top: 03.0),
             child: Container(
-              height: Get.size.height * 0.72,
+              height: Get.size.height * 0.71,
               width: Get.size.width * 0.92,
               color: Colors.white,
               child: !isApply

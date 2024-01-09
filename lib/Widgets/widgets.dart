@@ -116,7 +116,7 @@ class SwitchClass extends State {
   }
 }
 
-searchbox(context, onpressed, txt, h, w, c) {
+searchbox(context, onchanged, txt, h, w, c) {
   return Container(
     height: h,
     width: w,

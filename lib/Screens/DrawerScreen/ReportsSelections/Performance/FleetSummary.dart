@@ -16,6 +16,7 @@ class FleetSummary extends StatefulWidget {
 
 class _FleetSummaryState extends State<FleetSummary> {
   List<Map<String, dynamic>> vehiclesData = [];
+  List<Map<String, dynamic>> filteredItems = [];
   TextEditingController searchCtrl = TextEditingController();
 
   @override
@@ -24,6 +25,20 @@ class _FleetSummaryState extends State<FleetSummary> {
     searchCtrl.text = "";
     // Call the API when the widget is first created
     fetchData();
+  }
+
+  void search(String query) {
+    setState(
+      () {
+        filteredItems = vehiclesData
+            .where(
+              (item) => item['veh_name'].toLowerCase().contains(
+                    query.toLowerCase(),
+                  ),
+            )
+            .toList();
+      },
+    );
   }
 
   void fetchData() async {
@@ -101,6 +116,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                     controller: searchCtrl,
                     onChanged: (e) {
                       print(e.toString());
+                      search(e);
                     },
                     decoration:
                         //disable single line border below the text field
@@ -113,15 +129,15 @@ class _FleetSummaryState extends State<FleetSummary> {
           Container(
             height: Get.size.height * 0.78,
             child: ListView.builder(
-              itemCount: vehiclesData.length,
+              itemCount: filteredItems.length,
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder: (BuildContext context, int index) {
-                final vehicle = vehiclesData[index];
+                final vehicle = filteredItems[index];
                 return Card(
                   elevation: 3,
                   child: Container(
-                    height: Get.size.height * 0.26,
+                    height: Get.size.height * 0.25,
                     width: Get.size.width * 0.95,
                     color: Colors.white,
                     child: Padding(

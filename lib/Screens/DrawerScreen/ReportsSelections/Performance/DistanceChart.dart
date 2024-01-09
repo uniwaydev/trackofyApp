@@ -16,6 +16,7 @@ class DistanceChart extends StatefulWidget {
 
 class _DistanceChartState extends State<DistanceChart> {
   List<Map<String, dynamic>> vehiclesData = [];
+  List<Map<String, dynamic>> filteredItems = [];
   String startDate = "";
   String endDate = "";
 
@@ -26,6 +27,20 @@ class _DistanceChartState extends State<DistanceChart> {
     // Call the API when the widget is first created
     fetchData();
     startDate = endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  }
+
+  void search(String query) {
+    setState(
+      () {
+        filteredItems = vehiclesData
+            .where(
+              (item) => item['veh_name'].toLowerCase().contains(
+                    query.toLowerCase(),
+                  ),
+            )
+            .toList();
+      },
+    );
   }
 
   void fetchData() async {
@@ -167,7 +182,13 @@ class _DistanceChartState extends State<DistanceChart> {
                 ),
                 MaterialButton(
                   color: Color(0xffd6d7d7),
-                  onPressed: () {},
+                  onPressed: () {
+                    // setState(() {
+                    //   filteredItems = vehiclesData
+                    //       .sort()
+                    //       .toList();
+                    // });
+                  },
                   child: Text(
                     "APPLY",
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
@@ -189,13 +210,33 @@ class _DistanceChartState extends State<DistanceChart> {
                     height: 30,
                   ),
                 ),
-                searchbox(
-                    context,
-                    () {},
-                    "Search Vehicle Name",
-                    Get.size.height * 0.06,
-                    Get.size.width * 0.80,
-                    Colors.transparent),
+
+                Container(
+                  height: Get.size.height * 0.06,
+                  width: Get.size.width * 0.80,
+                  child:
+                      new Stack(alignment: Alignment.center, children: <Widget>[
+                    Image(
+                      image: AssetImage('assets/images/search.png'),
+                      // width: 300,
+                    ),
+                    TextField(
+                        textAlign: TextAlign.center,
+                        autocorrect: false,
+                        onChanged: (value) {
+                          search(value);
+                        },
+                        decoration:
+                            //disable single line border below the text field
+                            new InputDecoration.collapsed(
+                                hintText: 'Search Vehicle',
+                                hintStyle: TextStyle(color: Colors.grey))),
+                  ]),
+                ),
+                // searchbox(context, (e) {
+                //   search(e);
+                // }, "Search Vehicle Name", Get.size.height * 0.06,
+                //     Get.size.width * 0.80, Colors.transparent),
               ],
             ),
           ),
@@ -225,11 +266,11 @@ class _DistanceChartState extends State<DistanceChart> {
             child: Container(
               height: Get.size.height * 0.65,
               child: ListView.builder(
-                itemCount: vehiclesData.length,
+                itemCount: filteredItems.length,
                 shrinkWrap: true,
                 //   scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  final vehicle = vehiclesData[index];
+                  final vehicle = filteredItems[index];
                   return Card(
                     elevation: 1,
                     child: Container(

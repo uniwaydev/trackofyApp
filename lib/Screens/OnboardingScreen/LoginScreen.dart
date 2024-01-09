@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:trackofyapp/Screens/DrawerScreen/NotificationsScreen.dart';
 import 'package:trackofyapp/Screens/OnboardingScreen/ForgotPassword.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
+import 'package:trackofyapp/Screens/OnboardingScreen/Terms%20and%20Condition.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 import 'package:trackofyapp/Widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -23,17 +26,23 @@ class _LoginScreenState extends State<LoginScreen> {
   void _submitForm() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
-
-    SmartDialog.showLoading(msg: "Loading...");
-    // Send a POST request to the API endpoint
-    final response = await ApiService.login(username, password);
-    SmartDialog.dismiss();
-    if (response) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+    bool checkbox = isChecked;
+    if (isChecked) {
+      SmartDialog.showLoading(msg: "Loading...");
+      final response = await ApiService.login(username, password);
+      SmartDialog.dismiss();
+      if (response) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
+    } else {
+      //  print('Terms and Conditions not accepted');
+      SmartDialog.showToast('Terms and Conditions not accepted');
     }
+
+    // Send a POST request to the API endpoint
   }
 
   bool _isObscure = true;
@@ -298,27 +307,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      materialButton2(
-                          context,
-                          () {},
-                          "READ TERMS AND CONDITIONS",
-                          Colors.grey.shade300,
-                          Get.size.width * 0.95,
-                          Get.size.height * 0.06),
+                      materialButton2(context, () {
+                        Get.to(() => Terms());
+                      }, "READ TERMS AND CONDITIONS", Colors.grey.shade300,
+                          Get.size.width * 0.95, Get.size.height * 0.06),
                       Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        child: Text(
-                          "App Version 3.048",
-                          style: TextStyle(color: Colors.grey.shade600),
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: InkWell(
+                            onTap: () async {
+                              final Uri url = Uri.parse(
+                                  'https://play.google.com/store/apps/details?id=com.example.trackofy');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                throw Exception('Could not launch $url');
+                              }
+                            },
+                            child: Text(
+                              "App Version 3.048",
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                          )),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          "Developed and Designed by trackofy team",
-                          style: TextStyle(color: Colors.grey.shade600),
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: InkWell(
+                            child: Text(
+                              "Developed and Designed by trackofy team",
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.trackofy.com');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                throw Exception('Could not launch $url');
+                              }
+                            },
+                          )),
                       // SizedBox(
                       //   height: Get.size.height * 0.20,
                       // )

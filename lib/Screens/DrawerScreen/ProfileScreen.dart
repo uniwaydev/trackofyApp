@@ -224,120 +224,126 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (BuildContext context) {
           return Dialog(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            child: Container(
-              height: Get.size.height * 0.42,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: Get.size.height * 0.01,
-                    ),
-                    Text(
-                      "Select Date Format",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("yyyy-mm-dd");
-                      },
-                      child: Text(
-                        "yyyy-mm-dd",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 300,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0, bottom: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: Get.size.height * 0.01,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("dd-mm-yyyy");
-                      },
-                      child: Text(
-                        "dd-mm-yyyy",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        Text(
+                          "Select Date Format",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("mm-dd-yyyy");
-                      },
-                      child: Text(
-                        "mm-dd-yyyy",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        SizedBox(
+                          height: Get.size.height * 0.03,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("yyyy/mm/dd");
-                      },
-                      child: Text(
-                        "yyyy/mm/dd",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("yyyy-mm-dd");
+                          },
+                          child: Text(
+                            "yyyy-mm-dd",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("dd/mm/yyyy");
-                      },
-                      child: Text(
-                        "dd/mm/yyyy",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        SizedBox(
+                          height: Get.size.height * 0.03,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.size.height * 0.03,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        changeDateFormat("mm/dd/yyyy");
-                      },
-                      child: Text(
-                        "mm/dd/yyyy",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("dd-mm-yyyy");
+                          },
+                          child: Text(
+                            "dd-mm-yyyy",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          height: Get.size.height * 0.03,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("mm-dd-yyyy");
+                          },
+                          child: Text(
+                            "mm-dd-yyyy",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.size.height * 0.03,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("yyyy/mm/dd");
+                          },
+                          child: Text(
+                            "yyyy/mm/dd",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.size.height * 0.03,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("dd/mm/yyyy");
+                          },
+                          child: Text(
+                            "dd/mm/yyyy",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.size.height * 0.03,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            changeDateFormat("mm/dd/yyyy");
+                          },
+                          child: Text(
+                            "mm/dd/yyyy",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         });
