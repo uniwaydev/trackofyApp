@@ -1,26 +1,31 @@
 import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:trackofyapp/Screens/DrawerScreen/ReportsSelections/Performance/DistanceGraph.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/widgets.dart';
 import 'package:trackofyapp/constants.dart';
 import 'package:http/http.dart' as http;
 
-class DistanceChart extends StatefulWidget {
-  const DistanceChart({Key? key}) : super(key: key);
+class DistanceGraph extends StatefulWidget {
+  const DistanceGraph({Key? key}) : super(key: key);
 
   @override
-  State<DistanceChart> createState() => _DistanceChartState();
+  State<DistanceGraph> createState() => _DistanceGraphState();
 }
 
-class _DistanceChartState extends State<DistanceChart> {
+class _DistanceGraphState extends State<DistanceGraph> {
   List<Map<String, dynamic>> vehiclesData = [];
-  List<Map<String, dynamic>> filteredItems = [];
   String startDate = "";
   String endDate = "";
+  var distanceDetail;
+  List<_ChartData> data = [];
+  TooltipBehavior _tooltip = TooltipBehavior();
+  double maxDist = 10;
+  double interval = 1;
 
   @override
   void initState() {
@@ -31,34 +36,23 @@ class _DistanceChartState extends State<DistanceChart> {
     fetchData();
   }
 
-  void search(String query) {
-    setState(
-      () {
-        var fItems = vehiclesData
-            .where(
-              (item) => item['Vehiclename'].toLowerCase().contains(
-                    query.toLowerCase(),
-                  ),
-            )
-            .toList();
-        filteredItems = fItems;
-      },
-    );
-  }
-
   void fetchData() async {
     SmartDialog.showLoading(msg: "Loading...");
     vehiclesData = await ApiService.getDistanceRange(startDate, endDate);
     vehiclesData[vehiclesData.length - 1]["TotalDistance"] = 1;
     vehiclesData
         .sort((a, b) => a["TotalDistance"] < b["TotalDistance"] ? 1 : 0);
-    filteredItems = vehiclesData;
+    maxDist = double.parse(vehiclesData[0]["TotalDistance"].toString());
+    interval = maxDist / vehiclesData.length;
+
+    for (var vInfo in vehiclesData) {
+      data.add(_ChartData(vInfo["Vehiclename"],
+          double.parse(vInfo["TotalDistance"].toString())));
+    }
+    _tooltip = TooltipBehavior(enable: true);
     SmartDialog.dismiss();
     setState(() {});
   }
-
-  // var dlno =["DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366"];
-  // var kms =["150.5","82.4","232.7","0","150.5","82.4","232.7","0"];
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +77,7 @@ class _DistanceChartState extends State<DistanceChart> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Distance Chart",
+                "Distance Graph",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 21,
@@ -202,126 +196,32 @@ class _DistanceChartState extends State<DistanceChart> {
               ],
             ),
           ),
-          Container(
-            height: Get.size.height * 0.07,
-            width: Get.size.width,
-            color: Color(0xffeeeeee),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 15),
-                  child: InkWell(
-                    onTap: () {
-                      Get.to(() => DistanceGraph());
-                    },
-                    child: Image.asset(
-                      "assets/images/barpng-removebg-preview.png",
-                      height: 30,
-                    ),
-                  ),
-                ),
-
-                Container(
-                  height: Get.size.height * 0.06,
-                  width: Get.size.width * 0.80,
-                  child:
-                      new Stack(alignment: Alignment.center, children: <Widget>[
-                    Image(
-                      image: AssetImage('assets/images/search.png'),
-                      // width: 300,
-                    ),
-                    TextField(
-                        textAlign: TextAlign.center,
-                        autocorrect: false,
-                        onChanged: (value) {
-                          search(value);
-                        },
-                        decoration:
-                            //disable single line border below the text field
-                            new InputDecoration.collapsed(
-                                hintText: 'Search Vehicle',
-                                hintStyle: TextStyle(color: Colors.grey))),
-                  ]),
-                ),
-                // searchbox(context, (e) {
-                //   search(e);
-                // }, "Search Vehicle Name", Get.size.height * 0.06,
-                //     Get.size.width * 0.80, Colors.transparent),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Vehicle Name",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff757575)),
-                ),
-                Text(
-                  "Distance(in kms)",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff757575)),
-                )
-              ],
-            ),
-          ),
-          SingleChildScrollView(
+          Expanded(
             child: Container(
-              height: Get.size.height * 0.65,
-              child: ListView.builder(
-                itemCount: filteredItems.length,
-                shrinkWrap: true,
-                //   scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, int index) {
-                  final vehicle = filteredItems[index];
-                  return Card(
-                    elevation: 1,
-                    child: Container(
-                      width: Get.size.width * 0.95,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/car.png",
-                                height: 70,
-                              ),
-                              Text(
-                                vehicle['Vehiclename'],
-                                style: TextStyle(
-                                    color: Color(0xff222222), fontSize: 20),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: Text(
-                              vehicle['TotalDistance'].truncate().toString(),
-                              style: TextStyle(
-                                  color: Color(0xff1666c0),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+              child: SfCartesianChart(
+                  primaryXAxis: CategoryAxis(),
+                  primaryYAxis:
+                      NumericAxis(minimum: 0, maximum: maxDist, interval: interval),
+                  tooltipBehavior: _tooltip,
+                  series: <CartesianSeries<_ChartData, String>>[
+                    BarSeries<_ChartData, String>(
+                        dataSource: data,
+                        xValueMapper: (_ChartData data, _) => data.x,
+                        yValueMapper: (_ChartData data, _) => data.y,
+                        name: 'Gold',
+                        color: Color.fromRGBO(8, 142, 255, 1))
+                  ]),
             ),
-          )
+          ),
         ],
       ),
     );
   }
+}
+
+class _ChartData {
+  _ChartData(this.x, this.y);
+
+  final String x;
+  final double y;
 }

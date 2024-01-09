@@ -111,9 +111,9 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> vehiclesByGroup() async {
     try {
-      var response = await client.post(Uri.parse(API_URL + "?method=location_wise_vehicle_list"), body: {
-        'user_id': currentUser!.id.toString()
-      });
+      var response = await client.post(
+          Uri.parse(API_URL + "?method=location_wise_vehicle_list"),
+          body: {'user_id': currentUser!.id.toString()});
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -689,21 +689,28 @@ class ApiService {
     }
   }
 
-  static Future getDistanceRange(sdate, edate) async {
+  static Future<List<Map<String, dynamic>>> getDistanceRange(sdate, edate) async {
     try {
-      var response = await client.get(Uri.parse(API_URL +
-          "?method=get_distance_range_report&UserId=${currentUser!.id}&sdate=$sdate&edate=$edate"));
+      var response = await client.post(
+          Uri.parse(API_URL + "?method=get_distance_range_report"),
+          body: {
+            "user_id": currentUser!.id.toString(),
+            "start_date": sdate,
+            "end_date": edate
+          });
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return data["result"];
+        return List<Map<String, dynamic>>.from(data["result"]);
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return [];
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
+      return [];
     }
   }
 
@@ -1445,12 +1452,14 @@ class ApiService {
 
   static Future<bool> updateParking(sId, mode) async {
     try {
-      var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php?method=update_vehicle_parking_mode"), body: {
-        "user_id": currentUser?.id.toString(),
-        "sys_service_id": sId,
-        "parking_mode": mode.toString(),
-      });
+      var response = await client.post(
+          Uri.parse(BASE_URL +
+              "/API/user_api.php?method=update_vehicle_parking_mode"),
+          body: {
+            "user_id": currentUser?.id.toString(),
+            "sys_service_id": sId,
+            "parking_mode": mode.toString(),
+          });
 
       if (response.statusCode == 200) {
         return true;
