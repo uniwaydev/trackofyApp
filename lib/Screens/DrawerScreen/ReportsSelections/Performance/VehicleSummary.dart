@@ -38,8 +38,7 @@ class _VehicleSummaryState extends State<VehicleSummary> {
 
   void fetchVehicleSummary() async {
     if (selectedVehicleIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select Vehicles")));
+      SmartDialog.showToast("Please select Vehicles.");
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");

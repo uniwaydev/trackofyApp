@@ -36,8 +36,8 @@ class _ControlLocationState extends State<ControlLocation> {
 
   void onSubmit() async {
     if (locationCtrl.text == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please input Location.")));
+      SmartDialog.showToast("Please input Location.");
+      return;
     }
     SmartDialog.showLoading(msg: "Loading...");
     var res = await ApiService.saveControlLocation(locationCtrl.text);
