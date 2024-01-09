@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -29,8 +30,7 @@ class _DriverSummaryState extends State<DriverSummary> {
 
   void fetchData() async {
     if (selectedDriver == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please select Driver")));
+      SmartDialog.showToast("Please select Driver");
       return;
     }
     data =
