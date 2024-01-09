@@ -839,6 +839,34 @@ class ApiService {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> AddDriverPerfermance(
+    pid,
+  ) async {
+    try {
+      var response = await client
+          .post(Uri.parse(API_URL + "?method=save_driver_performance"), body: {
+        "user_id": currentUser?.id.toString(),
+        "criteria": [
+          //   "position_id":""
+        ]
+      });
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print(data);
+        return List<Map<String, dynamic>>.from(data["result"]);
+      } else {
+        showMessage('Network Error',
+            'An error occurred while communicating with the server.');
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      showMessage('Network Error', 'Something went wrong.');
+      return [];
+    }
+  }
+
   static Future getDriverDetails(driverId) async {
     try {
       var response = await client.get(Uri.parse(API_URL +

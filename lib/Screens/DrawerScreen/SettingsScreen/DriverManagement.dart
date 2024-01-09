@@ -24,7 +24,7 @@ class _DriverManagementState extends State<DriverManagement> {
 
   void fetchData() async {
     SmartDialog.showLoading(msg: "Loading...");
-    data = await ApiService.getDrivers();
+    // data = await ApiService.AddDriverPerfermance();
     SmartDialog.dismiss();
     setState(() {});
   }

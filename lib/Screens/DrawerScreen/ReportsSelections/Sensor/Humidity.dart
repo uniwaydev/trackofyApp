@@ -14,23 +14,29 @@ class HumidityReport extends StatefulWidget {
 
 class _HumidityReportState extends State<HumidityReport> {
   List<Map<String, dynamic>> data = [];
+  List<Map<String, dynamic>> drivers = [];
   String startDate = "";
   String endDate = "";
   bool isApply = false;
+  var selectedVehicle;
   @override
   void initState() {
     super.initState();
-
     startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
     // Call the API when the widget is first created
     fetchData();
   }
 
   void fetchData() async {
-    // data = await ApiService.vehicleSummary();
-    data.add({"name": "a"});
-    data.add({"name": "b"});
-    data.add({"name": "c"});
+    if (selectedVehicle == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Please select Driver")));
+      return;
+    }
+    // data = await ApiService.vehicleSummaryReport(selectedVehicle[id],);
+    // data.add({"name": "a"});
+    // data.add({"name": "b"});
+    // data.add({"name": "c"});
   }
 
   @override

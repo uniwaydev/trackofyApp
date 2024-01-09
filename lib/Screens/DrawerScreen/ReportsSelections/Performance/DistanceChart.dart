@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -17,6 +18,7 @@ class DistanceChart extends StatefulWidget {
 class _DistanceChartState extends State<DistanceChart> {
   List<Map<String, dynamic>> vehiclesData = [];
   List<Map<String, dynamic>> filteredItems = [];
+  String _query = '';
   String startDate = "";
   String endDate = "";
 
@@ -32,10 +34,11 @@ class _DistanceChartState extends State<DistanceChart> {
   void search(String query) {
     setState(
       () {
+        _query = query;
         filteredItems = vehiclesData
             .where(
               (item) => item['veh_name'].toLowerCase().contains(
-                    query.toLowerCase(),
+                    _query.toLowerCase(),
                   ),
             )
             .toList();
@@ -44,8 +47,10 @@ class _DistanceChartState extends State<DistanceChart> {
   }
 
   void fetchData() async {
+    SmartDialog.showLoading(msg: 'Loading...');
     vehiclesData = await ApiService.getTodayDistance();
     setState(() {});
+    SmartDialog.dismiss();
   }
 
   // var dlno =["DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366"];
@@ -265,49 +270,106 @@ class _DistanceChartState extends State<DistanceChart> {
           SingleChildScrollView(
             child: Container(
               height: Get.size.height * 0.65,
-              child: ListView.builder(
-                itemCount: filteredItems.length,
-                shrinkWrap: true,
-                //   scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, int index) {
-                  final vehicle = filteredItems[index];
-                  return Card(
-                    elevation: 1,
-                    child: Container(
-                      width: Get.size.width * 0.95,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/car.png",
-                                height: 70,
-                              ),
-                              Text(
-                                vehicle['veh_name'],
-                                style: TextStyle(
-                                    color: Color(0xff222222), fontSize: 20),
-                              )
-                            ],
+              child: filteredItems.isNotEmpty || _query.isNotEmpty
+                  ? filteredItems.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No Results Found',
+                            style: TextStyle(fontSize: 18),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: Text(
-                              vehicle['distance'].truncate().toString(),
-                              style: TextStyle(
-                                  color: Color(0xff1666c0),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                        )
+                      : ListView.builder(
+                          itemCount: filteredItems.length,
+                          shrinkWrap: true,
+                          //   scrollDirection: Axis.vertical,
+                          itemBuilder: (BuildContext context, int index) {
+                            final vehicle = filteredItems[index];
+                            return Card(
+                              elevation: 1,
+                              child: Container(
+                                width: Get.size.width * 0.95,
+                                color: Colors.white,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/car.png",
+                                          height: 70,
+                                        ),
+                                        Text(
+                                          vehicle['veh_name'],
+                                          style: TextStyle(
+                                              color: Color(0xff222222),
+                                              fontSize: 20),
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      child: Text(
+                                        vehicle['distance']
+                                            .truncate()
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: Color(0xff1666c0),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                  : ListView.builder(
+                      itemCount: vehiclesData.length,
+                      shrinkWrap: true,
+                      //   scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        final vehicle = vehiclesData[index];
+                        return Card(
+                          elevation: 1,
+                          child: Container(
+                            width: Get.size.width * 0.95,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/car.png",
+                                      height: 70,
+                                    ),
+                                    Text(
+                                      vehicle['veh_name'],
+                                      style: TextStyle(
+                                          color: Color(0xff222222),
+                                          fontSize: 20),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 15.0),
+                                  child: Text(
+                                    vehicle['distance'].truncate().toString(),
+                                    style: TextStyle(
+                                        color: Color(0xff1666c0),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           )
         ],

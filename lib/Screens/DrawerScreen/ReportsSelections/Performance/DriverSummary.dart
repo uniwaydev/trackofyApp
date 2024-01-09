@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -42,8 +43,10 @@ class _DriverSummaryState extends State<DriverSummary> {
   }
 
   getDrivers() async {
+    SmartDialog.showLoading(msg: "Loading...");
     drivers = await ApiService.getDrivers();
     setState(() {});
+    SmartDialog.dismiss();
   }
 
   @override
