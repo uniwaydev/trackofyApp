@@ -49,7 +49,6 @@ class _DistanceChartState extends State<DistanceChart> {
   void fetchData() async {
     SmartDialog.showLoading(msg: "Loading...");
     vehiclesData = await ApiService.getDistanceRange(startDate, endDate);
-    vehiclesData[vehiclesData.length - 1]["TotalDistance"] = 1;
     vehiclesData
         .sort((a, b) => a["TotalDistance"] < b["TotalDistance"] ? 1 : 0);
     filteredItems = vehiclesData;

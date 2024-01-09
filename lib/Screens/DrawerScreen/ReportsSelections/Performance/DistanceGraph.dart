@@ -39,7 +39,6 @@ class _DistanceGraphState extends State<DistanceGraph> {
   void fetchData() async {
     SmartDialog.showLoading(msg: "Loading...");
     vehiclesData = await ApiService.getDistanceRange(startDate, endDate);
-    vehiclesData[vehiclesData.length - 1]["TotalDistance"] = 1;
     vehiclesData
         .sort((a, b) => a["TotalDistance"] < b["TotalDistance"] ? 1 : 0);
     maxDist = double.parse(vehiclesData[0]["TotalDistance"].toString());
