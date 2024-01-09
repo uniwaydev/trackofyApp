@@ -21,6 +21,8 @@ class _VehicleScreenState extends State<VehicleScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   // Declare variables to store the fetched data
   List<Map<String, dynamic>> vehiclesData = [];
+  Map<String, dynamic> vehiclesDatabyGroup = {};
+  List<String> groups = [];
 
   @override
   void initState() {
@@ -36,13 +38,37 @@ class _VehicleScreenState extends State<VehicleScreen> {
     SmartDialog.dismiss();
   }
 
+  void fetchDatabyGroup() async {
+    SmartDialog.showLoading(msg: "Loading...");
+    var groupData = await ApiService.vehiclesByGroup();
+    print(groupData);
+    for (int i = 0; i < groupData.length; i++) {
+      groups.add(groupData[i]["location"]);
+      vehiclesDatabyGroup[groupData[i]["location"]] = groupData[i]["result"];
+      if (i == 0) {
+        dropdownGroup = groupData[i]["location"];
+        vehiclesData = List<Map<String, dynamic>>.from(
+            (groupData[i]["result"]).map((item) => {
+                  'serviceId': item['service_id'],
+                  'vehReg': item['veh_reg'],
+                  'created': item['sys_created'],
+                  'renewalDue': item['sys_renewal_due'],
+                  'imei': item['imei'],
+                  'mobileNo': item['mobile_no'],
+                  'mobileNo1': item['mobile_no1'],
+                  'is_selected': false,
+                }));
+      }
+    }
+    setState(() {});
+    SmartDialog.dismiss();
+  }
+
   String dropdownvalue = 'ListView';
+  String dropdownGroup = 'Select Name..';
 
   // List of items in our dropdown menu
-  var items = [
-    'ListView',
-    'GroupView'
-  ];
+  var items = ['ListView', 'GroupView'];
 
   @override
   Widget build(BuildContext context) {
@@ -64,30 +90,81 @@ class _VehicleScreenState extends State<VehicleScreen> {
                 Icons.menu,
                 color: Color(0xff1574a4),
               )),
-          title: Container(
-            width: Get.size.width * 0.30,
-            child: DropdownButton(
-              underline: SizedBox(),
-              isExpanded: true,
-              // Initial Value
-              value: dropdownvalue,
-              // Down Arrow Icon
-              icon: const Icon(Icons.arrow_drop_down_sharp),
-              // Array list of items
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownvalue = newValue!;
-                });
-              },
-            ),
+          title: Row(
+            children: [
+              Container(
+                width: Get.size.width * 0.30,
+                child: DropdownButton(
+                  underline: SizedBox(),
+                  isExpanded: true,
+                  // Initial Value
+                  value: dropdownvalue,
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.arrow_drop_down_sharp),
+                  // Array list of items
+                  items: items.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                      onTap: () {
+                        if (items == "GroupView") {
+                          fetchDatabyGroup();
+                        } else {
+                          fetchData();
+                        }
+                      },
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              if (dropdownvalue == "GroupView")
+                Container(
+                  width: Get.size.width * 0.30,
+                  child: DropdownButton(
+                    underline: SizedBox(),
+                    isExpanded: true,
+                    value: dropdownGroup,
+                    icon: const Icon(Icons.arrow_drop_down_sharp),
+                    items: groups.map((String item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                        onTap: () {
+                          setState(() {
+                            vehiclesData = List<Map<String, dynamic>>.from(
+                                vehiclesDatabyGroup[item].map((item) => {
+                                      'serviceId': item['service_id'],
+                                      'vehReg': item['veh_reg'],
+                                      'created': item['sys_created'],
+                                      'renewalDue': item['sys_renewal_due'],
+                                      'imei': item['imei'],
+                                      'mobileNo': item['mobile_no'],
+                                      'mobileNo1': item['mobile_no1'],
+                                      'is_selected': false,
+                                    }));
+                            print(vehiclesData);
+                          });
+                        },
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownGroup = newValue!;
+                      });
+                    },
+                  ),
+                )
+            ],
           ),
           actions: [
             Padding(

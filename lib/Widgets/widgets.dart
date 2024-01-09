@@ -75,25 +75,31 @@ materialButton2(context, onpressed, txt, c, w, h) {
 }
 
 class SwitchScreen extends StatefulWidget {
+  bool isSwitched = false;
+  void Function(bool value) onSwitch;
+
+  SwitchScreen({Key? key, required this.isSwitched, required this.onSwitch}) : super(key: key);
+
   @override
   SwitchClass createState() => new SwitchClass();
 }
 
-class SwitchClass extends State {
-  bool isSwitched = false;
+class SwitchClass extends State<SwitchScreen> {
   var textValue = 'Switch is OFF';
 
   void toggleSwitch(bool value) {
-    if (isSwitched == false) {
+    if (widget.isSwitched == false) {
       setState(() {
-        isSwitched = true;
+        widget.isSwitched = true;
         textValue = 'Switch Button is ON';
+        widget.onSwitch(true);
       });
       print('Switch Button is ON');
     } else {
       setState(() {
-        isSwitched = false;
+        widget.isSwitched = false;
         textValue = 'Switch Button is OFF';
+        widget.onSwitch(false);
       });
       print('Switch Button is OFF');
     }
@@ -106,7 +112,7 @@ class SwitchClass extends State {
           scale: 1,
           child: Switch(
             onChanged: toggleSwitch,
-            value: isSwitched,
+            value: widget.isSwitched,
             activeColor: Color(0xff524f54),
             activeTrackColor: Color(0xffa8b8c7),
             inactiveThumbColor: Color(0xffececec),

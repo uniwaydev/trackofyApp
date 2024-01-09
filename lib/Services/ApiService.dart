@@ -109,6 +109,27 @@ class ApiService {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> vehiclesByGroup() async {
+    try {
+      var response = await client.post(Uri.parse(API_URL + "?method=location_wise_vehicle_list"), body: {
+        'user_id': currentUser!.id.toString()
+      });
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return List<Map<String, dynamic>>.from(data);
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return List.empty();
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Somthing went wrong.');
+      return List.empty();
+    }
+  }
+
   static Future vehicleInfo(vehicleId) async {
     try {
       var response = await client.get(Uri.parse(API_URL +
@@ -469,7 +490,8 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        print(response.body);
+        return List<Map<String, dynamic>>.from(data["result"]);
       } else {
         // showMessage('Network Error',
         //     'An error occurred while communicating with the server.');
@@ -1048,13 +1070,13 @@ class ApiService {
           return List.empty();
         }
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return List.empty();
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return List.empty();
     }
   }
@@ -1074,13 +1096,13 @@ class ApiService {
           return {};
         }
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return {};
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return {};
     }
   }
@@ -1098,13 +1120,13 @@ class ApiService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return false;
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return false;
     }
   }
@@ -1117,13 +1139,13 @@ class ApiService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return false;
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return false;
     }
   }
@@ -1177,13 +1199,13 @@ class ApiService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return false;
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return false;
     }
   }
@@ -1390,6 +1412,56 @@ class ApiService {
       return true;
     } catch (e) {
       print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> savePoiLocation(name, lat, lng, address, radius) async {
+    try {
+      var response =
+          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+        "user_id": currentUser?.id.toString(),
+        "method": "save_poi",
+        "name": name,
+        "latitude": lat,
+        "longitude": lng,
+        "address": address,
+        "radius": radius,
+      });
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
+      return false;
+    }
+  }
+
+  static Future<bool> updateParking(sId, mode) async {
+    try {
+      var response =
+          await client.post(Uri.parse(BASE_URL + "/API/user_api.php?method=update_vehicle_parking_mode"), body: {
+        "user_id": currentUser?.id.toString(),
+        "sys_service_id": sId,
+        "parking_mode": mode.toString(),
+      });
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
       return false;
     }
   }

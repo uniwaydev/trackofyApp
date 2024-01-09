@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:intl/intl.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/POIScreens/PoiMapScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
@@ -18,6 +20,9 @@ class AddPOIScreen extends StatefulWidget {
 
 class _AddPOIScreenState extends State<AddPOIScreen> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  String address = "";
+  double sLat = 19.018255973653343, sLng = 72.84793849278007;
 
   @override
   void initState() {
@@ -57,24 +62,6 @@ class _AddPOIScreenState extends State<AddPOIScreen> {
               ),
             ],
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Get.to(() => HomeScreen());
-                      },
-                      child: Icon(
-                        Icons.home,
-                        color: ThemeColor.primarycolor,
-                        size: 27,
-                      )),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
       body: Padding(
@@ -84,11 +71,17 @@ class _AddPOIScreenState extends State<AddPOIScreen> {
             InkWell(
               onTap: () async {
                 var p = await PlacesAutocomplete.show(
+                    types: List.empty(),
+                    components: [Component(Component.country, "in")],
+                    strictbounds: false,
                     context: context,
                     mode: Mode.overlay,
                     apiKey: GOOGLE_MAP_KEY);
-                print(p);
-                // displayPrediction(p);
+                if (p != null) {
+                  setState(() {
+                    _getLatLng(p);
+                  });
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -113,16 +106,40 @@ class _AddPOIScreenState extends State<AddPOIScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
-                child:
-                    Text("No Place Selected", style: TextStyle(fontSize: 16)),
+                child: Text(address.isEmpty ? "No Place Selected" : address,
+                    style: TextStyle(fontSize: 16)),
               ),
             ),
             SizedBox(
               height: 8,
             ),
+            InkWell(
+              onTap: () {
+                Get.to(
+                    () => PoiMapScreen(lat: sLat, lng: sLng, address: address));
+              },
+              child: Container(
+                color: Colors.blue[900],
+                width: 100,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text("MAP", style: TextStyle(color: Colors.white)),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _getLatLng(Prediction prediction) async {
+    GoogleMapsPlaces _places =
+        new GoogleMapsPlaces(apiKey: GOOGLE_MAP_KEY); //Same API_KEY as above
+    PlacesDetailsResponse detail =
+        await _places.getDetailsByPlaceId(prediction.placeId!);
+    sLat = detail.result.geometry!.location.lat;
+    sLng = detail.result.geometry!.location.lng;
+    address = prediction.description!;
+    setState(() {});
   }
 }
