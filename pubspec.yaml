@@ -47,13 +47,12 @@ dependencies:
   fl_chart:
   flutter_smart_dialog:
   flutter_animation_progress_bar:
-  # custom_marker:
-  flutter_google_places:
-  # geocoder:
+  google_maps_webservice: ^0.0.16
   image_picker:
   syncfusion_flutter_maps: ^20.4.54
   url_launcher: ^6.2.2
   share_plus: ^6.0.0
+  flutter_google_places: ^0.3.0
 
 dev_dependencies:
   flutter_test:

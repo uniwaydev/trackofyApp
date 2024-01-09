@@ -86,7 +86,7 @@ class _AddPOIScreenState extends State<AddPOIScreen> {
                 var p = await PlacesAutocomplete.show(
                     context: context,
                     mode: Mode.overlay,
-                    apiKey: "AIzaSyAO-EodE9fDBFSL1q3-9fORq9ijwdbqwN8");
+                    apiKey: GOOGLE_MAP_KEY);
                 print(p);
                 // displayPrediction(p);
               },

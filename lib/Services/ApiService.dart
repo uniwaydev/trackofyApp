@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -97,13 +98,13 @@ class ApiService {
               'is_selected': false,
             }));
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return List.empty();
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Somthing went wrong.');
+      // showMessage('Network Error', 'Somthing went wrong.');
       return List.empty();
     }
   }
@@ -538,13 +539,15 @@ class ApiService {
         print(data);
         return List<Map<String, dynamic>>.from(data);
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return [];
       }
     } catch (e) {
+      print("~~~~");
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      print("~~~~");
+      // showMessage('Network Error', 'Something went wrong.');
       return [];
     }
   }
@@ -909,21 +912,30 @@ class ApiService {
     }
   }
 
-  static Future saveFenceAlert() async {
+  static Future saveFenceAlert(
+      vIds, sTime, shape, radius, name, lat, lng) async {
     try {
-      var response =
-          await client.get(Uri.parse(API_URL + "?method=save_fence_alert"));
+      var response = await client
+          .post(Uri.parse(API_URL + "?method=save_fence_alert_new"), body: {
+        "user_id": currentUser?.id.toString(),
+        "vehicle_ids": vIds,
+        "start_time": sTime,
+        "radius": radius,
+        "fence_name": name,
+        "lat": lat,
+        "lng": lng
+      });
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         return data["result"];
       } else {
-        showMessage('Network Error',
+        SmartDialog.showToast(
             'An error occurred while communicating with the server.');
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      SmartDialog.showToast('Something went wrong.');
     }
   }
 

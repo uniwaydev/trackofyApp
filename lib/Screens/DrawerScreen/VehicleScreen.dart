@@ -36,11 +36,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
     SmartDialog.dismiss();
   }
 
-  String dropdownvalue = 'Listview';
+  String dropdownvalue = 'ListView';
 
   // List of items in our dropdown menu
   var items = [
-    'Listview',
+    'ListView',
+    'GroupView'
   ];
 
   @override

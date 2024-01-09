@@ -11,3 +11,4 @@ class ThemeColor {
 }
 
 const String BING_MAP_KEY = "AmEmJG_uzsyIoT7hE_8hiUxBQeJfoRcykwHfWOZ-2OeHEZWQ4P4Z4Oom2Hyrawgv";
+const String GOOGLE_MAP_KEY = "AIzaSyAO-EodE9fDBFSL1q3-9fORq9ijwdbqwN8";
