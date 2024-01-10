@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/ControlLocation.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/DriverManagement.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/VehiclePerformanceManagement.dart';
+import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 
 class ConfigureDriver extends StatefulWidget {
@@ -13,6 +18,131 @@ class ConfigureDriver extends StatefulWidget {
 }
 
 class _ConfigureDriverState extends State<ConfigureDriver> {
+  String dropdownname = 'Select Category Type';
+  List<Map<String, dynamic>> categoryTypes = [];
+  List<Map<String, dynamic>> criterionTypes = [];
+  List<String> selectedCriterion = [];
+  List<String> selectedIds = [];
+  var selectedType;
+  var selectedTypeId;
+
+  TextEditingController overspeedMinCtrl = TextEditingController();
+  TextEditingController overspeedMaxCtrl = TextEditingController();
+  TextEditingController distanceMinCtrl = TextEditingController();
+  TextEditingController distanceMaxCtrl = TextEditingController();
+  TextEditingController haltTimeMinCtrl = TextEditingController();
+  TextEditingController haltTimeMaxCtrl = TextEditingController();
+  TextEditingController runningTimeMinCtrl = TextEditingController();
+  TextEditingController runningTimeMaxCtrl = TextEditingController();
+  TextEditingController idletimeMinCtrl = TextEditingController();
+  TextEditingController idletimeMaxCtrl = TextEditingController();
+  TextEditingController harshaccelerationCountCtrl = TextEditingController();
+  TextEditingController harshbreakingMinCountCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    getPerformance();
+    super.initState();
+  }
+
+  void getPerformance() async {
+    SmartDialog.showLoading(msg: "Loading...");
+    categoryTypes = await ApiService.getPerformanceCategory();
+    SmartDialog.dismiss();
+  }
+
+  onSubmit() async {
+    List<Map<String, dynamic>> group = [];
+    if (selectedType == null) {
+      SmartDialog.showToast("Please select the Category.");
+      return;
+    }
+    if (selectedCriterion.isEmpty) {
+      SmartDialog.showToast("Please select the Criterion.");
+      return;
+    }
+    bool isValid = true;
+    for (var i = 0; i < selectedIds.length; i++) {
+      if (selectedCriterion[i] == "Running Time Range") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "min": runningTimeMinCtrl.text.toString(),
+          "max": runningTimeMaxCtrl.text.toString(),
+        });
+        if (runningTimeMinCtrl.text.isEmpty ||
+            runningTimeMaxCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Overspeed Limit") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "min": overspeedMinCtrl.text.toString(),
+          "max": overspeedMaxCtrl.text.toString(),
+        });
+        if (overspeedMinCtrl.text.isEmpty || overspeedMaxCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Distance Range") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "min": distanceMinCtrl.text.toString(),
+          "max": distanceMaxCtrl.text.toString(),
+        });
+        if (distanceMinCtrl.text.isEmpty || distanceMaxCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Halt Time Range") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "min": haltTimeMinCtrl.text.toString(),
+          "max": haltTimeMaxCtrl.text.toString(),
+        });
+        if (haltTimeMinCtrl.text.isEmpty || haltTimeMaxCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Idle Time Range") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "min": idletimeMinCtrl.text.toString(),
+          "max": idletimeMaxCtrl.text.toString(),
+        });
+        if (idletimeMinCtrl.text.isEmpty || idletimeMaxCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Harsh Acceleration") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "count": harshaccelerationCountCtrl.text.toString(),
+        });
+        if (harshaccelerationCountCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      } else if (selectedCriterion[i] == "Harsh Braking") {
+        group.add({
+          "position_id": selectedIds[i].toString(),
+          "count": harshbreakingMinCountCtrl.text.toString(),
+        });
+        if (harshbreakingMinCountCtrl.text.isEmpty) {
+          isValid = false;
+        }
+      }
+    }
+    if (!isValid) {
+      SmartDialog.showToast("Please Enter complete details.");
+      return;
+    }
+    var jsonString = jsonEncode(group);
+    SmartDialog.showLoading(msg: "Loading...");
+    var res = await ApiService.addDriverPerformance(
+        jsonString, selectedType["performance_id"]);
+    SmartDialog.dismiss();
+    if (res) {
+      SmartDialog.showToast("Success!!!");
+    } else {
+      SmartDialog.showToast("Something went wrong.");
+    }
+  }
+
   bool ol = false;
   bool dr = false;
   bool htr = false;
@@ -21,18 +151,9 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
   bool ha = false;
   bool hb = false;
 
-  List<String> data = [
-    "OverSpeed Limit",
-    "Distance Range",
-    "Halt Time Range",
-    "Running Time Range",
-    "Idle Time Range",
-    "Harsh Acceleration",
-    "Harsh Braking"
-  ];
   List<String> userChecked = [];
 
-  String dropdownname = 'Select Frequency';
+//  String dropdownname = 'Select Frequency';
 
   // List of items in our dropdown menu
   var names = [
@@ -78,7 +199,7 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
                 "Configure Driver Performance",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 22,
                   color: ThemeColor.primarycolor,
                 ),
               ),
@@ -108,29 +229,29 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: DropdownButton(
-                    isExpanded: true,
-
-                    underline: SizedBox(),
-
-                    // Initial Value
-                    value: dropdownname,
-                    // Down Arrow Icon
-                    icon: const Icon(Icons.arrow_drop_down_sharp),
-                    // Array list of items
-                    items: names.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    // After selecting the desired option,it will
-                    // change button value to selected value
-                    onChanged: (String? newValue) {
+                  child: PopupMenuButton(
+                    onSelected: (item) async {
+                      criterionTypes = await ApiService.getPerformanceCriterion(
+                          item["performance_id"].toString());
                       setState(() {
-                        dropdownname = newValue!;
+                        print(item);
+                        selectedType = item;
                       });
                     },
+                    itemBuilder: (BuildContext context) => categoryTypes
+                        .map((e) => PopupMenuItem(
+                              value: e,
+                              child: Text(e["name"] ?? ""),
+                            ))
+                        .toList(),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                          selectedType == null
+                              ? "Select Category Type"
+                              : selectedType["name"],
+                          style: TextStyle(fontSize: 16)),
+                    ),
                   ),
                 ),
               ),
@@ -164,171 +285,299 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
             ),
             Container(
               height: Get.size.height * 0.24,
-              child: ListView(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  children: [
-                    Column(
-                      children: [
-                        ListTile(
-                          title: Text("OverSpeed Limit"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: ol,
-                            onChanged: (
-                              bool? value,
-                            ) {
-                              checkBoxValue = value!;
-                              setState(() {
-                                ol = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Distance Range"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: dr,
-                            onChanged: (bool? value) {
-                              checkBoxValue2 = value!;
-                              setState(() {
-                                dr = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Halt Time Range"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: htr,
-                            onChanged: (bool? value) {
-                              checkBoxValue3 = value!;
-                              setState(() {
-                                htr = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Running Time Range"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: rtr,
-                            onChanged: (bool? value) {
-                              checkBoxValue4 = value!;
-                              setState(() {
-                                rtr = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Idle Time Range"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: itr,
-                            onChanged: (bool? value) {
-                              checkBoxValue5 = value!;
-                              setState(() {
-                                itr = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Harsh Acceleration"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: ha,
-                            onChanged: (bool? value) {
-                              checkBoxValue6 = value!;
-                              setState(() {
-                                ha = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("Harsh Braking"),
-                          trailing: Checkbox(
-                            checkColor: Colors.white,
-                            value: hb,
-                            onChanged: (bool? value) {
-                              checkBoxValue7 = value!;
-                              setState(() {
-                                hb = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
+              child: ListView.builder(
+                  itemCount: criterionTypes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final criterion = criterionTypes[index];
+                    return CheckboxListTile(
+                      checkColor: Colors.yellow,
+                      value: selectedCriterion
+                          .contains(criterionTypes[index]["name"]),
+                      title: Text(criterion["name"]),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      tileColor: Colors.white,
+                      onChanged: (bool? value) {
+                        if (value == true) {
+                          selectedCriterion.add(criterionTypes[index]["name"]);
+                          selectedIds
+                              .add(criterionTypes[index]["id"].toString());
+                          print(selectedCriterion);
+                        } else {
+                          for (var i = 0; i < selectedCriterion.length; i++) {
+                            String checkcriterion = selectedCriterion[i];
+                            if (checkcriterion == 'Overspeed Limit') {
+                              checkBoxValue = false;
+                            }
+                            if (checkcriterion == 'Distance Range') {
+                              checkBoxValue2 = false;
+                            }
+                            if (checkcriterion == 'Halt Time Range') {
+                              checkBoxValue3 = false;
+                            }
+                            if (checkcriterion == 'Running Time Range') {
+                              checkBoxValue4 = false;
+                            }
+                            if (checkcriterion == 'Idle Time Range') {
+                              checkBoxValue5 = false;
+                            }
+                            if (checkcriterion == 'Harsh Acceleration') {
+                              checkBoxValue6 = false;
+                            }
+                            if (checkcriterion == 'Harsh Braking') {
+                              checkBoxValue7 = false;
+                            }
+                          }
+                          selectedCriterion.removeWhere((element) =>
+                              element == criterionTypes[index]["name"]);
+                          selectedIds.removeWhere((element) =>
+                              element ==
+                              criterionTypes[index]["id"].toString());
+                          print(selectedCriterion);
+                        }
+                        for (var i = 0; i < selectedCriterion.length; i++) {
+                          String checkcriterion = selectedCriterion[i];
+                          if (checkcriterion == 'Overspeed Limit') {
+                            checkBoxValue = true;
+                          }
+                          if (checkcriterion == 'Distance Range') {
+                            checkBoxValue2 = true;
+                          }
+                          if (checkcriterion == 'Halt Time Range') {
+                            checkBoxValue3 = true;
+                          }
+                          if (checkcriterion == 'Running Time Range') {
+                            checkBoxValue4 = true;
+                          }
+                          if (checkcriterion == 'Idle Time Range') {
+                            checkBoxValue5 = true;
+                          }
+                          if (checkcriterion == 'Harsh Acceleration') {
+                            checkBoxValue6 = true;
+                          }
+                          if (checkcriterion == 'Harsh Braking') {
+                            checkBoxValue7 = true;
+                          }
+                        }
+                        setState(() {});
+                      },
+                    );
+                  }),
             ),
             Visibility(
-                visible: checkBoxValue,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        minmaxfield(context, "OverSpeed Limit(In KM/H)*"),
-                      ],
-                    ))),
+              visible: checkBoxValue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "OverSpeed Limit(In KM/H)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(context, "Mini", overspeedMinCtrl),
+                          minmaxtextfield(context, "Max", overspeedMaxCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Visibility(
-                visible: checkBoxValue2,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        minmaxfield(context, "Distance Range(In KM)*"),
-                      ],
-                    ))),
+              visible: checkBoxValue2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Distance Range(In KM)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(context, "Mini", distanceMinCtrl),
+                          minmaxtextfield(context, "Max", distanceMaxCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Visibility(
-                visible: checkBoxValue3,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        minmaxfield(context, "Halt Time Range(In Hr)*"),
-                      ],
-                    ))),
+              visible: checkBoxValue3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Halt Time Range(In Hr)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(context, "Mini", haltTimeMinCtrl),
+                          minmaxtextfield(context, "Max", haltTimeMaxCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Visibility(
-                visible: checkBoxValue4,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        minmaxfield(context, "Running Time Range(In Hr)*"),
-                      ],
-                    ))),
+              visible: checkBoxValue4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Running Time Range(In Hr)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(context, "Mini", runningTimeMinCtrl),
+                          minmaxtextfield(context, "Max", runningTimeMaxCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Visibility(
-                visible: checkBoxValue5,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        minmaxfield(context, "Idle Time Range(In Hr)*"),
-                      ],
-                    ))),
+              visible: checkBoxValue5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Idle Time Range(In Hr)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(context, "Mini", idletimeMinCtrl),
+                          minmaxtextfield(context, "Max", idletimeMaxCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Visibility(
               visible: checkBoxValue6,
-              child: Padding(
-                padding: EdgeInsets.only(top: 15, bottom: 15),
-                child: harshfield(context, "Harsh Acceleration(In Count)*"),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Harsh Acceleration(In Count)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(
+                              context, "Count", harshaccelerationCountCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Visibility(
               visible: checkBoxValue7,
-              child: Padding(
-                padding: EdgeInsets.only(top: 15, bottom: 15),
-                child: harshfield(context, "Harsh Breaking(In Count)*"),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Harsh Breaking(In Count)*",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: Get.size.width * 0.75,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          minmaxtextfield(
+                              context, "Count", harshbreakingMinCountCtrl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -338,7 +587,9 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
                 width: Get.size.width * 0.75,
                 child: MaterialButton(
                   color: ThemeColor.darkblue,
-                  onPressed: () {},
+                  onPressed: () {
+                    onSubmit();
+                  },
                   child: Center(
                       child: Text(
                     "CREATE DRIVER PERFORMANCE",
@@ -352,19 +603,19 @@ class _ConfigureDriverState extends State<ConfigureDriver> {
       ),
     );
   }
-
-  void _onSelected(bool selected, String dataName) {
-    if (selected == true) {
-      setState(() {
-        userChecked.add(dataName);
-      });
-    } else {
-      setState(() {
-        userChecked.remove(dataName);
-      });
-    }
-  }
 }
+// void _onSelected(bool selected, String dataName) {
+//     if (criterionTypes["name"].map((String) => null)) {
+//       setState(() {
+//         userChecked.add(dataName);
+//       });
+//     } else {
+//       setState(() {
+//         userChecked.remove(dataName);
+//       });
+//     }
+//   }
+// }
 
 class CheckboxModel {
   String title;

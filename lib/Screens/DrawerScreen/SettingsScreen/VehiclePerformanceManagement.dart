@@ -272,7 +272,7 @@ class _VehiclePerformanceManagementState
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: const EdgeInsets.only(top: 40.0, bottom: 10),
                   child: Center(
                     child: Container(
                       height: Get.size.height * 0.06,

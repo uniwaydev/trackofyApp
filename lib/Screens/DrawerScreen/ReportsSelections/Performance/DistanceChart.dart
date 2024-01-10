@@ -19,6 +19,7 @@ class DistanceChart extends StatefulWidget {
 class _DistanceChartState extends State<DistanceChart> {
   List<Map<String, dynamic>> vehiclesData = [];
   List<Map<String, dynamic>> filteredItems = [];
+  String _query = '';
   String startDate = "";
   String endDate = "";
 
@@ -310,13 +311,10 @@ class _DistanceChartState extends State<DistanceChart> {
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           )
         ],
