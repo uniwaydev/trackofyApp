@@ -839,34 +839,6 @@ class ApiService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> AddDriverPerfermance(
-    pid,
-  ) async {
-    try {
-      var response = await client
-          .post(Uri.parse(API_URL + "?method=save_driver_performance"), body: {
-        "user_id": currentUser?.id.toString(),
-        "criteria": [
-          //   "position_id":""
-        ]
-      });
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        print(data);
-        return List<Map<String, dynamic>>.from(data["result"]);
-      } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
-        return [];
-      }
-    } catch (e) {
-      print(e);
-      showMessage('Network Error', 'Something went wrong.');
-      return [];
-    }
-  }
-
   static Future getDriverDetails(driverId) async {
     try {
       var response = await client.get(Uri.parse(API_URL +
@@ -1252,6 +1224,32 @@ class ApiService {
     }
   }
 
+  static addDriverPerformance(jsonString, position_id) async {
+    try {
+      var response = await client.post(
+          Uri.parse(BASE_URL +
+              "/API/trackofy_app.php?method=save_driver_performance"),
+          body: {
+            "user_id": currentUser?.id.toString(),
+            "criteria": jsonString,
+            "Category": position_id.toString()
+          });
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print(response);
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
+      return false;
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> getPerformanceCategory() async {
     try {
       var response = await client
@@ -1304,7 +1302,56 @@ class ApiService {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> getPerformanceCriterion(
+      performance_id) async {
+    try {
+      var response =
+          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+        "user_id": currentUser?.id.toString(),
+        "method": "get_performance_criterion",
+        "Category": performance_id,
+      });
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return List<Map<String, dynamic>>.from(data);
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
+      return [];
+    }
+  }
+
   static Future<bool> saveControlLocation(locationName) async {
+    try {
+      var response =
+          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+        "user_id": currentUser?.id.toString(),
+        "method": "save_control_location",
+        "location_name": locationName,
+        "isEdit": "false",
+      });
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
+      return false;
+    }
+  }
+
+  static Future<bool> saveDriverPerformance(locationName) async {
     try {
       var response =
           await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {

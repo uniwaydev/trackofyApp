@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 
@@ -197,6 +198,8 @@ class _DriverSummaryState extends State<DriverSummary> {
                 },
                 itemBuilder: (BuildContext context) => drivers
                     .map((e) => PopupMenuItem(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Get.size.width * 0.1),
                           value: e,
                           child: Text(e["name"]),
                         ))
