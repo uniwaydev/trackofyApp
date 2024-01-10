@@ -49,8 +49,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
         addressCtrl.text == "" ||
         contactCtrl.text == "" ||
         pickedImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please input all information")));
+      SmartDialog.showToast("Please input all information");
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");
@@ -67,12 +66,10 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
         pickedImage);
     SmartDialog.dismiss();
     if (res) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Success!!!")));
+      SmartDialog.showToast("Success!!!");
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Something went wrong.")));
+      SmartDialog.showToast("Something went wrong.");
     }
   }
 
@@ -224,9 +221,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: InkWell(
-                  onTap: () {
-                    onSubmit();
-                  },
+                  onTap: () {},
                   child: Container(
                     height: Get.size.height * 0.09,
                     width: Get.size.width * 0.95,
@@ -238,7 +233,9 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                       padding: const EdgeInsets.all(15.0),
                       child: MaterialButton(
                         color: ThemeColor.darkblue,
-                        onPressed: () {},
+                        onPressed: () {
+                          onSubmit();
+                        },
                         child: Center(
                             child: Text(
                           "CREATE DRIVER",

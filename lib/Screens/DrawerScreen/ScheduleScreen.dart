@@ -71,8 +71,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         scheduleTime,
         emails.join(","));
     SmartDialog.dismiss();
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Schedule Report is sent.")));
+    SmartDialog.showToast("Schedule Report is sent.");
   }
 
   String dropdownname = 'Select Frequency';

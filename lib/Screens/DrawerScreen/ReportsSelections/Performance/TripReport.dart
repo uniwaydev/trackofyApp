@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -33,8 +34,7 @@ class _TripReportState extends State<TripReport> {
 
   void fetchData() async {
     if (selectedVehicleIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select Vehicles")));
+      SmartDialog.showToast("Please select Vehicles.");
       return;
     }
     data = await ApiService.tripReport(

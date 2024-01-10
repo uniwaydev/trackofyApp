@@ -31,8 +31,7 @@ class _DriverSummaryState extends State<DriverSummary> {
 
   void fetchData() async {
     if (selectedDriver == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please select Driver")));
+      SmartDialog.showToast("Please select Driver");
       return;
     }
     data =

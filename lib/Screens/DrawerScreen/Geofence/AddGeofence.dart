@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:intl/intl.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/Geofence/GeoMapScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
@@ -24,6 +26,12 @@ class _AddGeofenceState extends State<AddGeofence> {
   List<Map<String, dynamic>> parkingData = [];
   String startTime = "";
   String endTime = "";
+  String address = "";
+
+  double sLat = 19.018255973653343, sLng = 72.84793849278007;
+
+  TextEditingController fenceNameCtrl = TextEditingController();
+  TextEditingController radiusCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -97,11 +105,17 @@ class _AddGeofenceState extends State<AddGeofence> {
             InkWell(
               onTap: () async {
                 var p = await PlacesAutocomplete.show(
+                    types: List.empty(),
+                    components: [Component(Component.country, "in")],
+                    strictbounds: false,
                     context: context,
                     mode: Mode.overlay,
-                    apiKey: "AIzaSyAO-EodE9fDBFSL1q3-9fORq9ijwdbqwN8");
-                print(p);
-                // displayPrediction(p);
+                    apiKey: GOOGLE_MAP_KEY);
+                if (p != null) {
+                  setState(() {
+                    _getLatLng(p);
+                  });
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -118,6 +132,7 @@ class _AddGeofenceState extends State<AddGeofence> {
               ),
             ),
             TextFormField(
+              controller: fenceNameCtrl,
               decoration: InputDecoration(
                 isDense: true,
                 label: Text(
@@ -139,8 +154,8 @@ class _AddGeofenceState extends State<AddGeofence> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
-                child:
-                    Text("No Place Selected", style: TextStyle(fontSize: 16)),
+                child: Text(address.isEmpty ? "No Place Selected" : address,
+                    style: TextStyle(fontSize: 16)),
               ),
             ),
             SizedBox(
@@ -155,6 +170,7 @@ class _AddGeofenceState extends State<AddGeofence> {
               ),
               child: Center(
                 child: TextFormField(
+                  controller: radiusCtrl,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     isDense: true,
@@ -215,7 +231,27 @@ class _AddGeofenceState extends State<AddGeofence> {
                   ),
                   MaterialButton(
                     color: Color(0xffd6d7d7),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (fenceNameCtrl.text.isEmpty ||
+                          radiusCtrl.text.isEmpty ||
+                          address.isEmpty ||
+                          selectedVehicleIds.isEmpty) {
+                        SmartDialog.showToast("Please complete all fields.");
+                        return;
+                      }
+                      Get.to(
+                        () => GeoMapScreen(
+                          lat: sLat,
+                          lng: sLng,
+                          address: address,
+                          radius: double.parse(radiusCtrl.text),
+                          startTime: startTime,
+                          endTime: endTime,
+                          fenceName: fenceNameCtrl.text,
+                          selectedVehicleIds: selectedVehicleIds,
+                        ),
+                      );
+                    },
                     child: Text(
                       "MAP",
                       style:
@@ -255,5 +291,16 @@ class _AddGeofenceState extends State<AddGeofence> {
         ),
       ),
     );
+  }
+
+  void _getLatLng(Prediction prediction) async {
+    GoogleMapsPlaces _places =
+        new GoogleMapsPlaces(apiKey: GOOGLE_MAP_KEY); //Same API_KEY as above
+    PlacesDetailsResponse detail =
+        await _places.getDetailsByPlaceId(prediction.placeId!);
+    sLat = detail.result.geometry!.location.lat;
+    sLng = detail.result.geometry!.location.lng;
+    address = prediction.description!;
+    setState(() {});
   }
 }
