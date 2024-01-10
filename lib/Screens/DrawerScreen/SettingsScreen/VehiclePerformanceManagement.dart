@@ -49,8 +49,7 @@ class _VehiclePerformanceManagementState
         haltTimeMaxCtrl.text == "" ||
         runningTimeMinCtrl.text == "" ||
         runningTimeMaxCtrl.text == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please input all information.")));
+      SmartDialog.showToast("Please input all information.");
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");
@@ -62,11 +61,9 @@ class _VehiclePerformanceManagementState
         selectedType["performance_id"].toString());
     SmartDialog.dismiss();
     if (res) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Success!!!")));
+      SmartDialog.showToast("Success!!!");
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Something went wrong.")));
+      SmartDialog.showToast("Something went wrong.");
     }
   }
 

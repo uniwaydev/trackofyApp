@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
 import 'package:trackofyapp/Widgets/widgets.dart';
@@ -27,6 +29,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
 
   Future<void> fetchVehicles() async {
     vehicles = await ApiService.getVehicleParkingMode();
+    print(vehicles);
     setState(() {
       isLoading = false;
     });
@@ -70,11 +73,16 @@ class _ParkingScreenState extends State<ParkingScreen> {
               padding: const EdgeInsets.only(right: 12.0),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.home,
-                    color: ThemeColor.primarycolor,
-                    size: 27,
-                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => HomeScreen());
+                    },
+                    child: Icon(
+                      Icons.home,
+                      color: ThemeColor.primarycolor,
+                      size: 27,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -148,7 +156,13 @@ class _ParkingScreenState extends State<ParkingScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      SwitchScreen(),
+                                      SwitchScreen(
+                                        isSwitched:
+                                            vehicle["parking_mode"],
+                                        onSwitch: (value) {
+                                          onUpdateParking(vehicle["service_id"], value);
+                                        },
+                                      ),
                                     ],
                                   )
                                 ],
@@ -163,5 +177,12 @@ class _ParkingScreenState extends State<ParkingScreen> {
               ),
       ),
     );
+  }
+
+  onUpdateParking(sId, val)async {
+    SmartDialog.showLoading(msg: "Loading...");
+    var res = await ApiService.updateParking(sId.toString(), val);
+    SmartDialog.dismiss();
+    SmartDialog.showToast(res ? "Success!!!" : "Something went wrong");
   }
 }

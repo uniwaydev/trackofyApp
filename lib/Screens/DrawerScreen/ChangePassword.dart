@@ -21,8 +21,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Future<void> updatePassword() async {
     if (oldPwdCtrl.text == "" || newPwdCtrl.text == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please Input Password!!!")));
+      SmartDialog.showToast("Please Input Password!!!");
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");

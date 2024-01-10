@@ -80,11 +80,9 @@ class _PoiScreenState extends State<PoiScreen> {
         email3Ctrl.text);
     SmartDialog.dismiss();
     if (res) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Success!!!")));
+      SmartDialog.showToast("Success!!!");
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Something went wrong.")));
+      SmartDialog.showToast("Something went wrong.");
     }
   }
 

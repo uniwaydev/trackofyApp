@@ -354,7 +354,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SmartDialog.showLoading(msg: "Loading...");
     await ApiService.changeDateFormat(newFormat);
     SmartDialog.dismiss();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Date Format is changed.")));
+    SmartDialog.showToast("Date Format is changed.");
   }
 }

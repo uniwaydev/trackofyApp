@@ -33,7 +33,10 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
     print(widget.serviceId);
     print("======");
     SmartDialog.showLoading(msg: "Loading...");
-    data = await ApiService.getVehicleAlerts();
+    data = await ApiService.getVehicleAlerts(widget.serviceId.toString());
+    print("======");
+    print(data);
+    print("======");
     SmartDialog.dismiss();
 
     setState(() {});
@@ -42,8 +45,7 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
   void updateAlert(alertId, notify) async {
     await ApiService.updateAlert(
         widget.serviceId.toString(), "$alertId", notify);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Update Successfully.")));
+    SmartDialog.showToast("Update Successfully");
   }
 
   @override
@@ -122,16 +124,34 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
                     children: [
                       Row(
                         children: [
-                          Text(alertData["alert_name"]),
+                          Builder(builder: (context) {
+                            String img = "assets/images/information.png";
+                            if (alertData["alert_type"] == "Door") {
+                              img = "assets/images/ic_door_new.PNG";
+                            } else if (alertData["alert_type"] == "AC") {
+                              img = "assets/images/ic_ac_new.PNG";
+                            } else if (alertData["alert_type"] == "Ignition") {
+                              img = "assets/images/ic_ignition_new.PNG";
+                            } else if (alertData["alert_type"] == "Main Power") {
+                              img = "assets/images/plug.png";
+                            } else if (alertData["alert_type"] == "Panic") {
+                              img = "assets/images/ic_speed_new.PNG";
+                            } else if (alertData["alert_type"] == "Speed") {
+                              img = "assets/images/stop-sign.png";
+                            }
+                            return Image.asset(img, width: 20);
+                          }),
+                          SizedBox(width: 8),
+                          Text(alertData["alert_type"]),
                         ],
                       ),
                       Switch(
                         onChanged: (value) {
-                          alertData["alert_type"] = value ? 1 : 0;
+                          alertData["is_notification"] = value ? 1 : 0;
                           updateAlert(alertData["alert_id"], value);
                           setState(() {});
                         },
-                        value: alertData["alert_type"] == 1,
+                        value: alertData["is_notification"] == 1,
                         activeColor: Color(0xff524f54),
                         activeTrackColor: Color(0xffa8b8c7),
                         inactiveThumbColor: Color(0xffececec),

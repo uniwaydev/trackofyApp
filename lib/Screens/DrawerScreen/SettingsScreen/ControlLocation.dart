@@ -36,23 +36,21 @@ class _ControlLocationState extends State<ControlLocation> {
 
   void onSubmit() async {
     if (locationCtrl.text == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please input Location.")));
+      SmartDialog.showToast("Please input Location.");
+      return;
     }
     SmartDialog.showLoading(msg: "Loading...");
     var res = await ApiService.saveControlLocation(locationCtrl.text);
     SmartDialog.dismiss();
     if (res) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Success!!!")));
+      SmartDialog.showToast("Success!!!");
       setState(() {
         isVisible = false;
         locationCtrl.text = "";
       });
       fetchData();
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Something went wrong.")));
+      SmartDialog.showToast("Something went wrong.");
     }
   }
 

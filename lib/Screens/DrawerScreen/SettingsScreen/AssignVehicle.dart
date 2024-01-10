@@ -38,8 +38,7 @@ class _AssignVehicleState extends State<AssignVehicle> {
     if (res) {
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Something went wrong.")));
+      SmartDialog.showToast("Something went wrong.");
     }
   }
 

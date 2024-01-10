@@ -36,13 +36,11 @@ class _TrackingScreenState extends State<TrackingScreen> {
   var selected;
   late List selectedList;
 
-  late Timer _timer;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-
-    fetchVehicles();
   }
 
   Future<Uint8List> getImages(String path, int width) async {
@@ -56,35 +54,43 @@ class _TrackingScreenState extends State<TrackingScreen> {
   }
 
   void fetchData(serviceId) async {
-    data = await ApiService.liveTracking(serviceId);
-    _markers.clear();
-    if (data.isNotEmpty) {
-      Timer.periodic(Duration(milliseconds: 5000), (timer) {
-        var e = data[0];
-        print("~~~~~~~~~~~~~");
-        print(e);
-        print("~~~~~~~~~~~~~");
-        // final Uint8List markIcons = await getImages(e["icon"], 100);
-        _markers.add(Marker(
-          markerId: MarkerId(e["vehicle_name"]),
-          // icon: await MarkerIcon.downloadResizePictureCircle(e["icon"],
-          //     size: 100,
-          //     addBorder: true,
-          //     borderColor: Colors.white,
-          //     borderSize: 15),
-          position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
-        ));
-        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
-            LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
-        setState(() {});
-      });
-    }
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
+      print("==== Start Tracking ====");
+      data = await ApiService.liveTracking(serviceId);
+      var e = data[0];
+      _markers.clear();
+      BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(), "assets/images/red_car.png");
+      _markers.add(Marker(
+        markerId: MarkerId(e["vehicle_name"]),
+        icon: markerIcon,
+        position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
+      ));
+
+      mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
+          LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
+      setState(() {});
+      print("==== End Tracking ====");
+    });
+  }
+
+  @override
+  void dispose() {
+    print("dispose");
+    
+    _timer?.cancel();
+    super.dispose();
   }
 
   void fetchVehicles() async {
     SmartDialog.showLoading(msg: "Loading...");
     vehicles = await ApiService.vehicles();
     SmartDialog.dismiss();
+
+    // vehicles.insert(0, {'serviceId': "all", 'vehReg': "ALL"});
+
+    await initMap();
+
     setState(() {});
   }
 
@@ -108,6 +114,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
                 color: Color(0xff1574a4),
               )),
           centerTitle: false,
+          titleSpacing: 0,
           title: Container(
             width: Get.width * 0.7,
             child: Row(
@@ -178,9 +185,38 @@ class _TrackingScreenState extends State<TrackingScreen> {
           markers: Set<Marker>.of(_markers),
           onMapCreated: (controller) {
             mapCtrl = controller;
+            fetchVehicles();
           },
         ),
       ),
     );
+  }
+
+  initMap() async {
+    _markers.clear();
+    for (int i = 0; i < vehicles.length; i++) {
+      print(vehicles[i]);
+      var trackingRes =
+          await ApiService.liveTracking(vehicles[i]["serviceId"].toString());
+      if (trackingRes.isNotEmpty) {
+        var trackingInfo = trackingRes[0];
+        print(trackingInfo);
+        BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(), "assets/images/red_car.png");
+        _markers.add(Marker(
+          markerId: MarkerId(trackingInfo["vehicle_name"]),
+          icon: markerIcon,
+          position: LatLng(double.parse(trackingInfo["lat"]),
+              double.parse(trackingInfo["lng"])),
+        ));
+
+        if (i == 0) {
+          mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
+              LatLng(double.parse(trackingInfo["lat"]),
+                  double.parse(trackingInfo["lng"])),
+              14));
+        }
+      }
+    }
   }
 }
