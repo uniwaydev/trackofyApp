@@ -87,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(
             child: Container(
@@ -100,16 +101,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            height: Get.size.height * 0.33,
+            height: 200,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: GridView.builder(
                 itemCount: 10,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    crossAxisSpacing: 3,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: Get.height * 0.4 / Get.width),
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 3,
+                  mainAxisSpacing: 0,
+                  //childAspectRatio: Get.height * 0.4 / Get.width
+                ),
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {

@@ -77,7 +77,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
   @override
   void dispose() {
     print("dispose");
-    
+
     _timer?.cancel();
     super.dispose();
   }
@@ -116,7 +116,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
           centerTitle: false,
           titleSpacing: 0,
           title: Container(
-            width: Get.width * 0.7,
+            width: Get.width * 0.9,
             child: Row(
               children: [
                 Text(
@@ -127,54 +127,59 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     color: ThemeColor.primarycolor,
                   ),
                 ),
-                Container(
-                  width: Get.width * 0.4,
-                  child: PopupMenuButton(
-                    onSelected: (item) {
-                      setState(() {
-                        print(item);
-                        selected = item;
-                        fetchData(item["serviceId"].toString());
-                      });
-                    },
-                    itemBuilder: (BuildContext context) => vehicles
-                        .map((e) => PopupMenuItem(
-                              value: e,
-                              child: Text(e["vehReg"] ?? ""),
-                            ))
-                        .toList(),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                          selected == null ? "Select Name" : selected["vehReg"],
-                          style: TextStyle(fontSize: 16)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Container(
+                    width: Get.width * 0.4,
+                    child: PopupMenuButton(
+                      onSelected: (item) {
+                        setState(() {
+                          print(item);
+                          selected = item;
+                          fetchData(item["serviceId"].toString());
+                        });
+                      },
+                      itemBuilder: (BuildContext context) => vehicles
+                          .map((e) => PopupMenuItem(
+                                value: e,
+                                child: Text(e["vehReg"] ?? ""),
+                              ))
+                          .toList(),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                            selected == null
+                                ? "Select Name"
+                                : selected["vehReg"],
+                            style: TextStyle(fontSize: 16)),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Get.to(() => HomeScreen());
-                      },
-                      child: Icon(
-                        Icons.home,
-                        color: ThemeColor.primarycolor,
-                        size: 27,
-                      )),
-                  SizedBox(
-                    width: Get.size.width * 0.04,
-                  ),
-                ],
-              ),
-            ),
-          ],
+          // actions: [
+          //   Padding(
+          //     padding: const EdgeInsets.only(right: 12.0),
+          //     child: Row(
+          //       children: [
+          //         GestureDetector(
+          //             onTap: () {
+          //               Get.to(() => HomeScreen());
+          //             },
+          //             child: Icon(
+          //               Icons.home,
+          //               color: ThemeColor.primarycolor,
+          //               size: 27,
+          //             )),
+          //         SizedBox(
+          //           width: Get.size.width * 0.04,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ],
         ),
       ),
       body: Container(

@@ -189,15 +189,15 @@ class ApiService {
     }
   }
 
-  static Future haltDuration() async {
+  static Future haltDuration(sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_halt_duration"),
           body: {
             "user_id": currentUser?.id.toString(),
-            "start_date": "2023-10-12 00:00:00",
-            "end_date": "2023-10-12 00:00:00"
+            "start_date": sdate,
+            "end_date": edate
           });
 
       if (response.statusCode == 200) {
@@ -689,7 +689,8 @@ class ApiService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getDistanceRange(sdate, edate) async {
+  static Future<List<Map<String, dynamic>>> getDistanceRange(
+      sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(API_URL + "?method=get_distance_range_report"),
