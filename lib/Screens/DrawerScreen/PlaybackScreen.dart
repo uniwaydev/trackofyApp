@@ -148,7 +148,11 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                         ),
                         child: TextFormField(
                           controller: stoppageCtrl,
+                          textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           decoration: InputDecoration(
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
@@ -172,7 +176,11 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                         ),
                         child: TextFormField(
                           controller: overspeedCtrl,
+                          textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           decoration: InputDecoration(
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,

@@ -66,8 +66,8 @@ class _FleetSummaryState extends State<FleetSummary> {
   // var speed =["50","50","50","50","50","50",];
 
   //var distance = ["90","90","90","90","90","90"];
-  var idlesince = [90.9, 0, 0, 90, 90];
-  var Haltsince = [90.9, 0, 0, 90, 90];
+  // var idlesince = [90.9, 0, 0, 90, 90];
+  // var Haltsince = [90.9, 0, 0, 90, 90];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -141,9 +141,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     },
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.map,
-                          size: 27,
+                        Image.asset(
+                          "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
+                          height: 27,
+                          width: 27,
                         ),
                         Text(
                           "Select Map",
@@ -167,7 +168,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          "assets/images/Untitled_design-removebg-preview.png",
+                          "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
                           height: 27,
                           width: 27,
                         ),
@@ -227,16 +228,17 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   onMap(),
                   Positioned(
                     left: 8,
-                    bottom: 8,
+                    bottom: 30,
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,
                       mini: true,
                       onPressed: () {
                         showMapTypeDialog();
                       },
-                      child: Icon(
-                        Icons.map,
-                        size: 27,
+                      child: Image.asset(
+                        "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
+                        height: 27,
+                        width: 27,
                       ),
                     ),
                   ),
