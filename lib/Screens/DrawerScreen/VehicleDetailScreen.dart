@@ -48,41 +48,54 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   double vLat = 19.018255973653343, vLng = 72.84793849278007;
   bool isExpand = false;
   bool isFirstPanel = true;
+  bool isTracking = true;
 
   @override
   void initState() {
     super.initState();
-    // SmartDialog.showLoading(msg: "Loading...");
+    SmartDialog.showLoading(msg: "Loading...");
     fetchData();
   }
 
-  void fetchData() async {
-    print("======");
-    print(widget.serviceId);
-    print("======");
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose");
+    isTracking = false;
+  }
+
+  fetchData() async {
+    await onTracking();
+    if (isTracking) {
+      Future.delayed(Duration(seconds: 5), () {
+        fetchData();
+      });
+    }
+  }
+
+  onTracking() async {
+    print("==== TRACKING START ====");
     data = await ApiService.liveTracking(widget.serviceId.toString());
+    SmartDialog.dismiss();
     _markers.clear();
     if (data.isNotEmpty) {
       var e = data[0];
       vehicleData = e;
-      print("~~~~~~~~~~~~~");
-      print(e);
-      print("~~~~~~~~~~~~~");
-      // final Uint8List markIcons = await getImages(e["icon"], 100);
       BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
           const ImageConfiguration(), "assets/images/red_car.png");
       _markers.add(Marker(
-        markerId: MarkerId(e["vehicle_name"]),
-        icon: markerIcon,
-        position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
-      ));
+          markerId: MarkerId(e["vehicle_name"]),
+          icon: markerIcon,
+          position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
+          rotation: double.parse(e["angle"])));
       mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
           LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
-      SmartDialog.dismiss();
       vLat = double.parse(e["lat"]);
       vLng = double.parse(e["lng"]);
+      print("$vLat, $vLng");
       setState(() {});
     }
+    print("==== TRACKING END ====");
   }
 
   @override
@@ -142,7 +155,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
+                          "assets/images/worldwide.png",
                           height: 27,
                           width: 27,
                         ),
@@ -168,7 +181,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
+                          "assets/images/video-player.png",
                           height: 27,
                           width: 27,
                         ),
@@ -197,7 +210,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          "assets/images/Untitled_design__11_-removebg-preview.png",
+                          "assets/images/caution.png",
                           height: 27,
                           width: 27,
                         ),
@@ -236,7 +249,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         showMapTypeDialog();
                       },
                       child: Image.asset(
-                        "assets/images/Screenshot_2022-09-17_153904-removebg-preview.png",
+                        "assets/images/worldwide.png",
                         height: 27,
                         width: 27,
                       ),
@@ -330,10 +343,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   children: [
                     Column(
                       children: [
-                        Icon(
-                          Icons.integration_instructions_rounded,
-                          color: Colors.grey,
-                        ),
+                        onIgnitionData(),
                         Text(
                           "Ignition",
                           style: TextStyle(fontSize: 10),
@@ -343,10 +353,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     SizedBox(width: 8),
                     Column(
                       children: [
-                        Icon(
-                          Icons.battery_0_bar,
-                          color: Colors.grey,
-                        ),
+                        onBatteryData(),
                         Text(
                           "Battery(${vehicleData != null ? vehicleData["battery_percent_val"] : "0"})",
                           style: TextStyle(fontSize: 10),
@@ -356,10 +363,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     SizedBox(width: 8),
                     Column(
                       children: [
-                        Icon(
-                          Icons.settings,
-                          color: Colors.grey,
-                        ),
+                        onACData(),
                         Text(
                           "AC",
                           style: TextStyle(fontSize: 10),
@@ -369,9 +373,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     SizedBox(width: 8),
                     Column(
                       children: [
-                        Icon(
-                          Icons.door_back_door_outlined,
-                          color: Colors.grey,
+                        Image.asset(
+                          "assets/images/door.png",
+                          width: 20,
                         ),
                         Text(
                           "Door",
@@ -417,7 +421,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("1.72")
+                                      Text(vehicleData["odometer"] ?? '0')
                                     ],
                                   ),
                                 ),
@@ -443,7 +447,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["distance"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -469,7 +473,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("0")
+                                      Text(vehicleData["speed"] ?? '0')
                                     ],
                                   ),
                                 ),
@@ -505,7 +509,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["halttime"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -531,7 +535,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["idletime"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -557,7 +561,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["maxspeed"] ?? '0')
                                     ],
                                   ),
                                 ),
@@ -593,7 +597,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["vehicle_status"] ??
+                                          'N/A')
                                     ],
                                   ),
                                 ),
@@ -619,7 +624,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["unit_battery"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -645,7 +650,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["permit"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -659,64 +664,67 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         ),
                         Container(
                           color: Colors.grey,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/Untitled_design__4_-removebg-preview.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Insurance",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("1.72")
-                                    ],
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/Untitled_design__4_-removebg-preview.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Insurance",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["insurance"] ?? 'N/A')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 1),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/ic_co2.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Pollution",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("N/A")
-                                    ],
+                                SizedBox(width: 1),
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/ic_co2.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Pollution",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["pollution"] ??
+                                            'Invalid')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(width: 1, color: Colors.grey),
-                              Expanded(
-                                child: Container(color: Colors.white),
-                              ),
-                            ],
+                                Container(width: 1, color: Colors.grey),
+                                Expanded(
+                                  child: Container(color: Colors.white),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -726,86 +734,90 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       children: [
                         Container(
                           color: Colors.grey,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/ic_today_halt_new.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Total Parked",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("1.72")
-                                    ],
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/ic_today_halt_new.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Total Parked",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["total_parked"] ??
+                                            'N/A')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 1),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/ic_idle.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Today Idle",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("N/A")
-                                    ],
+                                SizedBox(width: 1),
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/ic_idle.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Today Idle",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["total_idle"] ?? 'N/A')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(width: 1, color: Colors.grey),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/meter.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Today Running",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("0")
-                                    ],
+                                Container(width: 1, color: Colors.grey),
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/meter.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Today Running",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["total_running"] ??
+                                            'N/A')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         Container(
@@ -836,7 +848,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["total_inactive"] ??
+                                          'N/A')
                                     ],
                                   ),
                                 ),
@@ -862,7 +875,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["lat"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -891,7 +904,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("N/A")
+                                      Text(vehicleData["lng"] ?? 'N/A')
                                     ],
                                   ),
                                 ),
@@ -905,38 +918,44 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         ),
                         Container(
                           color: Colors.grey,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/ic_fitness.png",
-                                            width: 15,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Fitness",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                      Text("N/A")
-                                    ],
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/ic_fitness.png",
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Fitness",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(vehicleData["fitness"] ?? 'N/A')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(width: 1, color: Colors.grey),
-                              Expanded(child: SizedBox.shrink()),
-                              Container(width: 1, color: Colors.grey),
-                              Expanded(child: SizedBox.shrink()),
-                            ],
+                                Container(width: 1, color: Colors.grey),
+                                Expanded(
+                                  child: Container(color: Colors.white),
+                                ),
+                                Container(width: 1, color: Colors.grey),
+                                Expanded(
+                                  child: Container(color: Colors.white),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -1265,5 +1284,86 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   onShareLocation() async {
     Share.share('Lat: $vLat, Lng: $vLng');
+  }
+
+  onIgnitionData() {
+    String ignitionTxt = "rsz_battery_no_data";
+    if (vehicleData == null) {
+      ignitionTxt = "rsz_battery_no_data";
+    } else if (vehicleData["ignitionOnOff"] == "Off") {
+      ignitionTxt = "rsz_battery_ignition_off";
+    } else if (vehicleData["ignitionOnOff"] == "On") {
+      ignitionTxt = "rsz_battery_ignition_on";
+    } else if (vehicleData["ignitionOnOff"] == "Idle") {
+      ignitionTxt = "rsz_battery_ignition_idle";
+    }
+
+    return Container(
+      width: 20,
+      height: 20,
+      child: Center(
+          child: Image.asset(
+        "assets/images/$ignitionTxt.png",
+        width: 20,
+      )),
+    );
+  }
+
+  onBatteryData() {
+    if (vehicleData == null) {
+      return Icon(
+        Icons.battery_0_bar,
+        color: Colors.red,
+        size: 20,
+      );
+    } else if (vehicleData["battery_percent_val"] <= 30 &&
+        vehicleData["battery_percent_val"] >= 1) {
+      return Icon(
+        Icons.battery_2_bar,
+        color: Colors.red,
+        size: 20,
+      );
+    } else if (vehicleData["battery_percent_val"] <= 70 &&
+        vehicleData["battery_percent_val"] >= 30) {
+      return Icon(
+        Icons.battery_3_bar,
+        color: Colors.orange,
+        size: 20,
+      );
+    } else if (vehicleData["battery_percent_val"] >= 70) {
+      return Icon(
+        Icons.battery_5_bar,
+        color: Colors.green,
+        size: 20,
+      );
+    } else if (vehicleData["battery_percent_val"] == 100) {
+      return Icon(
+        Icons.battery_6_bar,
+        color: Colors.green,
+        size: 20,
+      );
+    }
+
+    return Icon(
+      Icons.battery_0_bar,
+      color: Colors.red,
+      size: 20,
+    );
+  }
+
+  onACData() {
+    String acTxt = "freezer-safe";
+    if (vehicleData == null) {
+      acTxt = "rsz_battery_no_data";
+    } else if (vehicleData["ac"] == "OFF") {
+      acTxt = "freezer-safe1";
+    } else if (vehicleData["ac"] == "ON") {
+      acTxt = "freezer-safe2";
+    }
+
+    return Image.asset(
+      "assets/images/$acTxt.png",
+      width: 20,
+    );
   }
 }
