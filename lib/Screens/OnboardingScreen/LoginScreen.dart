@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _submitForm() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
-    bool checkbox = isChecked;
+    //  bool checkbox = isChecked;
     if (isChecked) {
       SmartDialog.showLoading(msg: "Loading...");
       final response = await ApiService.login(username, password);

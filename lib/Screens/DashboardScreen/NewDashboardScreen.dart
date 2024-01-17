@@ -4,6 +4,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:trackofyapp/Screens/DashboardScreen/Vehicle.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/NotificationsScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -92,6 +93,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
   var haltDuration;
   var runningDuration;
   var idleDuration;
+  var engineHour;
   var alertData;
   var overSpeed;
   var maintenance;
@@ -115,6 +117,51 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
     fetchData(startDate, endDate);
   }
 
+  void haltDurationfunc(String s, String e) async {
+    s = startDate;
+    e = endDate;
+    haltDuration = await ApiService.haltDuration(s, e);
+    setState(() {});
+  }
+
+  void runningDurationfunc(String s, String e) async {
+    s = startDate;
+    e = endDate;
+    runningDuration = await ApiService.runningDuration(s, e);
+    setState(() {});
+  }
+
+  void idleDurationfunc(String s, String e) async {
+    s = startDate;
+    e = endDate;
+    idleDuration = await ApiService.idleDuration(s, e);
+    setState(() {});
+  }
+
+  void alertDatafunc(String s, String e) async {
+    s = startDate;
+    e = endDate;
+    alertData = await ApiService.alertData(s, e);
+    setState(() {});
+  }
+
+  void overSpeedfunc(String s, String e) async {
+    s = startDate;
+    e = endDate;
+    overSpeed = await ApiService.overSpeed(s, e);
+    setState(() {});
+  }
+
+  void maintenancefunc() async {
+    maintenance = await ApiService.maintenance();
+    setState(() {});
+  }
+
+  void deviceRenewalfunc() async {
+    deviceRenewal = await ApiService.deviceRenewal();
+    setState(() {});
+  }
+
   void fetchData(String s, String e) async {
     s = startDate;
     e = endDate;
@@ -126,10 +173,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
         vehicleStatusCount["nodata"]["total"];
 
     haltDuration = await ApiService.haltDuration(s, e);
-    runningDuration = await ApiService.runningDuration();
-    idleDuration = await ApiService.idleDuration();
-    alertData = await ApiService.alertData();
-    overSpeed = await ApiService.overSpeed();
+    runningDuration = await ApiService.runningDuration(s, e);
+    idleDuration = await ApiService.idleDuration(s, e);
+    alertData = await ApiService.alertData(s, e);
+    overSpeed = await ApiService.overSpeed(s, e);
     maintenance = await ApiService.maintenance();
     deviceRenewal = await ApiService.deviceRenewal();
     geoFenceAlert = await ApiService.geoFenceAlert();
@@ -176,20 +223,36 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
           centerTitle: true,
           title: Image.asset(
             "assets/images/logo.png",
-            height: 40,
+            height: 50,
           ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
-              child: GestureDetector(
-                  onTap: () {
-                    Get.to(() => NotificationScreen());
-                  },
-                  child: Icon(
-                    Icons.notifications_sharp,
-                    color: Color(0xff1574a4),
-                    size: 35,
-                  )),
+              child: Row(
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        Get.to(() => HomeScreen());
+                      },
+                      child: Icon(
+                        Icons.home,
+                        color: Color(0xff1574a4),
+                        size: 35,
+                      )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        Get.to(() => Vehicle());
+                      },
+                      child: Icon(
+                        Icons.maps_ugc_rounded,
+                        color: Color(0xff1574a4),
+                        size: 35,
+                      )),
+                ],
+              ),
             )
           ],
         ),
@@ -488,7 +551,13 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                 .format(DateTime.now());
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            print(startDate);
+                                            print(endDate);
+                                            SmartDialog.showLoading(
+                                                msg: 'loading');
+                                            haltDurationfunc(
+                                                startDate, endDate);
+                                            SmartDialog.dismiss();
                                           } else if (items == "Yesterday") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -501,7 +570,13 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     Duration(days: 1)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            SmartDialog.showLoading(
+                                                msg: 'loading');
+                                            print(startDate);
+                                            print(endDate);
+                                            haltDurationfunc(
+                                                startDate, endDate);
+                                            SmartDialog.dismiss();
                                           } else if (items == "This Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -520,7 +595,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            haltDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "Last Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -529,17 +605,23 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                     .weekday -
                                                                 1))) +
                                                 " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
+                                            endDate = DateFormat('yyyy-MM-dd')
+                                                    .format(DateTime.now().add(
+                                                        Duration(
+                                                            days: DateTime
+                                                                    .daysPerWeek -
+                                                                DateTime.now()
+                                                                    .weekday))) +
+                                                " 23:59:59";
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            SmartDialog.showLoading(
+                                                msg: 'loading');
+                                            print(startDate);
+                                            print(endDate);
+                                            haltDurationfunc(
+                                                startDate, endDate);
+                                            SmartDialog.dismiss();
                                           }
                                         },
                                       );
@@ -577,6 +659,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       haltDuration != null
                                           ? haltDuration["max_halt_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -605,6 +688,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       haltDuration != null
                                           ? haltDuration["total_halt_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -644,6 +728,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   DropdownButton(
+                                    // padding:
+                                    //     EdgeInsets.symmetric(horizontal: 5),
                                     underline: SizedBox(),
                                     isExpanded: true,
                                     isDense: true,
@@ -657,8 +743,12 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                     // Array list of items
                                     items: items.map((String items) {
                                       return DropdownMenuItem(
+                                        //  alignment: Alignment.centerRight,
                                         value: items,
-                                        child: Text(items),
+                                        child: Container(
+                                          width: 200,
+                                          child: Text(items),
+                                        ),
                                         onTap: () {
                                           if (items == "Today") {
                                             startDate = DateFormat('yyyy-MM-dd')
@@ -668,8 +758,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     'yyyy-MM-dd HH:mm:ss')
                                                 .format(DateTime.now());
                                             // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            // endDate = "2023-10-17 12:00:00";
+                                            print(startDate);
+                                            print(endDate);
+                                            runningDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "Yesterday") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -682,7 +775,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     Duration(days: 1)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            print(startDate);
+                                            print(endDate);
+                                            runningDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "This Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -701,7 +797,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            print(startDate);
+                                            print(endDate);
+                                            runningDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "Last Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -720,7 +819,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            print(startDate);
+                                            print(endDate);
+                                            runningDurationfunc(
+                                                startDate, endDate);
                                           }
                                         },
                                       );
@@ -758,6 +860,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       runningDuration != null
                                           ? runningDuration["max_halt_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -786,7 +889,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       runningDuration != null
                                           ? runningDuration[
-                                              "total_halt_duration"]
+                                                  "total_halt_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -851,7 +955,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                 .format(DateTime.now());
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            idleDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "Yesterday") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -864,7 +969,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     Duration(days: 1)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            idleDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "This Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -883,7 +989,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            idleDurationfunc(
+                                                startDate, endDate);
                                           } else if (items == "Last Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -902,7 +1009,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            idleDurationfunc(
+                                                startDate, endDate);
                                           }
                                         },
                                       );
@@ -940,6 +1048,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       idleDuration != null
                                           ? idleDuration["max_idle_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -968,6 +1077,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   Text(
                                       idleDuration != null
                                           ? idleDuration["total_idle_duration"]
+                                              .toString()
                                           : "N/A",
                                       style:
                                           TextStyle(color: Colors.grey[300])),
@@ -1032,7 +1142,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                 .format(DateTime.now());
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            alertDatafunc(startDate, endDate);
                                           } else if (items == "Yesterday") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1043,9 +1153,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     'yyyy-MM-dd HH:mm:ss')
                                                 .format(DateTime.now().subtract(
                                                     Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            // startDate = "2023-11-03 00:00:00";
+                                            // endDate = "2023-11-03 23:59:5";
+                                            alertDatafunc(startDate, endDate);
                                           } else if (items == "This Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1064,7 +1174,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            alertDatafunc(startDate, endDate);
                                           } else if (items == "Last Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1083,7 +1193,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            alertDatafunc(startDate, endDate);
                                           }
                                         },
                                       );
@@ -1213,7 +1323,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                 .format(DateTime.now());
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            overSpeedfunc(startDate, endDate);
                                           } else if (items == "Yesterday") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1226,7 +1336,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                     Duration(days: 1)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            overSpeedfunc(startDate, endDate);
                                           } else if (items == "This Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1245,7 +1355,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            overSpeedfunc(startDate, endDate);
                                           } else if (items == "Last Week") {
                                             startDate = DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now()
@@ -1264,7 +1374,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                                                 .weekday)));
                                             // startDate = "2023-10-12 00:00:00";
                                             // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
+                                            overSpeedfunc(startDate, endDate);
                                           }
                                         },
                                       );
@@ -1339,7 +1449,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 160,
+                      width: 180,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -1360,102 +1470,102 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
+                              // Expanded(
+                              //     child: Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.end,
+                              //   children: [
+                              //     DropdownButton(
+                              //       underline: SizedBox(),
+                              //       isExpanded: true,
+                              //       isDense: true,
+                              //       // Initial Value
+                              //       //  value: dropdownvalue,
+                              //       // Down Arrow Icon
+                              //       icon: const Icon(
+                              //         Icons.more_vert,
+                              //         color: Colors.white,
+                              //       ),
+                              //       // Array list of items
+                              //       items: items.map((String items) {
+                              //         return DropdownMenuItem(
+                              //           value: items,
+                              //           child: Text(items),
+                              //           onTap: () {
+                              //             if (items == "Today") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now());
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "Yesterday") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: 1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().subtract(
+                              //                       Duration(days: 1)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "This Week") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: DateTime.now()
+                              //                                       .weekday -
+                              //                                   1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().add(
+                              //                       Duration(
+                              //                           days: DateTime
+                              //                                   .daysPerWeek -
+                              //                               DateTime.now()
+                              //                                   .weekday)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "Last Week") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: DateTime.now()
+                              //                                       .weekday -
+                              //                                   1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().add(
+                              //                       Duration(
+                              //                           days: DateTime
+                              //                                   .daysPerWeek -
+                              //                               DateTime.now()
+                              //                                   .weekday)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             }
+                              //           },
+                              //         );
+                              //       }).toList(),
+                              //       // After selecting the desired option,it will
+                              //       // change button value to selected value
+                              //       onChanged: (String? newValue) {
+                              //         setState(() {
+                              //           dropdownvalue = newValue!;
+                              //         });
+                              //       },
+                              //     ),
+                              //   ],
+                              // ))
                             ],
                           ),
                           SizedBox(height: 20),
@@ -1537,102 +1647,102 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            fetchData(startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
+                              // Expanded(
+                              //     child: Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.end,
+                              //   children: [
+                              //     DropdownButton(
+                              //       underline: SizedBox(),
+                              //       isExpanded: true,
+                              //       isDense: true,
+                              //       // Initial Value
+                              //       //  value: dropdownvalue,
+                              //       // Down Arrow Icon
+                              //       icon: const Icon(
+                              //         Icons.more_vert,
+                              //         color: Colors.white,
+                              //       ),
+                              //       // Array list of items
+                              //       items: items.map((String items) {
+                              //         return DropdownMenuItem(
+                              //           value: items,
+                              //           child: Text(items),
+                              //           onTap: () {
+                              //             if (items == "Today") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now());
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "Yesterday") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: 1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().subtract(
+                              //                       Duration(days: 1)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "This Week") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: DateTime.now()
+                              //                                       .weekday -
+                              //                                   1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().add(
+                              //                       Duration(
+                              //                           days: DateTime
+                              //                                   .daysPerWeek -
+                              //                               DateTime.now()
+                              //                                   .weekday)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             } else if (items == "Last Week") {
+                              //               startDate = DateFormat('yyyy-MM-dd')
+                              //                       .format(DateTime.now()
+                              //                           .subtract(Duration(
+                              //                               days: DateTime.now()
+                              //                                       .weekday -
+                              //                                   1))) +
+                              //                   " 00:00:00";
+                              //               endDate = DateFormat(
+                              //                       'yyyy-MM-dd HH:mm:ss')
+                              //                   .format(DateTime.now().add(
+                              //                       Duration(
+                              //                           days: DateTime
+                              //                                   .daysPerWeek -
+                              //                               DateTime.now()
+                              //                                   .weekday)));
+                              //               // startDate = "2023-10-12 00:00:00";
+                              //               // endDate = "2023-10-12 12:00:00";
+                              //               //  fetchData(startDate, endDate);
+                              //             }
+                              //           },
+                              //         );
+                              //       }).toList(),
+                              //       // After selecting the desired option,it will
+                              //       // change button value to selected value
+                              //       onChanged: (String? newValue) {
+                              //         setState(() {
+                              //           dropdownvalue = newValue!;
+                              //         });
+                              //       },
+                              //     ),
+                              //   ],
+                              // ))
                             ],
                           ),
                           SizedBox(height: 20),

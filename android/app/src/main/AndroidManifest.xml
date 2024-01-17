@@ -43,8 +43,6 @@
            android:value="AIzaSyAO-EodE9fDBFSL1q3-9fORq9ijwdbqwN8"/>
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    
     <queries>
       <intent>
           <action android:name="android.intent.action.VIEW" />

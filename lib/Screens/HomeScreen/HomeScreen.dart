@@ -48,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    var x = (Get.width - 0) / 21;
+
     return Scaffold(
       key: scaffoldKey,
       drawer: DrawerClass(),
@@ -101,16 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            height: 200,
+            height: 9 * x,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.symmetric(vertical: 0),
               child: GridView.builder(
+                padding: EdgeInsets.fromLTRB(x, x, x, 0),
                 itemCount: 10,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
-                  crossAxisSpacing: 3,
+                  crossAxisSpacing: x,
                   mainAxisSpacing: 0,
-                  //childAspectRatio: Get.height * 0.4 / Get.width
+                  childAspectRatio: 3 / 4,
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
@@ -140,10 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
+                          padding: const EdgeInsets.only(top: 0.0),
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
-                            radius: 30,
+                            radius: (3 / 2 * x) - x * 0.5,
                             child: Image.asset(
                               images[index],
                               fit: BoxFit.cover,
@@ -151,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Container(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -158,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   txt[index],
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 11, color: Colors.black87),
+                                      fontSize: x * 0.5, color: Colors.black87),
                                 ),
                               ]),
                         )
