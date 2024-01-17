@@ -321,9 +321,15 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape: Border(bottom: BorderSide.none, top: BorderSide.none),
             backgroundColor: Colors.white,
-            titlePadding: EdgeInsets.all(16),
-            title: Text("Select Vehicle"),
+            //  titlePadding: EdgeInsets.all(16),
+            title: Container(
+              color: Colors.blue,
+              width: Get.width,
+              //  color: Colors.blue,
+              child: Text("Select Vehicle"),
+            ),
             contentPadding: EdgeInsets.symmetric(horizontal: 16),
             content: Container(
               height: 400,
@@ -417,7 +423,8 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                                                 }
                                               }
                                               if (isCheckedAll) {
-                                                selectedGroups.add(vehicleInfo["location"]);
+                                                selectedGroups.add(
+                                                    vehicleInfo["location"]);
                                               }
                                             } else {
                                               selectedVehicle.removeWhere(

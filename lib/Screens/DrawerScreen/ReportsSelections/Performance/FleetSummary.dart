@@ -113,7 +113,7 @@ class _FleetSummaryState extends State<FleetSummary> {
               child: new Stack(alignment: Alignment.center, children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/search.png'),
-                  width: 300,
+                  width: Get.width * 0.8,
                 ),
                 TextField(
                     textAlign: TextAlign.center,
@@ -150,7 +150,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                           return Card(
                             elevation: 3,
                             child: Container(
-                              height: Get.size.height * 0.25,
+                              height: Get.size.height * 0.2,
                               width: Get.size.width * 0.95,
                               color: Colors.white,
                               child: Padding(
@@ -189,7 +189,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                       ],
                                     ),
                                     Text(
-                                      vehicle['lat_long'],
+                                      vehicle['address'],
                                       style: TextStyle(
                                         color: Color(0xff2f9df4),
                                         fontSize: 15,
@@ -374,7 +374,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                       return Card(
                         elevation: 3,
                         child: Container(
-                          height: Get.size.height * 0.25,
+                          height: Get.size.height * 0.2,
                           width: Get.size.width * 0.95,
                           color: Colors.white,
                           child: Padding(
@@ -412,7 +412,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                   ],
                                 ),
                                 Text(
-                                  vehicle['lat_long'],
+                                  vehicle['address'],
                                   style: TextStyle(
                                     color: Color(0xff2f9df4),
                                     fontSize: 15,

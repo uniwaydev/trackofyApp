@@ -125,8 +125,6 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                             return AlertDialog(
                               title: Text("Select Vehicle"),
                               content: Container(
-                                width: 300,
-                                height: 400,
                                 child: StatefulBuilder(builder:
                                     (BuildContext context,
                                         StateSetter alertState) {

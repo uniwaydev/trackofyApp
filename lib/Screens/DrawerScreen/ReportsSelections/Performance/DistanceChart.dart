@@ -57,7 +57,7 @@ class _DistanceChartState extends State<DistanceChart> {
   }
 
   // var dlno =["DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366","DL1RTB8753","DL1ZA9366"];
-  // var kms =["150.5","82.4","232.7","0","150.5","82.4","232.7","0"];
+  var kms = ["150.5", "82.4", "232.7", "0", "150.5", "82.4", "232.7", "0"];
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +113,12 @@ class _DistanceChartState extends State<DistanceChart> {
                       lastDate: DateTime(2101),
                       builder: (context, child) {
                         return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ConstrainedBox(
                               constraints: BoxConstraints(
-                                maxWidth: 400.0,
-                              ),
+                                  maxWidth: Get.width * 0.7,
+                                  maxHeight: Get.height * 0.6),
                               child: child,
                             ),
                           ],
@@ -305,7 +306,7 @@ class _DistanceChartState extends State<DistanceChart> {
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: Text(
                                   vehicle['TotalDistance']
-                                      .truncate()
+                                      .toStringAsFixed(1)
                                       .toString(),
                                   style: TextStyle(
                                       color: Color(0xff1666c0),

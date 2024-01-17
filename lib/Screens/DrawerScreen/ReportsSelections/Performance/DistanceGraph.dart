@@ -24,7 +24,7 @@ class _DistanceGraphState extends State<DistanceGraph> {
   var distanceDetail;
   List<_ChartData> data = [];
   TooltipBehavior _tooltip = TooltipBehavior();
-  double maxDist = 10;
+  double maxDist = 20;
   double interval = 1;
 
   @override
@@ -195,23 +195,26 @@ class _DistanceGraphState extends State<DistanceGraph> {
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  primaryYAxis:
-                      NumericAxis(minimum: 0, maximum: maxDist, interval: interval),
-                  tooltipBehavior: _tooltip,
-                  series: <CartesianSeries<_ChartData, String>>[
-                    BarSeries<_ChartData, String>(
-                        dataSource: data,
-                        xValueMapper: (_ChartData data, _) => data.x,
-                        yValueMapper: (_ChartData data, _) => data.y,
-                        name: 'Gold',
-                        color: Color.fromRGBO(8, 142, 255, 1))
-                  ]),
-            ),
+          Container(
+            height: Get.height * 0.88,
+            child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                primaryYAxis:
+                    NumericAxis(minimum: 0, maximum: maxDist, interval: 4),
+                tooltipBehavior: _tooltip,
+                series: <CartesianSeries<_ChartData, String>>[
+                  BarSeries<_ChartData, String>(
+                      dataSource: data,
+                      xValueMapper: (_ChartData data, _) => data.x,
+                      yValueMapper: (_ChartData data, _) => data.y,
+                      name: 'Gold',
+                      color: Colors.green)
+                ]),
           ),
+          Text(
+            'data',
+            textAlign: TextAlign.right,
+          )
         ],
       ),
     );

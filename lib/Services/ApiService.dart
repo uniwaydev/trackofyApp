@@ -42,8 +42,10 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        User user = User.fromJson(data['user_detail'][0]);
+        print("==================");
         print(response.body);
+        print("==================");
+        User user = User.fromJson(data['user_detail'][0]);
         if (user.sys_username.toLowerCase() == username && user.id != 0) {
           currentUser = user;
           return true;
@@ -55,7 +57,9 @@ class ApiService {
             'An error occurred while communicating with the server.');
       }
     } catch (e) {
+      print('=================================');
       print(e);
+      print('=================================');
       showMessage('Network Error', 'Somthing went wrong.');
     }
   }
@@ -216,15 +220,15 @@ class ApiService {
     }
   }
 
-  static Future runningDuration() async {
+  static Future runningDuration(sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_run_duration"),
           body: {
             "user_id": currentUser?.id.toString(),
-            "start_date": "2023-10-12 00:00:00",
-            "end_date": "2023-10-12 00:00:00"
+            "start_date": sdate,
+            "end_date": edate
           });
 
       if (response.statusCode == 200) {
@@ -242,15 +246,15 @@ class ApiService {
     }
   }
 
-  static Future idleDuration() async {
+  static Future idleDuration(sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_idle_duration"),
           body: {
             "user_id": currentUser?.id.toString(),
-            "start_date": "2023-10-12 00:00:00",
-            "end_date": "2023-10-12 00:00:00"
+            "start_date": sdate,
+            "end_date": edate
           });
 
       if (response.statusCode == 200) {
@@ -268,14 +272,14 @@ class ApiService {
     }
   }
 
-  static Future alertData() async {
+  static Future alertData(sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(BASE_URL + "/API/dashboard_api.php?method=get_alert_count"),
           body: {
             "user_id": currentUser?.id.toString(),
-            "start_date": "2023-10-12 00:00:00",
-            "end_date": "2023-10-12 23:59:59",
+            "start_date": sdate,
+            "end_date": edate,
             "alert_type": "All"
           });
 
@@ -295,15 +299,15 @@ class ApiService {
     }
   }
 
-  static Future overSpeed() async {
+  static Future overSpeed(sdate, edate) async {
     try {
       var response = await client.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_overspeed_count"),
           body: {
             "user_id": currentUser?.id.toString(),
-            "start_date": "2023-10-12 00:00:00",
-            "end_date": "2023-10-12 00:00:00"
+            "start_date": sdate,
+            "end_date": edate
           });
 
       if (response.statusCode == 200) {
@@ -652,11 +656,53 @@ class ApiService {
         var vehiclesData = List<Map<String, dynamic>>.from(data.map((item) => {
               'veh_name': item['veh_name'],
               'last_contact': item['lastcontact'],
+              "address": item['address'],
               'lat_long': item['latlong'],
               'speed': item['speed'],
               'distance': item['distance'],
               'idealtime': item['idle_time'],
               'halttime': item['halt_time'],
+            }));
+        return vehiclesData;
+      } else {
+        showMessage('Network Error',
+            'An error occurred while communicating with the server.');
+        return List.empty();
+      }
+    } catch (e) {
+      print(e.toString());
+      showMessage('Network Error', 'Something went wrong.');
+      return List.empty();
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getVehicles() async {
+    try {
+      var response = await client.get(
+        Uri.parse(
+            API_URL + "?method=vehicles&userid=${currentUser?.id.toString()}"),
+      );
+      // var response = await client.get(Uri.parse(
+      //     API_URL + "?method=get_alert_count&UserId=${currentUser!.id}"));
+
+      //  body: {
+      //   "user_id": currentUser?.id.toString(),
+      //   "start_date": sdate,
+      //   "end_date": edate,
+      //   "sys_service_id": sids,
+      // });
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        var vehiclesData = List<Map<String, dynamic>>.from(data.map((item) => {
+              'Name': item['Name'].toString(),
+              'Speed': item['Speed'].toString(),
+              'LastContact': item['LastContact'].toString(),
+              'icon_url': item['icon_url'].toString(),
+              'Address': item['Address'].toString(),
+              'AC': item['AC'].toString(),
+              'GPS': item['GPS'].toString(),
+              'Temperature': item['Temperature'].toString(),
             }));
         return vehiclesData;
       } else {
