@@ -320,162 +320,194 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
+          return Dialog(
             shape: Border(bottom: BorderSide.none, top: BorderSide.none),
             backgroundColor: Colors.white,
-            //  titlePadding: EdgeInsets.all(16),
-            title: Container(
-              color: Colors.blue,
-              width: Get.width,
-              //  color: Colors.blue,
-              child: Text("Select Vehicle"),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8),
+                  color: Color.fromARGB(255, 96, 125, 139),
+                  alignment: Alignment.center,
+                  width: Get.width,
+                  child: Text("Select Vehicle",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic)),
+                ),
+                Expanded(
+                  child: Container(
+                    child: StatefulBuilder(builder:
+                        (BuildContext context, StateSetter alertState) {
+                      return SingleChildScrollView(
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: vehicles.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var groupInfo = vehicles[index];
+                              var groupVehicles =
+                                  List<Map<String, dynamic>>.from(
+                                      (groupInfo["result"]).map((item) => {
+                                            'serviceId': item['service_id'],
+                                            'vehReg': item['veh_reg'],
+                                            'created': item['sys_created'],
+                                            'renewalDue':
+                                                item['sys_renewal_due'],
+                                            'imei': item['imei'],
+                                            'mobileNo': item['mobile_no'],
+                                            'mobileNo1': item['mobile_no1'],
+                                            'location': item['location'],
+                                            'is_selected': false,
+                                          }));
+                              print(groupInfo);
+                              return Column(
+                                children: [
+                                  CheckboxListTile(
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      value: selectedGroups
+                                          .contains(groupInfo["location"]),
+                                      tileColor:
+                                          Color.fromARGB(255, 150, 219, 250),
+                                      title: Text(
+                                        groupInfo["location"],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onChanged: (bool? value) {
+                                        if (value == true) {
+                                          selectedGroups
+                                              .add(groupInfo["location"]);
+
+                                          for (var vInfo in groupVehicles) {
+                                            selectedVehicle
+                                                .add(vInfo["vehReg"]);
+                                            selectedVehicleIds
+                                                .add("${vInfo["serviceId"]}");
+                                          }
+                                        } else {
+                                          selectedGroups.removeWhere(
+                                              (element) =>
+                                                  element ==
+                                                  groupInfo["location"]);
+                                          for (var vInfo in groupVehicles) {
+                                            selectedVehicle.removeWhere(
+                                                (element) =>
+                                                    element == vInfo["vehReg"]);
+                                            selectedVehicleIds.removeWhere(
+                                                (element) =>
+                                                    element ==
+                                                    "${vInfo["serviceId"]}");
+                                          }
+                                        }
+                                        alertState(() {});
+                                      }),
+                                  ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: groupVehicles.length,
+                                      itemBuilder:
+                                          (BuildContext context, int vIndex) {
+                                        var vehicleInfo = groupVehicles[vIndex];
+                                        print(vehicleInfo);
+                                        return Column(
+                                          children: [
+                                            CheckboxListTile(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                value: selectedVehicle.contains(
+                                                    vehicleInfo["vehReg"]),
+                                                title: Text(
+                                                  vehicleInfo["vehReg"],
+                                                ),
+                                                onChanged: (bool? value) {
+                                                  if (value == true) {
+                                                    selectedVehicle.add(
+                                                        vehicleInfo["vehReg"]);
+                                                    selectedVehicleIds.add(
+                                                        "${vehicleInfo["serviceId"]}");
+
+                                                    bool isCheckedAll = true;
+                                                    for (var gInfo
+                                                        in groupVehicles) {
+                                                      if (!selectedVehicle
+                                                          .contains(gInfo[
+                                                              "vehReg"])) {
+                                                        isCheckedAll = false;
+                                                      }
+                                                    }
+                                                    if (isCheckedAll) {
+                                                      selectedGroups.add(
+                                                          vehicleInfo[
+                                                              "location"]);
+                                                    }
+                                                  } else {
+                                                    selectedVehicle.removeWhere(
+                                                        (element) =>
+                                                            element ==
+                                                            vehicleInfo[
+                                                                "vehReg"]);
+                                                    selectedVehicleIds
+                                                        .removeWhere((element) =>
+                                                            element ==
+                                                            "${vehicleInfo["serviceId"]}");
+
+                                                    bool isCheckedAll = true;
+                                                    for (var gInfo
+                                                        in groupVehicles) {
+                                                      if (!selectedVehicle
+                                                          .contains(gInfo[
+                                                              "vehReg"])) {
+                                                        isCheckedAll = false;
+                                                      }
+                                                    }
+                                                    if (!isCheckedAll) {
+                                                      selectedGroups.removeWhere(
+                                                          (element) =>
+                                                              element ==
+                                                              vehicleInfo[
+                                                                  "location"]);
+                                                    }
+                                                  }
+                                                  alertState(() {});
+                                                }),
+                                          ],
+                                        );
+                                      })
+                                ],
+                              );
+                            }),
+                      );
+                    }),
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Cancel")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            setState(() {});
+                          },
+                          child: Text("Confirm")),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16),
-            content: Container(
-              height: 400,
-              child: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter alertState) {
-                return SingleChildScrollView(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: vehicles.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var groupInfo = vehicles[index];
-                        var groupVehicles = List<Map<String, dynamic>>.from(
-                            (groupInfo["result"]).map((item) => {
-                                  'serviceId': item['service_id'],
-                                  'vehReg': item['veh_reg'],
-                                  'created': item['sys_created'],
-                                  'renewalDue': item['sys_renewal_due'],
-                                  'imei': item['imei'],
-                                  'mobileNo': item['mobile_no'],
-                                  'mobileNo1': item['mobile_no1'],
-                                  'location': item['location'],
-                                  'is_selected': false,
-                                }));
-                        print(groupInfo);
-                        return Column(
-                          children: [
-                            CheckboxListTile(
-                                contentPadding: EdgeInsets.all(0),
-                                value: selectedGroups
-                                    .contains(groupInfo["location"]),
-                                title: Text(
-                                  groupInfo["location"],
-                                  style: TextStyle(
-                                      color: ThemeColor.primarycolor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                onChanged: (bool? value) {
-                                  if (value == true) {
-                                    selectedGroups.add(groupInfo["location"]);
-
-                                    for (var vInfo in groupVehicles) {
-                                      selectedVehicle.add(vInfo["vehReg"]);
-                                      selectedVehicleIds
-                                          .add("${vInfo["serviceId"]}");
-                                    }
-                                  } else {
-                                    selectedGroups.removeWhere((element) =>
-                                        element == groupInfo["location"]);
-                                    for (var vInfo in groupVehicles) {
-                                      selectedVehicle.removeWhere((element) =>
-                                          element == vInfo["vehReg"]);
-                                      selectedVehicleIds.removeWhere(
-                                          (element) =>
-                                              element ==
-                                              "${vInfo["serviceId"]}");
-                                    }
-                                  }
-                                  alertState(() {});
-                                }),
-                            ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: groupVehicles.length,
-                                itemBuilder:
-                                    (BuildContext context, int vIndex) {
-                                  var vehicleInfo = groupVehicles[vIndex];
-                                  print(vehicleInfo);
-                                  return Column(
-                                    children: [
-                                      CheckboxListTile(
-                                          value: selectedVehicle
-                                              .contains(vehicleInfo["vehReg"]),
-                                          title: Text(
-                                            vehicleInfo["vehReg"],
-                                          ),
-                                          onChanged: (bool? value) {
-                                            if (value == true) {
-                                              selectedVehicle
-                                                  .add(vehicleInfo["vehReg"]);
-                                              selectedVehicleIds.add(
-                                                  "${vehicleInfo["serviceId"]}");
-
-                                              bool isCheckedAll = true;
-                                              for (var gInfo in groupVehicles) {
-                                                if (!selectedVehicle.contains(
-                                                    gInfo["vehReg"])) {
-                                                  isCheckedAll = false;
-                                                }
-                                              }
-                                              if (isCheckedAll) {
-                                                selectedGroups.add(
-                                                    vehicleInfo["location"]);
-                                              }
-                                            } else {
-                                              selectedVehicle.removeWhere(
-                                                  (element) =>
-                                                      element ==
-                                                      vehicleInfo["vehReg"]);
-                                              selectedVehicleIds.removeWhere(
-                                                  (element) =>
-                                                      element ==
-                                                      "${vehicleInfo["serviceId"]}");
-
-                                              bool isCheckedAll = true;
-                                              for (var gInfo in groupVehicles) {
-                                                if (!selectedVehicle.contains(
-                                                    gInfo["vehReg"])) {
-                                                  isCheckedAll = false;
-                                                }
-                                              }
-                                              if (!isCheckedAll) {
-                                                selectedGroups.removeWhere(
-                                                    (element) =>
-                                                        element ==
-                                                        vehicleInfo[
-                                                            "location"]);
-                                              }
-                                            }
-                                            alertState(() {});
-                                          }),
-                                    ],
-                                  );
-                                })
-                          ],
-                        );
-                      }),
-                );
-              }),
-            ),
-            actionsPadding: EdgeInsets.all(0),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Cancel")),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    setState(() {});
-                  },
-                  child: Text("Confirm")),
-            ],
           );
         });
   }

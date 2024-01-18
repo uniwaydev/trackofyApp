@@ -7,7 +7,6 @@ import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
 import 'package:trackofyapp/constants.dart';
-import 'package:http/http.dart' as http;
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -31,13 +30,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     _getNotifications();
   }
 
-  void fetchData() async {
-    SmartDialog.showLoading(msg: 'Loading...');
-    messages = await ApiService.getNotifications();
-    setState(() {});
-    SmartDialog.dismiss();
-  }
-
   void search(String query) {
     setState(
       () {
@@ -56,7 +48,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Future<void> _getNotifications() async {
     SmartDialog.showLoading(msg: "Loading...");
     messages = await ApiService.getNotifications();
+    filteremessages = messages;
     SmartDialog.dismiss();
+    setState(() {});
   }
 
   @override
@@ -145,88 +139,73 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   style: TextStyle(color: ThemeColor.greycolor, fontSize: 15),
                 )),
               ),
-              Container(
+              Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 05.0),
-                        child: Column(
-                          children: [
-                            ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: messages.length,
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                final message = messages[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Material(
-                                    elevation: 3,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 05.0),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: filteremessages.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        final message = filteremessages[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Material(
+                            elevation: 3,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                          "assets/images/Screenshot_2022-09-17_154834-removebg-preview.png",
+                                          height: 40),
+                                      Expanded(
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(left: 12.0),
-                                          child: Row(
+                                              const EdgeInsets.only(left: 22.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Image.asset(
-                                                  "assets/images/Screenshot_2022-09-17_154834-removebg-preview.png",
-                                                  height: 40),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 22.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "Sent ON ${message.sentOn}",
-                                                        style: TextStyle(
-                                                            color: ThemeColor
-                                                                .bluecolor,
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(
-                                                        message.message,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                              Text(
+                                                "Sent ON ${message.sentOn}",
+                                                style: TextStyle(
+                                                    color: ThemeColor.bluecolor,
+                                                    fontSize: 11,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                message.message,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 11,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         )

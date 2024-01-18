@@ -3,6 +3,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/AddDriverScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/ConfigureDriver.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/EditDriverScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 
@@ -24,7 +25,7 @@ class _DriverManagementState extends State<DriverManagement> {
 
   void fetchData() async {
     SmartDialog.showLoading(msg: "Loading...");
-    // data = await ApiService.AddDriverPerfermance();
+    data = await ApiService.getDrivers();
     SmartDialog.dismiss();
     setState(() {});
   }
@@ -75,8 +76,11 @@ class _DriverManagementState extends State<DriverManagement> {
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {
-                          Get.to(() => AddDriverScreen());
+                        onTap: () async {
+                          var result = await Get.to(() => AddDriverScreen());
+                          if (result == "success") {
+                            fetchData();
+                          }
                         },
                         child: Container(
                           height: Get.size.height * 0.08,
@@ -164,31 +168,89 @@ class _DriverManagementState extends State<DriverManagement> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(driverData["name"],
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          Text("(${driverData["dob"]})",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          Text("Address: ${driverData["address"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text("Mobile: ${driverData["mobile"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text("Email: ${driverData["email"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text(
-                              "Emergency Contact: ${driverData["emergency_contact_no"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text("DL No: ${driverData["dl_no"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text("DL Issued Date: ${driverData["dl_issued"]}",
-                              style: TextStyle(fontSize: 15)),
-                          Text("DL Expiry Date: ${driverData["dl_expiry"]}",
-                              style: TextStyle(fontSize: 15)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(driverData["name"],
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 14))
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  var result =
+                                      await Get.to(() => EditDriverScreen(
+                                            driverData: driverData,
+                                          ));
+                                  if (result == "success") {
+                                    fetchData();
+                                  }
+                                },
+                                child: Text("Edit Details",
+                                    style: TextStyle(
+                                        color: Colors.blue, fontSize: 14)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              IntrinsicWidth(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("DateOfBirth"),
+                                    Text("DL Issued dt"),
+                                    Text("DL Expiry dt"),
+                                    Text("DL No."),
+                                    Text("Assigned Vehicle"),
+                                    Text("Contact No."),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(":"),
+                                  Text(":"),
+                                  Text(":"),
+                                  Text(":"),
+                                  Text(":"),
+                                  Text(":"),
+                                ],
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("${driverData["dob"]}"),
+                                    Text("${driverData["dl_issued"]}"),
+                                    Text("${driverData["dl_expiry"]}"),
+                                    Text("${driverData["dl_no"]}"),
+                                    Text("${driverData["veh_reg"]}"),
+                                    Text(
+                                        "${driverData["emergency_contact_no"]}"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     );

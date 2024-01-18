@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/POIScreens/AddPOI.dart';
@@ -317,7 +318,7 @@ class _PoiScreenState extends State<PoiScreen> {
             Visibility(
               visible: isVisible2,
               child: Container(
-                height: Get.size.height * 0.21,
+                height: Get.size.height * 0.3,
                 child: ListView(
                   physics: NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(8),
@@ -353,233 +354,176 @@ class _PoiScreenState extends State<PoiScreen> {
             ),
             Visibility(
               visible: notificationType.contains("Sms"),
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+              child: Container(
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                    color: Colors.grey, borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.5), //(x,y)
+                              blurRadius: 3.0,
+                            ),
+                          ],
+                        ),
                         child: TextFormField(
                           controller: mobile1Ctrl,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           decoration: InputDecoration(
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             disabledBorder: InputBorder.none,
                             isDense: true,
-                            label: Text(
-                              "Mobile 1*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
+                            hintText: "Mobile 1*",
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.5), //(x,y)
+                              blurRadius: 3.0,
+                            ),
+                          ],
+                        ),
                         child: TextFormField(
                           controller: mobile2Ctrl,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             disabledBorder: InputBorder.none,
                             isDense: true,
-                            label: Text(
-                              "Mobile 2*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
+                            hintText: "Mobile 2*",
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.5), //(x,y)
+                              blurRadius: 3.0,
+                            ),
+                          ],
+                        ),
                         child: TextFormField(
                           controller: mobile3Ctrl,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             disabledBorder: InputBorder.none,
                             isDense: true,
-                            label: Text(
-                              "Mobile 3*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
+                            hintText: "Mobile 3*",
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Visibility(
               visible: notificationType.contains("Email"),
               child: Column(
                 children: [
-                  Padding(
+                  Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8)),
                     child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextFormField(
-                          controller: email1Ctrl,
-                          decoration: InputDecoration(
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            isDense: true,
-                            label: Text(
-                              "Email 1*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
+                      color: Colors.white,
+                      child: TextFormField(
+                        controller: email1Ctrl,
+                        decoration: InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          isDense: true,
+                          hintText: "Email 1*",
                         ),
                       ),
                     ),
                   ),
-                  Padding(
+                  Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8)),
                     child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextFormField(
-                          controller: email2Ctrl,
-                          decoration: InputDecoration(
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            isDense: true,
-                            label: Text(
-                              "Email 2*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
+                      color: Colors.white,
+                      child: TextFormField(
+                        controller: email2Ctrl,
+                        decoration: InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          isDense: true,
+                          hintText: "Email 2*",
                         ),
                       ),
                     ),
                   ),
-                  Padding(
+                  Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8)),
                     child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.5), //(x,y)
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextFormField(
-                          controller: email3Ctrl,
-                          decoration: InputDecoration(
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            isDense: true,
-                            label: Text(
-                              "Email 3*",
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
+                      color: Colors.white,
+                      child: TextFormField(
+                        controller: email3Ctrl,
+                        decoration: InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          isDense: true,
+                          hintText: "Email 3*",
                         ),
                       ),
                     ),

@@ -20,24 +20,25 @@ class ApiService {
   static User? currentUser;
 
   static showMessage(title, content) {
-    showDialog(
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    // showDialog(
+    //   context: Get.context!,
+    //   builder: (context) => AlertDialog(
+    //     title: Text(title),
+    //     content: Text(content),
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () => Navigator.pop(context),
+    //         child: Text('OK'),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    SmartDialog.showToast(content);
   }
 
   static Future login(String username, String password) async {
     try {
-      var response = await client.get(Uri.parse(
+      var response = await http.get(Uri.parse(
           API_URL + "?method=login&username=$username&sys_password=$password"));
 
       if (response.statusCode == 200) {
@@ -66,7 +67,7 @@ class ApiService {
 
   static Future getMenu() async {
     try {
-      var response = await client.get(Uri.parse(
+      var response = await http.get(Uri.parse(
           API_URL + "?method=get_user_menu&user_id=${currentUser!.id}"));
 
       if (response.statusCode == 200) {
@@ -84,7 +85,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> vehicles() async {
     try {
-      var response = await client.post(Uri.parse(USER_API_URL), body: {
+      var response = await http.post(Uri.parse(USER_API_URL), body: {
         'method': 'get_user_vehicles',
         'user_id': currentUser!.id.toString()
       });
@@ -115,7 +116,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> vehiclesByGroup() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=location_wise_vehicle_list"),
           body: {'user_id': currentUser!.id.toString()});
 
@@ -136,7 +137,7 @@ class ApiService {
 
   static Future vehicleInfo(vehicleId) async {
     try {
-      var response = await client.get(Uri.parse(API_URL +
+      var response = await http.get(Uri.parse(API_URL +
           "?method=vehicle_info&userid=${currentUser!.id}&vehid=${vehicleId}"));
 
       if (response.statusCode == 200) {
@@ -154,7 +155,7 @@ class ApiService {
 
   static Future userDetail() async {
     try {
-      var response = await client.get(Uri.parse(
+      var response = await http.get(Uri.parse(
           API_URL + "?method=user_more_detail&userid=${currentUser!.id}"));
 
       if (response.statusCode == 200) {
@@ -172,7 +173,7 @@ class ApiService {
 
   static Future vehicleSummaryStatus() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/trackofy_app.php?method=vehicle_summary_status"),
           body: {"user_id": currentUser?.id.toString()});
@@ -195,7 +196,7 @@ class ApiService {
 
   static Future haltDuration(sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_halt_duration"),
           body: {
@@ -222,7 +223,7 @@ class ApiService {
 
   static Future runningDuration(sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_run_duration"),
           body: {
@@ -248,7 +249,7 @@ class ApiService {
 
   static Future idleDuration(sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_idle_duration"),
           body: {
@@ -274,7 +275,7 @@ class ApiService {
 
   static Future alertData(sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/dashboard_api.php?method=get_alert_count"),
           body: {
             "user_id": currentUser?.id.toString(),
@@ -301,7 +302,7 @@ class ApiService {
 
   static Future overSpeed(sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/dashboard_api.php?method=get_overspeed_count"),
           body: {
@@ -327,7 +328,7 @@ class ApiService {
 
   static Future maintenance() async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/dashboard_api.php?method=maintenance_reminder&user_id=${currentUser?.id.toString()}&due_in_days=30"));
 
       if (response.statusCode == 200) {
@@ -347,7 +348,7 @@ class ApiService {
 
   static Future deviceRenewal() async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/dashboard_api.php?method=get_device_renewal_count&user_id=${currentUser?.id.toString()}&expiry_in_days=15"));
 
       if (response.statusCode == 200) {
@@ -367,7 +368,7 @@ class ApiService {
 
   static Future geoFenceAlert() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/dashboard_api.php?method=get_alert_count"),
           body: {
             "user_id": currentUser?.id.toString(),
@@ -393,7 +394,7 @@ class ApiService {
 
   static Future getServiceLimitCount() async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/dashboard_api.php?method=get_service_limit_counts&user_id=${currentUser?.id.toString()}"));
 
       if (response.statusCode == 200) {
@@ -413,7 +414,7 @@ class ApiService {
 
   static Future getVehiclePerformance() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL +
               "/API/trackofy_app.php?method=get_vehicle_performance"),
           body: {
@@ -439,7 +440,7 @@ class ApiService {
 
   static Future getHaltStatus() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=get_halt_status"),
           body: {
             "user_id": currentUser?.id.toString(),
@@ -464,7 +465,7 @@ class ApiService {
 
   static Future getDistanceDetail() async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/dashboard_api.php?method=get_distance_detail&user_id=${currentUser?.id.toString()}"));
 
       if (response.statusCode == 200) {
@@ -484,7 +485,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getVehicleAlerts(sysId) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(
               BASE_URL + "/API/trackofy_app.php?method=get_vehicle_alerts"),
           body: {
@@ -510,7 +511,7 @@ class ApiService {
 
   static Future<bool> updateAlert(serviceId, alertId, notify) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=create_alert"),
           body: {
             "user_id": currentUser?.id.toString(),
@@ -535,7 +536,7 @@ class ApiService {
 
   static Future vehicleStatus() async {
     try {
-      var response = await client.get(Uri.parse(
+      var response = await http.get(Uri.parse(
           API_URL + "?method=vehcicle_status_data&userid=${currentUser!.id}"));
 
       if (response.statusCode == 200) {
@@ -553,7 +554,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> liveTracking(serviceId) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=live_tracking"),
           body: {
             "user_id": currentUser?.id.toString(),
@@ -578,34 +579,37 @@ class ApiService {
     }
   }
 
-  static Future<bool> playback(serviceId, sdate, edate) async {
+  static Future<List<Map<String, dynamic>>> playback(
+      serviceId, sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=playback_api"),
           body: {
-            "user_id": currentUser?.id.toString(),
-            "service_id": serviceId,
-            "start_date": sdate,
-            "end_date": edate
+            "user_id": "257", //currentUser?.id.toString(),
+            "service_id": "31829", //serviceId,
+            "start_date": "2023-10-03 00:00", //sdate,
+            "end_date": "2023-10-03 23:59", //edate
           });
 
       if (response.statusCode == 200) {
-        return true;
+        var data = jsonDecode(response.body);
+        print(data);
+        return List<Map<String, dynamic>>.from(data["result"]);
       } else {
         // showMessage('Network Error',
         //     'An error occurred while communicating with the server.');
-        return false;
+        return [];
       }
     } catch (e) {
       print(e);
       // showMessage('Network Error', 'Something went wrong.');
-      return false;
+      return [];
     }
   }
 
   static Future dateFormat(inputDate) async {
     try {
-      var response = await client.get(Uri.parse(API_URL +
+      var response = await http.get(Uri.parse(API_URL +
           "?method=dateFormat&user_id=${currentUser!.id}&input_date=$inputDate"));
 
       if (response.statusCode == 200) {
@@ -623,7 +627,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getTodayDistance() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=get_today_distance"),
           body: {"user_id": currentUser!.id.toString()});
 
@@ -647,7 +651,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> fleetSummar() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=fleet_summar_api"),
           body: {"user_id": currentUser!.id.toString()});
 
@@ -719,7 +723,7 @@ class ApiService {
 
   static Future getAlertCount() async {
     try {
-      var response = await client.get(Uri.parse(
+      var response = await http.get(Uri.parse(
           API_URL + "?method=get_alert_count&UserId=${currentUser!.id}"));
 
       if (response.statusCode == 200) {
@@ -738,7 +742,7 @@ class ApiService {
   static Future<List<Map<String, dynamic>>> getDistanceRange(
       sdate, edate) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=get_distance_range_report"),
           body: {
             "user_id": currentUser!.id.toString(),
@@ -762,11 +766,12 @@ class ApiService {
   }
 
   static Future<List<Map<String, dynamic>>> vehicleSummaryReport(
-      sdate, edate) async {
+      sIds, sdate, edate) async {
     try {
       var response = await client
           .post(Uri.parse(API_URL + "?method=vehicle_summary_report"), body: {
         "user_id": currentUser!.id.toString(),
+        "service_id": sIds,
         "start_date": sdate,
         "end_date": edate
       });
@@ -791,7 +796,7 @@ class ApiService {
       sid, sdate, edate) async {
     print(sid);
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=speed_report"),
           body: {
             "sys_service_id": sid,
@@ -870,7 +875,7 @@ class ApiService {
       sids, sdate, edate) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "start_date": sdate,
         "end_date": edate,
@@ -903,7 +908,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getDrivers() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=get_driver_details"),
           body: {"user_id": currentUser?.id.toString()});
 
@@ -925,7 +930,7 @@ class ApiService {
 
   static Future getDriverDetails(driverId) async {
     try {
-      var response = await client.get(Uri.parse(API_URL +
+      var response = await http.get(Uri.parse(API_URL +
           "?method=get_driver_details&Userid=${currentUser!.id}&driver_id=$driverId"));
 
       if (response.statusCode == 200) {
@@ -969,7 +974,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> driverPerformance() async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/vehicle_assignedto_drivers.php?user_id=${currentUser?.id.toString()}"));
 
       if (response.statusCode == 200) {
@@ -1037,7 +1042,7 @@ class ApiService {
       sids, sdate, edate) async {
     try {
       var response =
-          await client.post(Uri.parse(API_URL + "?method=idle_summary"), body: {
+          await http.post(Uri.parse(API_URL + "?method=idle_summary"), body: {
         "user_id": currentUser?.id.toString(),
         "start_date": sdate,
         "end_date": edate,
@@ -1061,7 +1066,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getGeofences() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=get_geofences"),
           body: {"user_id": currentUser!.id.toString()});
 
@@ -1069,20 +1074,20 @@ class ApiService {
         var data = jsonDecode(response.body);
         return List<Map<String, dynamic>>.from(data);
       } else {
-        showMessage('Network Error',
-            'An error occurred while communicating with the server.');
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
         return List.empty();
       }
     } catch (e) {
       print(e);
-      showMessage('Network Error', 'Something went wrong.');
+      // showMessage('Network Error', 'Something went wrong.');
       return List.empty();
     }
   }
 
   static Future<List<NotificationMessage>> getNotifications() async {
     try {
-      var response = await client.post(Uri.parse(USER_API_URL), body: {
+      var response = await http.post(Uri.parse(USER_API_URL), body: {
         "method": "get_notification",
         "all": "true",
         "user_id": currentUser!.id.toString(),
@@ -1090,12 +1095,14 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        final notifications = data.map((e) => NotificationMessage(
-              id: e['id'],
-              msgStatus: e['msg_status'],
-              message: e['message'],
-              sentOn: e['sent_on'],
-            ));
+        print(data);
+        final notifications =
+            List<NotificationMessage>.from(data.map((e) => NotificationMessage(
+                  id: e['id'],
+                  msgStatus: e['msg_status'],
+                  message: e['message'],
+                  sentOn: e['sent_on'],
+                )));
         return notifications;
       } else {
         showMessage('Network Error',
@@ -1111,7 +1118,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getVehicleParkingMode() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=get_vehicle_parking_mode"),
           body: {"user_id": currentUser!.id.toString()});
 
@@ -1137,7 +1144,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>> getUserProfile() async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(API_URL + "?method=user_profile"),
           body: {"user_id": currentUser!.id.toString()});
 
@@ -1163,7 +1170,7 @@ class ApiService {
 
   static changePassword(curPwd, newPwd) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL + "/API/trackofy_app.php?method=change_password"),
           body: {
             "user_id": currentUser!.id.toString(),
@@ -1187,7 +1194,7 @@ class ApiService {
 
   static changeDateFormat(newFormat) async {
     try {
-      var response = await client.get(Uri.parse(BASE_URL +
+      var response = await http.get(Uri.parse(BASE_URL +
           "/API/trackofy_app.php?method=dateFormat&user_id=${currentUser?.id.toString()}&input_date=${newFormat}"));
 
       if (response.statusCode == 200) {
@@ -1239,7 +1246,7 @@ class ApiService {
     print("==========");
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "email_string": emailString,
         "schedule_time": scheduleTime,
         "scheduleTill": scheduleTill,
@@ -1266,8 +1273,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> getPoiLocation() async {
     try {
-      var response = await client.post(
-          Uri.parse(BASE_URL + "/API/user_api.php"),
+      var response = await http.post(Uri.parse(BASE_URL + "/API/user_api.php"),
           body: {"user_id": currentUser?.id.toString(), "method": "get_poi"});
 
       if (response.statusCode == 200) {
@@ -1289,7 +1295,7 @@ class ApiService {
       vehIds, pois, notify, mob1, mob2, mob3, email1, email2, email3) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "save_poi_alert",
         "veh_ids": vehIds,
@@ -1319,7 +1325,7 @@ class ApiService {
 
   static addDriverPerformance(jsonString, position_id) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL +
               "/API/trackofy_app.php?method=save_driver_performance"),
           body: {
@@ -1370,7 +1376,7 @@ class ApiService {
       distanceRange, haltRange, runningRange, idleRange, category) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "save_performance",
         "distance_range": distanceRange,
@@ -1399,7 +1405,7 @@ class ApiService {
       performance_id) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "get_performance_criterion",
         "Category": performance_id,
@@ -1423,7 +1429,7 @@ class ApiService {
   static Future<bool> saveControlLocation(locationName) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "save_control_location",
         "location_name": locationName,
@@ -1447,7 +1453,7 @@ class ApiService {
   static Future<bool> saveDriverPerformance(locationName) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "save_control_location",
         "location_name": locationName,
@@ -1471,7 +1477,7 @@ class ApiService {
   static Future<bool> assignLocationToVehicle(locationId, vehicleIds) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "assign_location",
         "location_id": locationId,
@@ -1518,7 +1524,9 @@ class ApiService {
   static addDriver(driverName, dob, contact, email, dlNo, dlIssuedDate,
       dlExpiryDate, address, emergencyContact, file) async {
     try {
-      var request = http.MultipartRequest("POST", Uri.parse("<url>"));
+      var request = http.MultipartRequest(
+          "POST", Uri.parse(API_URL + "?method=save_driver"));
+      Map<String, String> headers = {"Content-type": "multipart/form-data"};
       //add text fields
       request.fields["user_id"] = currentUser!.id.toString();
       request.fields["driver_name"] = driverName;
@@ -1530,14 +1538,73 @@ class ApiService {
       request.fields["dl_expiry_date"] = dlExpiryDate;
       request.fields["address"] = address;
       request.fields["emergency_contact"] = emergencyContact;
-      request.fields["is_edit"] = "false";
-      var pic = await http.MultipartFile.fromPath("dl_copy", file.path);
-      request.files.add(pic);
+      request.fields["isEdit"] = "false";
+      request.fields["dl_copy"] = base64Encode(file.readAsBytesSync());
+      // var pic = await http.MultipartFile.fromPath("dl_copy", file.path);
+      // request.files.add(
+      //   http.MultipartFile(
+      //     'dl_copy',
+      //     file.readAsBytes().asStream(),
+      //     file.lengthSync(),
+      //     filename: file.path.split('/').last,
+      //   ),
+      // );
+      request.headers.addAll(headers);
+      print("request: " + request.toString());
       var response = await request.send();
 
-      var responseData = await response.stream.toBytes();
-      var responseString = String.fromCharCodes(responseData);
+      http.Response responseData = await http.Response.fromStream(response);
+      var responseString = jsonDecode(responseData.body);
       print(responseString);
+      if (responseString["status"] == 0) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static editDriver(driverid, driverName, dob, contact, email, dlNo, dlIssuedDate,
+      dlExpiryDate, address, emergencyContact, file) async {
+    try {
+      var request = http.MultipartRequest(
+          "POST", Uri.parse(API_URL + "?method=save_driver"));
+      Map<String, String> headers = {"Content-type": "multipart/form-data"};
+      //add text fields
+      request.fields["user_id"] = currentUser!.id.toString();
+      request.fields["driverId"] = driverid;
+      request.fields["driver_name"] = driverName;
+      request.fields["dob"] = dob;
+      request.fields["contact"] = contact;
+      request.fields["email"] = email;
+      request.fields["dl_no"] = dlNo;
+      request.fields["dl_issued_date"] = dlIssuedDate;
+      request.fields["dl_expiry_date"] = dlExpiryDate;
+      request.fields["address"] = address;
+      request.fields["emergency_contact"] = emergencyContact;
+      request.fields["isEdit"] = "true";
+      request.fields["dl_copy"] = base64Encode(file.readAsBytesSync());
+      // var pic = await http.MultipartFile.fromPath("dl_copy", file.path);
+      // request.files.add(
+      //   http.MultipartFile(
+      //     'dl_copy',
+      //     file.readAsBytes().asStream(),
+      //     file.lengthSync(),
+      //     filename: file.path.split('/').last,
+      //   ),
+      // );
+      request.headers.addAll(headers);
+      print("request: " + request.toString());
+      var response = await request.send();
+
+      http.Response responseData = await http.Response.fromStream(response);
+      var responseString = jsonDecode(responseData.body);
+      print(responseString);
+      if (responseString["status"] == 0) {
+        return false;
+      }
       return true;
     } catch (e) {
       print(e);
@@ -1548,7 +1615,7 @@ class ApiService {
   static Future<bool> savePoiLocation(name, lat, lng, address, radius) async {
     try {
       var response =
-          await client.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
+          await http.post(Uri.parse(BASE_URL + "/API/user_api.php"), body: {
         "user_id": currentUser?.id.toString(),
         "method": "save_poi",
         "name": name,
@@ -1574,7 +1641,7 @@ class ApiService {
 
   static Future<bool> updateParking(sId, mode) async {
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse(BASE_URL +
               "/API/user_api.php?method=update_vehicle_parking_mode"),
           body: {

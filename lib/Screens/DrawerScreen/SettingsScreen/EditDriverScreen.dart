@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,14 +11,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 
-class AddDriverScreen extends StatefulWidget {
-  const AddDriverScreen({Key? key}) : super(key: key);
+class EditDriverScreen extends StatefulWidget {
+  var driverData;
+  EditDriverScreen({Key? key, required this.driverData}) : super(key: key);
 
   @override
-  State<AddDriverScreen> createState() => _AddDriverScreenState();
+  State<EditDriverScreen> createState() => _EditDriverScreenState();
 }
 
-class _AddDriverScreenState extends State<AddDriverScreen> {
+class _EditDriverScreenState extends State<EditDriverScreen> {
   TextEditingController dateinput = TextEditingController();
   TextEditingController dlIssueDateCtrl = TextEditingController();
   TextEditingController dlExpireDateCtrl = TextEditingController();
@@ -38,6 +40,16 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
   void initState() {
     dateinput.text = ""; //set the initial value of text field
     super.initState();
+
+    driverNameCtrl.text = widget.driverData["name"];
+    mobileCtrl.text = widget.driverData["mobile"];
+    emailCtrl.text = widget.driverData["email"];
+    contactCtrl.text = widget.driverData["emergency_contact_no"];
+    dlNoCtrl.text = widget.driverData["dl_no"];
+    addressCtrl.text = widget.driverData["address"];
+    dlIssueDateCtrl.text = widget.driverData["dl_issued"];
+    dlExpireDateCtrl.text = widget.driverData["dl_expiry"];
+    dateinput.text = widget.driverData["dob"];
   }
 
   void onSubmit() async {
@@ -55,7 +67,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");
-    var res = await ApiService.addDriver(
+    var res = await ApiService.editDriver(
+        widget.driverData["id"].toString(),
         driverNameCtrl.text,
         dateinput.text,
         mobileCtrl.text,
@@ -67,6 +80,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
         contactCtrl.text,
         pickedImage);
     SmartDialog.dismiss();
+
     if (res) {
       SmartDialog.showToast("Success!!!");
       Navigator.pop(context, "success");
@@ -98,7 +112,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Add Driver",
+                "Edit Driver",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
@@ -249,26 +263,31 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                         borderRadius: BorderRadius.circular(10),
                         color: Color(0xffcbd5d5)),
                     child: Center(
-                      child: pickedImage == null ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                              radius: 25,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.black,
-                                size: 34,
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              "Upload Photo",
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey.shade600),
-                            ),
-                          ),
-                        ],
-                      ) : Image.file(pickedImage!),
+                      child: pickedImage == null
+                          ? widget.driverData["dl_copy"] != null
+                              ? Image.network(widget.driverData["dl_copy_url"])
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 25,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.black,
+                                          size: 34,
+                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        "Upload Photo",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey.shade600),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                          : Image.file(pickedImage!),
                     ),
                   ),
                 ),
@@ -293,7 +312,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                         },
                         child: Center(
                             child: Text(
-                          "CREATE DRIVER",
+                          "UPDATE DRIVER",
                           style: TextStyle(color: Colors.white, fontSize: 15),
                         )),
                       ),

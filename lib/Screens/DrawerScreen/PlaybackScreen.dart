@@ -9,6 +9,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/AlertSettingScreen.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/MapHelper.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
 import 'package:trackofyapp/constants.dart';
@@ -34,6 +35,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
   List<Map<String, dynamic>> vehicles = [];
   final List<Marker> _markers = <Marker>[];
   late GoogleMapController mapCtrl;
+  double vLat = 19.018255973653343, vLng = 72.84793849278007;
 
   var vehicleData;
 
@@ -44,6 +46,13 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
   TextEditingController stoppageCtrl = TextEditingController();
   TextEditingController overspeedCtrl = TextEditingController();
   bool isPlay = false;
+  int playbackSeep = 1;
+  List<Map<String, dynamic>> playbackHist = [];
+  List<LatLng> points = [];
+
+  Set<Polyline> polylines = Set.from([]);
+  int backIndex = 0;
+  var curPlayHist;
 
   @override
   void initState() {
@@ -51,45 +60,70 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
     stoppageCtrl.text = "10";
     overspeedCtrl.text = "60";
     startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
-    SmartDialog.showLoading(msg: "Loading...");
   }
 
   void fetchData() async {
-    print("======");
-    print(widget.serviceId);
-    print("======");
-    data = await ApiService.liveTracking(widget.serviceId.toString());
-    _markers.clear();
-    if (data.isNotEmpty) {
-      var e = data[0];
-      vehicleData = e;
-      print("~~~~~~~~~~~~~");
-      print(e);
-      print("~~~~~~~~~~~~~");
-      BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
-          const ImageConfiguration(), "assets/images/red_car.png");
-      _markers.add(Marker(
-        markerId: MarkerId(e["vehicle_name"]),
-        icon: markerIcon,
-        position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
-      ));
-      mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
-          LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
-      SmartDialog.dismiss();
-      setState(() {});
+    SmartDialog.showLoading(msg: "Loading...");
+    playbackHist = await ApiService.playback(
+        widget.serviceId.toString(), startDate, endDate);
+    SmartDialog.dismiss();
+    for (int i = 0; i < playbackHist.length; i++) {
+      var histItem = playbackHist[i];
+      LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
+      points.add(histPos);
+      if (i == 0) {
+        BitmapDescriptor markerIcon =
+            await MapHelper.getMarkerImageFromUrl(histItem["rotation_full_url"]);
+        _markers.add(Marker(
+            markerId: MarkerId(i.toString()),
+            icon: markerIcon,
+            position: histPos,
+            rotation: double.parse(histItem["angle"].toString())));
+        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
+        curPlayHist = histItem;
+      }
     }
+    polylines = Set.from([
+      Polyline(
+        polylineId: PolylineId('1'),
+        points: points,
+        color: Colors.black,
+        width: 4,
+      )
+    ]);
+    setState(() {});
   }
 
   playback() async {
-    if (isPlay == false) {
-      isPlay = true;
-      setState(() {});
-      await ApiService.playback(
-          widget.serviceId.toString(), startDate, endDate);
-    } else {
-      isPlay = false;
-      setState(() {});
+    isPlay = !isPlay;
+
+    if (isPlay) {
+      onBackTracking();
     }
+    setState(() {});
+  }
+
+  onBackTracking() async {
+    backIndex += playbackSeep * 2;
+
+    var histItem = playbackHist[backIndex];
+    curPlayHist = histItem;
+    LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
+    BitmapDescriptor markerIcon =
+        await MapHelper.getMarkerImageFromUrl(histItem["rotation_full_url"]);
+    _markers.clear();
+    _markers.add(Marker(
+        markerId: MarkerId(backIndex.toString()),
+        icon: markerIcon,
+        position: histPos,
+        anchor: Offset(0.5, 0.5),
+        rotation: double.parse(histItem["angle"].toString())));
+    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
+    setState(() {});
+
+    Future.delayed(Duration(seconds: 1), () {
+      onBackTracking();
+    });
   }
 
   @override
@@ -98,7 +132,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
       key: scaffoldKey,
       drawer: DrawerClass(),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
+        preferredSize: Size.fromHeight(50.0),
         child: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -131,7 +165,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.black87,
+                color: Colors.black45,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -274,20 +308,55 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                       ],
                     ),
                   ),
+                  PopupMenuButton(
+                    onSelected: (item) {
+                      setState(() {
+                        playbackSeep = int.parse(item.substring(0, 1));
+                      });
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        ["1x", "2x", "3x", "4x", "5x"]
+                            .map((e) => PopupMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      color: Colors.white,
+                      alignment: Alignment.center,
+                      child: Text("${playbackSeep}x",
+                          style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
                   InkWell(
                     onTap: () {
                       playback();
                     },
-                    child: Icon(isPlay ? Icons.stop : Icons.play_arrow,
+                    child: Icon(isPlay ? Icons.pause : Icons.play_arrow,
                         color: Colors.white, size: 48),
                   ),
                 ],
               ),
             ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black87,
+              ),
+              child: curPlayHist == null
+                  ? SizedBox.shrink()
+                  : Text(
+                      "Date: ${curPlayHist["date"]} Speed: ${curPlayHist["speed"]} ${"\n"} Odometer: ${curPlayHist["odometer"]}",
+                      style: TextStyle(fontSize: 12, color: Colors.white)),
+            ),
             Expanded(
               child: GoogleMap(
                 initialCameraPosition: _kInitialPosition,
                 markers: Set<Marker>.of(_markers),
+                polylines: polylines,
                 onMapCreated: (controller) {
                   mapCtrl = controller;
                   fetchData();

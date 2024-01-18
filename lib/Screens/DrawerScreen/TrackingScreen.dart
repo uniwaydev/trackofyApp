@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
+import 'package:fluster/fluster.dart';
 
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/MapHelper.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/MapMarker.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
@@ -21,11 +24,10 @@ class TrackingScreen extends StatefulWidget {
 }
 
 class _TrackingScreenState extends State<TrackingScreen> {
-  static final LatLng _kMapCenter =
-      LatLng(19.018255973653343, 72.84793849278007);
+  static final LatLng _kMapCenter = LatLng(28.6505, 77.135);
 
   static final CameraPosition _kInitialPosition =
-      CameraPosition(target: _kMapCenter, zoom: 14.0, tilt: 0, bearing: 0);
+      CameraPosition(target: _kMapCenter, zoom: 7.0, tilt: 0, bearing: 0);
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Map<String, dynamic>> data = [];
@@ -36,49 +38,163 @@ class _TrackingScreenState extends State<TrackingScreen> {
   var selected;
   late List selectedList;
 
-  Timer? _timer;
+  /// Set of displayed markers and cluster markers on the map
+  // final Set<Marker> _markers = Set();
+
+  /// Minimum zoom at which the markers will cluster
+  final int _minClusterZoom = 0;
+
+  /// Maximum zoom at which the markers will cluster
+  final int _maxClusterZoom = 19;
+
+  /// [Fluster] instance used to manage the clusters
+  Fluster<MapMarker>? _clusterManager;
+
+  /// Current map zoom. Initial zoom will be 15, street level
+  double _currentZoom = 7;
+
+  /// Map loading flag
+  bool _isMapLoading = true;
+
+  /// Markers loading flag
+  bool _areMarkersLoading = true;
+
+  /// Color of the cluster circle
+  final Color _clusterColor = Colors.blue;
+
+  /// Color of the cluster text
+  final Color _clusterTextColor = Colors.white;
+
+  bool isTracking = true;
+
+  /// Called when the Google Map widget is created. Updates the map loading state
+  /// and inits the markers.
+  void _onMapCreated(GoogleMapController controller) async {
+    mapCtrl = controller;
+    mapCtrl
+        .animateCamera(CameraUpdate.newLatLngZoom(_kMapCenter, _currentZoom));
+
+    setState(() {
+      _isMapLoading = false;
+    });
+
+    vehicles = await ApiService.vehicles();
+    _initMarkers();
+  }
+
+  /// Inits [Fluster] and all the markers with network images and updates the loading state.
+  _initMarkers() async {
+    print("==== START TRACKING(tracking) ====");
+    final List<MapMarker> markers = [];
+    // _markers.clear();
+    for (int i = 0; i < vehicles.length; i++) {
+      if (selected == null ||
+          selected["serviceId"] == vehicles[i]["serviceId"]) {
+        print(vehicles[i]);
+        var trackingRes =
+            await ApiService.liveTracking(vehicles[i]["serviceId"].toString());
+        if (trackingRes.isNotEmpty) {
+          var trackingInfo = trackingRes[0];
+          print(trackingInfo);
+          final BitmapDescriptor markerImage =
+              await MapHelper.getMarkerImageFromUrl(trackingInfo["icon"]);
+
+          markers.add(
+            MapMarker(
+                id: (i + 1).toString(),
+                position: LatLng(double.parse(trackingInfo["lat"]),
+                    double.parse(trackingInfo["lng"])),
+                icon: markerImage,
+                rotation: double.parse(trackingInfo["angle"])),
+          );
+
+          // if (i == vehicles.length - 1) {
+          //   mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
+          //       LatLng(double.parse(trackingInfo["lat"]),
+          //           double.parse(trackingInfo["lng"])),
+          //       _currentZoom));
+          // }
+        }
+      }
+    }
+    print('===========');
+    print(markers.length);
+    print('===========');
+
+    _clusterManager = await MapHelper.initClusterManager(
+      markers,
+      _minClusterZoom,
+      _maxClusterZoom,
+    );
+
+    await _updateMarkers();
+    print("==== END TRACKING(tracking) ====");
+
+    if (isTracking) {
+      Future.delayed(Duration(seconds: 1), () {
+        _initMarkers();
+      });
+    }
+  }
+
+  /// Gets the markers and clusters to be displayed on the map for the current zoom level and
+  /// updates state.
+  Future<void> _updateMarkers([double? updatedZoom]) async {
+    if (_clusterManager == null || updatedZoom == _currentZoom) return;
+
+    if (updatedZoom != null) {
+      _currentZoom = updatedZoom;
+    }
+
+    setState(() {
+      _areMarkersLoading = true;
+    });
+
+    final updatedMarkers = await MapHelper.getClusterMarkers(
+      _clusterManager,
+      _currentZoom,
+      _clusterColor,
+      _clusterTextColor,
+      80,
+    );
+
+    _markers
+      ..clear()
+      ..addAll(updatedMarkers);
+
+    setState(() {
+      _areMarkersLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<Uint8List> getImages(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetHeight: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
-  }
-
   void fetchData(serviceId) async {
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
-      print("==== Start Tracking ====");
-      data = await ApiService.liveTracking(serviceId);
-      var e = data[0];
-      _markers.clear();
-      BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
-          const ImageConfiguration(), "assets/images/red_car.png");
-      _markers.add(Marker(
-        markerId: MarkerId(e["vehicle_name"]),
-        icon: markerIcon,
-        position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
-      ));
+    print("==== Start Tracking ====");
+    data = await ApiService.liveTracking(serviceId);
+    var e = data[0];
+    _markers.clear();
+    BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), "assets/images/red_car.png");
+    _markers.add(Marker(
+      markerId: MarkerId(e["vehicle_name"]),
+      icon: markerIcon,
+      position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
+    ));
 
-      mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
-          LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
-      setState(() {});
-      print("==== End Tracking ====");
-    });
+    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
+        LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
+    setState(() {});
+    print("==== End Tracking ====");
   }
 
   @override
   void dispose() {
     print("dispose");
-
-    _timer?.cancel();
+    isTracking = false;
     super.dispose();
   }
 
@@ -136,7 +252,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
                         setState(() {
                           print(item);
                           selected = item;
-                          fetchData(item["serviceId"].toString());
                         });
                       },
                       itemBuilder: (BuildContext context) => vehicles
@@ -185,13 +300,50 @@ class _TrackingScreenState extends State<TrackingScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        child: GoogleMap(
-          initialCameraPosition: _kInitialPosition,
-          markers: Set<Marker>.of(_markers),
-          onMapCreated: (controller) {
-            mapCtrl = controller;
-            fetchVehicles();
-          },
+        child: Stack(
+          children: [
+            GoogleMap(
+              mapToolbarEnabled: true,
+              zoomGesturesEnabled: true,
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              zoomControlsEnabled: true,
+              initialCameraPosition: _kInitialPosition,
+              markers: _markers.toSet(),
+              onMapCreated: (controller) => _onMapCreated(controller),
+              onCameraMove: (position) => _updateMarkers(position.zoom),
+              // initialCameraPosition: _kInitialPosition,
+              // markers: Set<Marker>.of(_markers),
+              // onMapCreated: (controller) {
+              //   mapCtrl = controller;
+              //   fetchVehicles();
+              // },
+            ),
+            Opacity(
+              opacity: _isMapLoading ? 1 : 0,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+
+            // Map markers loading indicator
+            if (_areMarkersLoading)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    color: Colors.grey.withOpacity(0.9),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        'Loading',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
