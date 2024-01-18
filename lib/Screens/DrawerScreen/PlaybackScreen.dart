@@ -72,13 +72,12 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
       LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
       points.add(histPos);
       if (i == 0) {
-        BitmapDescriptor markerIcon =
-            await MapHelper.getMarkerImageFromUrl(histItem["rotation_full_url"]);
+        BitmapDescriptor markerIcon = await MapHelper.getMarkerImageFromUrl(
+            histItem["rotation_full_url"]);
         _markers.add(Marker(
             markerId: MarkerId(i.toString()),
             icon: markerIcon,
-            position: histPos,
-            rotation: double.parse(histItem["angle"].toString())));
+            position: histPos));
         mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
         curPlayHist = histItem;
       }
@@ -116,8 +115,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
         markerId: MarkerId(backIndex.toString()),
         icon: markerIcon,
         position: histPos,
-        anchor: Offset(0.5, 0.5),
-        rotation: double.parse(histItem["angle"].toString())));
+        anchor: Offset(0.5, 0.5)));
     mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
     setState(() {});
 

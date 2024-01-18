@@ -237,7 +237,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                       child: Icon(
                         Icons.home,
                         color: Color(0xff1574a4),
-                        size: 35,
+                        size: 30,
                       )),
                   SizedBox(
                     width: 20,
@@ -246,10 +246,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                       onTap: () {
                         Get.to(() => Vehicle());
                       },
-                      child: Icon(
-                        Icons.maps_ugc_rounded,
-                        color: Color(0xff1574a4),
-                        size: 35,
+                      child: Image.asset(
+                        "assets/images/globe-512.png",
+                        height: 30,
+                        width: 30,
+                        color: ThemeColor.primarycolor,
                       )),
                 ],
               ),
