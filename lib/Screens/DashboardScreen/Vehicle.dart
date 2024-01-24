@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/VehicleDetailScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/widgets.dart';
 import 'package:trackofyapp/constants.dart';
@@ -47,27 +49,11 @@ class _VehicleState extends State<Vehicle> {
   void fetchData() async {
     SmartDialog.showLoading(msg: 'Loading...');
     vehiclesData = await ApiService.getVehicles();
-    setState(() {});
+    filteredItems = vehiclesData;
     SmartDialog.dismiss();
+    setState(() {});
   }
 
-  // List<String> distance = ["90","90","90","90","90","90"];
-  // List<String> idle = ["90","90","90","90","90","90"];
-  // List<String> halt= ["90","90","90","90","90","90"];
-  // var vehicleno = ["DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393",];
-  // var contactdate =["09-23-2022","09-23-2022","09-23-2022","09-23-2022","09-23-2022","09-23-2022",];
-  // var contacttime =["14:22","14:22","14:22","14:22","14:22","14:22",];
-  // var adress = ["Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //   "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //   "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",];
-  // var speed =["50","50","50","50","50","50",];
-
-  //var distance = ["90","90","90","90","90","90"];
-  // var idlesince = [90.9, 0, 0, 90, 90];
-  // var Haltsince = [90.9, 0, 0, 90, 90];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,289 +92,146 @@ class _VehicleState extends State<Vehicle> {
         children: [
           Center(
             child: Container(
-              height: Get.size.height * 0.08,
-              width: Get.size.width * 1.00,
+              width: double.infinity,
               alignment: Alignment.center,
               child: new Stack(alignment: Alignment.center, children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/search.png'),
-                  width: 400,
+                  width: Get.width * 0.8,
                 ),
                 TextField(
-                    textAlign: TextAlign.center,
-                    autocorrect: false,
-                    controller: searchCtrl,
-                    onChanged: (e) {
-                      print(e.toString());
-                      search(e);
-                    },
-                    decoration:
-                        //disable single line border below the text field
-                        new InputDecoration.collapsed(
-                            hintText: 'Search Vehicle',
-                            hintStyle: TextStyle(color: Colors.grey))),
+                  textAlign: TextAlign.start,
+                  autocorrect: false,
+                  controller: searchCtrl,
+                  onChanged: (e) {
+                    print(e.toString());
+                    search(e);
+                  },
+                  style: TextStyle(fontSize: 16),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: Get.width * 0.23),
+                    hintText: 'Search Vehicle',
+                    hintStyle: TextStyle(color: Colors.grey, fontSize: 24),
+                  ),
+                ),
               ]),
             ),
           ),
-          Container(
-            height: Get.size.height * 0.78,
-            child: filteredItems.isNotEmpty || _query.isNotEmpty
-                ? filteredItems.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No Results Found',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: filteredItems.length,
-                        //  shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          final vehicle = filteredItems[index];
-                          return Card(
-                            elevation: 3,
-                            child: Container(
-                              height: Get.size.height * 0.2,
-                              width: Get.size.width * 0.95,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Image.network(
-                                          '${vehicle['icon_url']}',
-                                          width: 70,
-                                          height: 120,
-                                        ),
-                                        Text("${vehicle['Speed']}km"),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                vehicle['Name'],
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 20),
-                                              ),
-                                              vehicle['AC'] != "OFF"
-                                                  ? Image.asset(
-                                                      "assets/images/freezer-safe1.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    )
-                                                  : Image.asset(
-                                                      "assets/images/freezer-safe.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    ),
-                                              vehicle['signal_percent'] != "0"
-                                                  ? Image.asset(
-                                                      "assets/images/rsz_signal_tower_off.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    )
-                                                  : Image.asset(
-                                                      "assets/images/rsz_signal_tower_off.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    ),
-                                              vehicle['Ignition'] !=
-                                                      'plug_no_data'
-                                                  ? vehicle['Ignition'] !=
-                                                          'plug_ignition_on'
-                                                      ? vehicle['Ignition'] !=
-                                                              'plug_ignition_off'
-                                                          ? Image.asset(
-                                                              "assets/images/rsz_plug_no_data.png",
-                                                              height: 27,
-                                                              width: 27,
-                                                            )
-                                                          : Image.asset(
-                                                              "assets/images/rsz_plug_ignition_on.png",
-                                                              height: 27,
-                                                              width: 27,
-                                                            )
-                                                      : Image.asset(
-                                                          "assets/images/rsz_plug_ignition_off.png",
-                                                          height: 27,
-                                                          width: 27,
-                                                        )
-                                                  : Image.asset(
-                                                      "assets/images/rsz_plug_ignition_idle.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${vehicle["LastContact"]}',
-                                                style: TextStyle(
-                                                    color: Colors.yellow,
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(vehicle['Address']),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
+          Expanded(
+            child: filteredItems.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No Results Found',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
                 : ListView.builder(
-                    itemCount: vehiclesData.length,
-                    shrinkWrap: true,
+                    itemCount: filteredItems.length,
+                    //  shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      final vehicle = vehiclesData[index];
-                      return Card(
-                        elevation: 3,
+                      final vehicle = filteredItems[index];
+                      return InkWell(
+                        onTap: () {
+                          Get.to(() => VehicleDetailScreen(
+                                serviceId: vehicle["VehicleId"],
+                              ));
+                        },
                         child: Container(
-                          height: Get.size.height * 0.2,
-                          width: Get.size.width * 0.95,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 3,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Image.network(
+                                    '${vehicle['icon_url']}',
+                                    width: 50,
+                                  ),
+                                  Text("${vehicle['TotalDistance'].toString()}km"),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Image.network(
-                                      '${vehicle['icon_url']}',
-                                      width: 70,
-                                      height: 120,
-                                    ),
-                                    Text("${vehicle['Speed']}km"),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 30,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
                                             vehicle['Name'],
                                             style: TextStyle(
                                                 color: Colors.blue,
                                                 fontSize: 20),
                                           ),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: vehicle['AC'] != "OFF"
-                                                ? Image.asset(
-                                                    "assets/images/freezer-safe1.png",
-                                                    height: 27,
-                                                    width: 27,
-                                                  )
-                                                : Image.asset(
-                                                    "assets/images/freezer-safe.png",
-                                                    height: 27,
-                                                    width: 27,
-                                                  ),
-                                          ),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          vehicle['signal_percent'] != "0"
-                                              ? Image.asset(
-                                                  "assets/images/rsz_signal_tower_off.png",
-                                                  height: 27,
-                                                  width: 27,
-                                                )
-                                              : Image.asset(
-                                                  "assets/images/rsz_signal_tower_off.png",
-                                                  height: 27,
-                                                  width: 27,
-                                                ),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          vehicle['Ignition'] != 'plug_no_data'
-                                              ? vehicle['Ignition'] !=
-                                                      'plug_ignition_on'
-                                                  ? vehicle['Ignition'] !=
-                                                          'plug_ignition_off'
-                                                      ? Image.asset(
-                                                          "assets/images/rsz_plug_no_data.png",
-                                                          height: 27,
-                                                          width: 27,
-                                                        )
-                                                      : Image.asset(
-                                                          "assets/images/rsz_plug_ignition_on.png",
-                                                          height: 27,
-                                                          width: 27,
-                                                        )
-                                                  : Image.asset(
-                                                      "assets/images/rsz_plug_ignition_off.png",
-                                                      height: 27,
-                                                      width: 27,
-                                                    )
-                                              : Image.asset(
-                                                  "assets/images/rsz_plug_ignition_idle.png",
-                                                  height: 27,
-                                                  width: 27,
-                                                ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('${vehicle["LastContact"]}'),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(vehicle['Address']),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                                        ),
+                                        onIgnitionData(vehicle['Ignition']),
+                                        SizedBox(width: 16),
+                                        vehicle['signal_percent'] != "0"
+                                            ? Image.asset(
+                                                "assets/images/rsz_signal_tower_off.png",
+                                                height: 27,
+                                                width: 27,
+                                                color: Colors.red,
+                                              )
+                                            : Image.asset(
+                                                "assets/images/rsz_signal_tower_off.png",
+                                                height: 27,
+                                                width: 27,
+                                              ),
+                                        SizedBox(width: 16),
+                                        onACData(vehicle['AC']),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${vehicle["LastContact"]}',
+                                          style: TextStyle(
+                                              color: Colors.yellow[800],
+                                              fontSize: 18),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    FutureBuilder(
+                                        future: placemarkFromCoordinates(
+                                            vehicle["Latitude"],
+                                            vehicle["Longitude"]),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData &&
+                                              snapshot.data != null) {
+                                            var place = snapshot.data![0];
+                                            return Text(
+                                                '${place.street ?? ""}, ${place.name ?? ""} ${place.subLocality ?? ""}, ${place.subAdministrativeArea ?? ""}, ${place.postalCode ?? ""}, ${place.country ?? ""}',
+                                                style: TextStyle(fontSize: 16));
+                                          }
+                                          return Text("Loading...");
+                                        })
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -397,6 +240,42 @@ class _VehicleState extends State<Vehicle> {
           ),
         ],
       ),
+    );
+  }
+
+  onIgnitionData(ignition) {
+    String ignitionTxt = "rsz_battery_no_data";
+    if (ignition == null ||
+        ignition == "battery_no_data" ||
+        ignition == "plug_no_data") {
+      ignitionTxt = "rsz_battery_no_data";
+    } else if (ignition == "Off") {
+      ignitionTxt = "rsz_battery_ignition_off";
+    } else if (ignition == "On") {
+      ignitionTxt = "rsz_battery_ignition_on";
+    } else if (ignition == "Idle") {
+      ignitionTxt = "rsz_battery_ignition_idle";
+    }
+
+    return Image.asset(
+      "assets/images/$ignitionTxt.png",
+      width: 27,
+    );
+  }
+
+  onACData(ac) {
+    String acTxt = "freezer-safe";
+    if (ac == null) {
+      acTxt = "freezer-safe";
+    } else if (ac == "OFF") {
+      acTxt = "freezer-safe1";
+    } else if (ac == "ON") {
+      acTxt = "freezer-safe2";
+    }
+
+    return Image.asset(
+      "assets/images/$acTxt.png",
+      width: 27,
     );
   }
 }

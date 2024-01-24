@@ -78,6 +78,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xff182f61),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),

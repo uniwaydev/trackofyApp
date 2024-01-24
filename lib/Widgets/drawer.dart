@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackofyapp/Screens/DashboardScreen/DashboardScreen.dart';
 import 'package:trackofyapp/Screens/DashboardScreen/NewDashboardScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/Geofence/GeofenceScreen.dart';
@@ -14,6 +15,7 @@ import 'package:trackofyapp/Screens/DrawerScreen/TrackingScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/VehicleScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Screens/OnboardingScreen/LoginScreen.dart';
+import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/constants.dart';
 
 class DrawerClass extends StatelessWidget {
@@ -32,76 +34,76 @@ class DrawerClass extends StatelessWidget {
               child: tiles('Home', "assets/images/ic_setting_icon.png"),
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Get.to(() => HomeScreen());
+                Get.offAll(() => HomeScreen());
               },
             ),
             GestureDetector(
               child: tiles('Dashboard', "assets/images/meter.png"),
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Get.to(() => NewDashboardScreen());
+                Get.offAll(() => NewDashboardScreen());
               },
             ),
             GestureDetector(
                 onTap: () {
-                  Get.to(() => ProfileScreen());
+                  Get.offAll(() => ProfileScreen());
                 },
                 child: tiles('Profile', "assets/images/person.png")),
             GestureDetector(
               child: tiles('Vehicle', "assets/images/redcar.png"),
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Get.to(() => VehicleScreen());
+                Get.offAll(() => VehicleScreen());
               },
             ),
             GestureDetector(
               child: tiles('Tracking', "assets/images/loca.png"),
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Get.to(() => TrackingScreen());
+                Get.offAll(() => TrackingScreen());
               },
             ),
             GestureDetector(
                 child: tiles('Reports', "assets/images/report.png"),
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => ReportsScreen());
+                  Get.offAll(() => ReportsScreen());
                 }),
             GestureDetector(
                 child: tiles('Schedule Reports', "assets/images/report.png"),
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => ScheduleScreen());
+                  Get.offAll(() => ScheduleScreen());
                 }),
             GestureDetector(
                 child: tiles('Notification',
                     "assets/images/Screenshot_2022-09-17_154834-removebg-preview.png"),
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => NotificationScreen());
+                  Get.offAll(() => NotificationScreen());
                 }),
             GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => GeofenceScreen());
+                  Get.offAll(() => GeofenceScreen());
                 },
                 child: tiles('Geofence', "assets/images/locationcar.png")),
             GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => PoiScreen());
+                  Get.offAll(() => PoiScreen());
                 },
                 child: tiles('POI', "assets/images/locationred.png")),
             GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => ParkingScreen());
+                  Get.offAll(() => ParkingScreen());
                 },
                 child: tiles('Parking', "assets/images/locationred.png")),
             GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Get.to(() => SettingsScreen());
+                  Get.offAll(() => SettingsScreen());
                 },
                 child: tiles('Setting', "assets/images/ic_setting_icon.png")),
             GestureDetector(
@@ -109,17 +111,21 @@ class DrawerClass extends StatelessWidget {
               onTap: () async {
                 var dlg = await Get.defaultDialog(
                     backgroundColor: ThemeColor.primarycolor,
-                    titlePadding: const EdgeInsets.all(10.0),
-                    title: 'Are you sure want to Logout ?',
+                    titlePadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    title: 'Are you sure want to Logout?',
                     titleStyle: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                     textCancel: "CANCEL",
                     textConfirm: "OK",
                     confirmTextColor: Colors.white,
-                    contentPadding: const EdgeInsets.all(5.0),
+                    contentPadding: const EdgeInsets.all(0),
                     cancelTextColor: Colors.white,
                     buttonColor: ThemeColor.secondarycolor,
-                    onConfirm: () {
+                    onConfirm: () async {
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.remove('user');
+                      ApiService.currentUser = null;
                       Get.offAll(() => LoginScreen());
                     },
                     middleText: "");

@@ -12,33 +12,34 @@ class MapMarker extends Clusterable {
   final LatLng position;
   double rotation;
   BitmapDescriptor? icon;
+  void Function()? onClick;
 
   MapMarker({
     required this.id,
     required this.position,
     required this.rotation,
+    this.onClick,
     this.icon,
     isCluster = false,
     clusterId,
     pointsSize,
     childMarkerId,
   }) : super(
-          markerId: id,
-          latitude: position.latitude,
-          longitude: position.longitude,
-          isCluster: isCluster,
-          clusterId: clusterId,
-          pointsSize: pointsSize,
-          childMarkerId: childMarkerId,
-        );
+            markerId: id,
+            latitude: position.latitude,
+            longitude: position.longitude,
+            isCluster: isCluster,
+            clusterId: clusterId,
+            pointsSize: pointsSize,
+            childMarkerId: childMarkerId);
 
   Marker toMarker() => Marker(
-        markerId: MarkerId(isCluster! ? 'cl_$id' : id),
-        position: LatLng(
-          position.latitude,
-          position.longitude,
-        ),
-        rotation: rotation,
-        icon: icon!,
-      );
+      markerId: MarkerId(isCluster! ? 'cl_$id' : id),
+      position: LatLng(
+        position.latitude,
+        position.longitude,
+      ),
+      rotation: rotation,
+      icon: icon!,
+      onTap: onClick);
 }

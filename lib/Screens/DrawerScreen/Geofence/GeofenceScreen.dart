@@ -42,8 +42,11 @@ class _GeofenceScreenState extends State<GeofenceScreen> {
           elevation: 0.0,
           child: new Icon(Icons.add),
           backgroundColor: new Color(0xFFE57373),
-          onPressed: () {
-            Get.to(() => AddGeofence());
+          onPressed: () async {
+            var addGeoRes = await Get.to(() => AddGeofence());
+            if (addGeoRes != null) {
+              fetchData();
+            }
           }),
       key: scaffoldKey,
       drawer: DrawerClass(),
@@ -170,10 +173,24 @@ class _GeofenceScreenState extends State<GeofenceScreen> {
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(right: 17.0),
-                                      child: Image.asset(
-                                        "assets/images/trash-alt-delete-bin-pngrepo-com.png",
-                                        height: 20,
-                                        color: Colors.black,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          SmartDialog.showLoading(
+                                              msg: "Loading...");
+
+                                          await ApiService.deleteFenceAlert(
+                                              parkingData[index]
+                                                  ["geofence_type"],
+                                              parkingData[index]
+                                                  ["alert_setting_id"]);
+                                          await SmartDialog.dismiss();
+                                          fetchData();
+                                        },
+                                        child: Image.asset(
+                                          "assets/images/trash-alt-delete-bin-pngrepo-com.png",
+                                          height: 20,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ],

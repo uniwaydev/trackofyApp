@@ -230,8 +230,9 @@ class _GeoMapScreenState extends State<GeoMapScreen> {
                               widget.fenceName,
                               widget.lat.toString(),
                               widget.lng.toString());
-                          SmartDialog.dismiss();
-                          SmartDialog.showToast("Success!!!");
+                          await SmartDialog.dismiss();
+                          await SmartDialog.showToast("Success!!!");
+                          Navigator.pop(context, "success");
                         },
                         child: Container(
                           color: Colors.blue[900]?.withOpacity(0.8),

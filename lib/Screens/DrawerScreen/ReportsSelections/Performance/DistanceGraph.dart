@@ -25,7 +25,7 @@ class _DistanceGraphState extends State<DistanceGraph> {
   List<_ChartData> data = [];
   TooltipBehavior _tooltip = TooltipBehavior();
   double maxDist = 20;
-  double interval = 1;
+  double interv = 4;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _DistanceGraphState extends State<DistanceGraph> {
     vehiclesData
         .sort((a, b) => a["TotalDistance"] < b["TotalDistance"] ? 1 : 0);
     maxDist = double.parse(vehiclesData[0]["TotalDistance"].toString());
-    interval = maxDist / vehiclesData.length;
+    interv = 4;
 
     for (var vInfo in vehiclesData) {
       data.add(_ChartData(vInfo["Vehiclename"],
@@ -195,26 +195,23 @@ class _DistanceGraphState extends State<DistanceGraph> {
               ],
             ),
           ),
-          Container(
-            height: Get.height * 0.88,
-            child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
-                primaryYAxis:
-                    NumericAxis(minimum: 0, maximum: maxDist, interval: 4),
-                tooltipBehavior: _tooltip,
-                series: <CartesianSeries<_ChartData, String>>[
-                  BarSeries<_ChartData, String>(
-                      dataSource: data,
-                      xValueMapper: (_ChartData data, _) => data.x,
-                      yValueMapper: (_ChartData data, _) => data.y,
-                      name: 'Gold',
-                      color: Colors.green)
-                ]),
+          Expanded(
+            child: Container(
+              child: SfCartesianChart(
+                  primaryXAxis: CategoryAxis(),
+                  primaryYAxis:
+                      NumericAxis(minimum: 0, maximum: maxDist, interval: interv),
+                  tooltipBehavior: _tooltip,
+                  series: <CartesianSeries<_ChartData, String>>[
+                    BarSeries<_ChartData, String>(
+                        dataSource: data,
+                        xValueMapper: (_ChartData data, _) => data.x,
+                        yValueMapper: (_ChartData data, _) => data.y,
+                        name: 'Distance Summary',
+                        color: Colors.green)
+                  ]),
+            ),
           ),
-          Text(
-            'data',
-            textAlign: TextAlign.right,
-          )
         ],
       ),
     );

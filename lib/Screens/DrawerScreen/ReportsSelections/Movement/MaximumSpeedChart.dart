@@ -90,7 +90,7 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
           Stack(
             children: [
               Container(
-                color: Color(0xffe2e2e2),
+                color: Color.fromARGB(255, 238, 238, 238),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -248,21 +248,28 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
                     ],
                   )
                 : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
                     child: Padding(
                       padding: EdgeInsets.all(16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          rowChart("SN", "Vehicle Name", "1 Day", "2 Day",
-                              "3 Day", Colors.blue),
+                          if (data.length > 0)
+                            Column(
+                              children: [
+                                rowChart("SN", "Vehicle Name", data[0], true,
+                                    Colors.grey),
+                                SizedBox(height: 24),
+                              ],
+                            ),
                           for (int i = 0; i < data.length; i++)
-                            rowChart(
-                                "${i + 1}",
-                                data[i]["vehicle"],
-                                "${data[i]["days"][0]}",
-                                "${data[i]["days"].length > 1 ? data[i]["days"][1] : 0}",
-                                "${data[i]["days"].length > 2 ? data[i]["days"][2] : 0}",
-                                Colors.black),
+                            Column(
+                              children: [
+                                rowChart("${i + 1}", data[i]["vehicle"],
+                                    data[i], false, Colors.grey[800]),
+                                SizedBox(height: 24),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -273,45 +280,33 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
     );
   }
 
-  rowChart(sn, vehiclename, oneDay, twoDay, threeDay, color) {
+  rowChart(sn, vehiclename, rowData, isRoot, color) {
+    print(rowData);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: Get.size.width * 0.1,
+          width: 50,
           child: Text(
-            sn,
+            isRoot ? "SN" : sn,
             style: TextStyle(fontSize: 16, color: color),
           ),
         ),
         Container(
-          width: Get.size.width * 0.35,
+          width: 200,
           child: Text(
-            vehiclename,
+            isRoot ? "Vehicle Name" : vehiclename,
             style: TextStyle(fontSize: 16, color: color),
           ),
         ),
-        Container(
-          width: Get.size.width * 0.12,
-          child: Text(
-            oneDay,
-            style: TextStyle(fontSize: 16, color: color),
-          ),
-        ),
-        Container(
-          width: Get.size.width * 0.12,
-          child: Text(
-            twoDay,
-            style: TextStyle(fontSize: 16, color: color),
-          ),
-        ),
-        Container(
-          width: Get.size.width * 0.12,
-          child: Text(
-            threeDay,
-            style: TextStyle(fontSize: 16, color: color),
-          ),
-        ),
+        if (rowData != null)
+          for (int i = 0; i < rowData["days"].length; i++)
+            Container(
+              width: 80,
+              child: Text(
+                isRoot ? "${i + 1} Day" : rowData["days"][i].toString(),
+                style: TextStyle(fontSize: 16, color: color),
+              ),
+            ),
       ],
     );
   }

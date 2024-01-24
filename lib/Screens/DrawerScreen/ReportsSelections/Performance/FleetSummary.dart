@@ -47,27 +47,11 @@ class _FleetSummaryState extends State<FleetSummary> {
   void fetchData() async {
     SmartDialog.showLoading(msg: 'Loading...');
     vehiclesData = await ApiService.fleetSummar();
+    filteredItems = vehiclesData;
     setState(() {});
     SmartDialog.dismiss();
   }
 
-  // List<String> distance = ["90","90","90","90","90","90"];
-  // List<String> idle = ["90","90","90","90","90","90"];
-  // List<String> halt= ["90","90","90","90","90","90"];
-  // var vehicleno = ["DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393","DL1ZB9393",];
-  // var contactdate =["09-23-2022","09-23-2022","09-23-2022","09-23-2022","09-23-2022","09-23-2022",];
-  // var contacttime =["14:22","14:22","14:22","14:22","14:22","14:22",];
-  // var adress = ["Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //   "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //   "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",
-  //       "Indra Gandhi Rd, Police Colony, Mehram Nagar, New Delhi,\nDelhi 110010,india",];
-  // var speed =["50","50","50","50","50","50",];
-
-  //var distance = ["90","90","90","90","90","90"];
-  // var idlesince = [90.9, 0, 0, 90, 90];
-  // var Haltsince = [90.9, 0, 0, 90, 90];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,445 +117,204 @@ class _FleetSummaryState extends State<FleetSummary> {
           ),
           Container(
             height: Get.size.height * 0.78,
-            child: filteredItems.isNotEmpty || _query.isNotEmpty
-                ? filteredItems.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No Results Found',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: filteredItems.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          final vehicle = filteredItems[index];
-                          return Card(
-                            elevation: 3,
-                            child: Container(
-                              height: Get.size.height * 0.2,
-                              width: Get.size.width * 0.95,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 4.0),
-                                      child: Text(
-                                        vehicle['veh_name'],
-                                        style: TextStyle(
-                                            color: Color(0xfff3c331),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Last Contact:",
-                                          style: TextStyle(
-                                            color: Color(0xff464646),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        Text(
-                                          vehicle['last_contact'],
-                                          style: TextStyle(
-                                            color: Color(0xff464646),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      vehicle['address'],
-                                      style: TextStyle(
-                                        color: Color(0xff2f9df4),
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4.0),
-                                      child: Container(
-                                        height: Get.size.height * 0.1,
-                                        width: Get.size.width * 0.90,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: Colors.black)),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: Get.size.height * 0.1,
-                                              width: Get.size.width * 0.2,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 6.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Speed",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      vehicle['speed']
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            VerticalDivider(
-                                              thickness: 1,
-                                              width: 1,
-                                              color: Colors.black,
-                                            ),
-                                            Container(
-                                              height: Get.size.height * 0.1,
-                                              width: Get.size.width * 0.22,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 6.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Distance",
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      vehicle['distance']
-                                                          .truncate()
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            VerticalDivider(
-                                              thickness: 1,
-                                              width: 1,
-                                              color: Colors.black,
-                                            ),
-                                            Container(
-                                              height: Get.size.height * 0.1,
-                                              width: Get.size.width * 0.22,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 6.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Idle Since",
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      vehicle['idealtime'],
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            VerticalDivider(
-                                              thickness: 1,
-                                              width: 1,
-                                              color: Colors.black,
-                                            ),
-                                            Container(
-                                              height: Get.size.height * 0.1,
-                                              width: Get.size.width * 0.22,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 6.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Halt Since",
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      vehicle['halttime'],
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff828282),
-                                                        fontSize: 13,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
+            child: filteredItems.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No Results Found',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
                 : ListView.builder(
-                    itemCount: vehiclesData.length,
+                    itemCount: filteredItems.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      final vehicle = vehiclesData[index];
-                      return Card(
-                        elevation: 3,
-                        child: Container(
-                          height: Get.size.height * 0.2,
-                          width: Get.size.width * 0.95,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0),
-                                  child: Text(
-                                    vehicle['veh_name'],
-                                    style: TextStyle(
-                                        color: Color(0xfff3c331),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Last Contact:",
-                                      style: TextStyle(
-                                        color: Color(0xff464646),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    Text(
-                                      vehicle['last_contact'],
-                                      style: TextStyle(
-                                        color: Color(0xff464646),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  vehicle['address'],
+                      final vehicle = filteredItems[index];
+                      return Container(
+                        margin: EdgeInsets.all(10),
+                        decoration:
+                            BoxDecoration(color: Colors.white, boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: Offset(0, 0),
+                          ),
+                        ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4.0),
+                                child: Text(
+                                  vehicle['veh_name'],
                                   style: TextStyle(
-                                    color: Color(0xff2f9df4),
-                                    fontSize: 15,
-                                  ),
+                                      color: Color(0xfff3c331),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Container(
-                                    height: Get.size.height * 0.1,
-                                    width: Get.size.width * 0.90,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 1.0, color: Colors.black)),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: Get.size.height * 0.1,
-                                          width: Get.size.width * 0.2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 6.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Speed",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  vehicle['speed'].toString(),
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        VerticalDivider(
-                                          thickness: 1,
-                                          width: 1,
-                                          color: Colors.black,
-                                        ),
-                                        Container(
-                                          height: Get.size.height * 0.1,
-                                          width: Get.size.width * 0.22,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 6.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Distance",
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  vehicle['distance']
-                                                      .truncate()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        VerticalDivider(
-                                          thickness: 1,
-                                          width: 1,
-                                          color: Colors.black,
-                                        ),
-                                        Container(
-                                          height: Get.size.height * 0.1,
-                                          width: Get.size.width * 0.22,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 6.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Idle Since",
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  vehicle['idealtime'],
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        VerticalDivider(
-                                          thickness: 1,
-                                          width: 1,
-                                          color: Colors.black,
-                                        ),
-                                        Container(
-                                          height: Get.size.height * 0.1,
-                                          width: Get.size.width * 0.22,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 6.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Halt Since",
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  vehicle['halttime'],
-                                                  style: TextStyle(
-                                                    color: Color(0xff828282),
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Last Contact:",
+                                    style: TextStyle(
+                                      color: Color(0xff464646),
+                                      fontSize: 14,
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
+                                  Text(
+                                    vehicle['last_contact'],
+                                    style: TextStyle(
+                                      color: Color(0xff464646),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                vehicle['address'],
+                                style: TextStyle(
+                                  color: Color(0xff2f9df4),
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    border: Border.all(
+                                        width: 1.0, color: Colors.black)),
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Speed",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                vehicle['speed'].toString(),
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 1),
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Distance",
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                double.parse(vehicle['distance']
+                                                        .truncate()
+                                                        .toString())
+                                                    .toStringAsFixed(1),
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 1),
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Idle Since",
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                vehicle['idealtime'],
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 1),
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Halt Since",
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                vehicle['halttime'],
+                                                style: TextStyle(
+                                                  color: Color(0xff828282),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       );

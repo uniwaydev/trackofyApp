@@ -42,10 +42,15 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
     setState(() {});
   }
 
-  void updateAlert(alertId, notify) async {
-    await ApiService.updateAlert(
+  updateAlert(alertId, notify) async {
+    SmartDialog.showLoading(msg: "Loading...");
+    var res = await ApiService.updateAlert(
         widget.serviceId.toString(), "$alertId", notify);
-    SmartDialog.showToast("Update Successfully");
+    SmartDialog.dismiss();
+    SmartDialog.showToast(res
+        ? "Update Successfully"
+        : "An error occurred while communicating with the server.");
+    return res;
   }
 
   @override
@@ -126,13 +131,16 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
                         children: [
                           Builder(builder: (context) {
                             String img = "assets/images/information.png";
-                            if (alertData["alert_type"] == "Door") {
+                            if (alertData["alert_type"] == null) {
+                              img = "assets/images/information.png";
+                            } else if (alertData["alert_type"] == "Door") {
                               img = "assets/images/ic_door_new.PNG";
                             } else if (alertData["alert_type"] == "AC") {
                               img = "assets/images/ic_ac_new.PNG";
                             } else if (alertData["alert_type"] == "Ignition") {
                               img = "assets/images/ic_ignition_new.PNG";
-                            } else if (alertData["alert_type"] == "Main Power") {
+                            } else if (alertData["alert_type"] ==
+                                "Main Power") {
                               img = "assets/images/plug.png";
                             } else if (alertData["alert_type"] == "Panic") {
                               img = "assets/images/ic_speed_new.PNG";
@@ -142,14 +150,19 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
                             return Image.asset(img, width: 20);
                           }),
                           SizedBox(width: 8),
-                          Text(alertData["alert_type"]),
+                          Text(alertData["alert_type"] ?? ""),
                         ],
                       ),
                       Switch(
-                        onChanged: (value) {
-                          alertData["is_notification"] = value ? 1 : 0;
-                          updateAlert(alertData["alert_id"], value);
-                          setState(() {});
+                        onChanged: (value) async {
+                          var res = await updateAlert(
+                              alertData["alert_setting_id"],
+                              value ? "true" : "false");
+                          if (res) {
+                            setState(() {
+                              alertData["is_notification"] = value ? 1 : 0;
+                            });
+                          }
                         },
                         value: alertData["is_notification"] == 1,
                         activeColor: Color(0xff524f54),

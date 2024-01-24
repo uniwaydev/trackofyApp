@@ -103,6 +103,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
   var vehiclePerformance;
   var haltStatus;
   var distanceDetail;
+  var locations;
+  var locationMaxDist = 0;
+  List<_ChartData> locationData = [];
+  TooltipBehavior _tooltip = TooltipBehavior();
 
   String startDate = "";
   String endDate = "";
@@ -184,6 +188,14 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
     vehiclePerformance = await ApiService.getVehiclePerformance();
     haltStatus = await ApiService.getHaltStatus();
     distanceDetail = await ApiService.getDistanceDetail();
+    locations = await ApiService.getControlLocation();
+    for (var location in locations) {
+      locationData.add(_ChartData(location["location"],
+          double.parse(location["location_count"].toString())));
+      if (locationMaxDist < int.parse(location["location_count"].toString())) {
+        locationMaxDist = location["location_count"];
+      }
+    }
     SmartDialog.dismiss();
 
     setState(() {});
@@ -1092,7 +1104,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                     ),
                     SizedBox(width: 8),
                     Container(
-                      width: 160,
+                      width: 220,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -1206,7 +1218,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                                         dropdownvalue = newValue!;
                                       });
                                     },
-                                  ),
+                                  )
                                 ],
                               ))
                             ],
@@ -1214,57 +1226,78 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                           SizedBox(height: 20),
                           Row(
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.blueGrey,
+                                          ),
+                                          child: Icon(Icons.time_to_leave,
+                                              color: Colors.blueGrey[300],
+                                              size: 24),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Max",
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text(
+                                                alertData != null
+                                                    ? "${alertData["max_alert_count"]}"
+                                                    : "N/A",
+                                                style: TextStyle(
+                                                    color: Colors.grey[300])),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.blueGrey,
+                                          ),
+                                          child: Icon(Icons.bar_chart,
+                                              color: Colors.blueGrey[300],
+                                              size: 24),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Count",
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text(
+                                                alertData != null
+                                                    ? "${alertData["notification_count"]}"
+                                                    : "N/A",
+                                                style: TextStyle(
+                                                    color: Colors.grey[300])),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
                               ),
                               SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Max",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      alertData != null
-                                          ? "${alertData["max_alert_count"]}"
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.bar_chart,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Count",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      alertData != null
-                                          ? "${alertData["notification_count"]}"
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
+                              Image.asset("assets/images/new-message.png",
+                                  width: 80),
                             ],
                           ),
                           SizedBox(height: 20),
@@ -2120,6 +2153,53 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      "Control Location",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 300,
+                      child: SfCartesianChart(
+                          primaryXAxis: CategoryAxis(),
+                          primaryYAxis: NumericAxis(
+                              minimum: 0,
+                              maximum: locationMaxDist.toDouble(),
+                              interval: 1),
+                          tooltipBehavior: _tooltip,
+                          series: <ColumnSeries<_ChartData, String>>[
+                            ColumnSeries<_ChartData, String>(
+                                dataSource: locationData,
+                                yValueMapper: (_ChartData data, _) => data.y,
+                                xValueMapper: (_ChartData data, _) => data.x,
+                                name: 'Control Location',
+                                color: ThemeColor.primarycolor)
+                          ]),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       "Vehicle Performance",
                       style: TextStyle(
                         fontSize: 20,
@@ -2317,7 +2397,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
             FlSpot(4.0, haltStatus != null ? haltStatus[">24"] * 1.0 : 0),
           ],
           color: Colors.blue,
-          isCurved: true,
+          isCurved: false,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -2454,4 +2534,11 @@ class SalesData {
 
   final double year;
   final double sales;
+}
+
+class _ChartData {
+  _ChartData(this.x, this.y);
+
+  final String x;
+  final double y;
 }

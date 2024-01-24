@@ -231,7 +231,7 @@ class _AddGeofenceState extends State<AddGeofence> {
                   ),
                   MaterialButton(
                     color: Color(0xffd6d7d7),
-                    onPressed: () {
+                    onPressed: () async {
                       if (fenceNameCtrl.text.isEmpty ||
                           radiusCtrl.text.isEmpty ||
                           address.isEmpty ||
@@ -239,7 +239,7 @@ class _AddGeofenceState extends State<AddGeofence> {
                         SmartDialog.showToast("Please complete all fields.");
                         return;
                       }
-                      Get.to(
+                      var geoRes = await Get.to(
                         () => GeoMapScreen(
                           lat: sLat,
                           lng: sLng,
@@ -251,6 +251,9 @@ class _AddGeofenceState extends State<AddGeofence> {
                           selectedVehicleIds: selectedVehicleIds,
                         ),
                       );
+                      if(geoRes != null){
+                        Navigator.pop(context, geoRes);
+                      }
                     },
                     child: Text(
                       "MAP",

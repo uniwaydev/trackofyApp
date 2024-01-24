@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackofyapp/Screens/DashboardScreen/NewDashboardScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/Geofence/GeofenceScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/NotificationsScreen.dart';
@@ -11,6 +12,7 @@ import 'package:trackofyapp/Screens/DrawerScreen/SettingsScreen/SettingsScreen.d
 import 'package:trackofyapp/Screens/DrawerScreen/TrackingScreen.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/VehicleScreen.dart';
 import 'package:trackofyapp/Screens/OnboardingScreen/LoginScreen.dart';
+import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    var x = (Get.width - 0) / 21;
+    var x = (Get.width - 0) / 20;
 
     return Scaffold(
       key: scaffoldKey,
@@ -103,21 +105,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            height: 9 * x,
+            height: (Get.width / 5) * 3,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0),
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               child: GridView.builder(
-                padding: EdgeInsets.fromLTRB(x, x, x, 0),
+                padding: EdgeInsets.all(0), //EdgeInsets.fromLTRB(x, x, x, 0),
                 itemCount: 10,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
-                  crossAxisSpacing: x,
+                  crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
-                  childAspectRatio: 3 / 4,
+                  childAspectRatio: 2 / 3,
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (index == 0) {
                         Get.to(() => NewDashboardScreen());
                       } else if (index == 1) {
@@ -137,34 +139,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else if (index == 8) {
                         Get.to(() => SettingsScreen());
                       } else if (index == 9) {
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.remove('user');
+                        ApiService.currentUser = null;
                         Get.offAll(() => LoginScreen());
                       }
                     },
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0.0),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: (3 / 2 * x) - x * 0.5,
-                            child: Image.asset(
-                              images[index],
-                              fit: BoxFit.cover,
-                            ),
+                        Container(
+                          width: Get.width / 5,
+                          height: Get.width / 5,
+                          padding: const EdgeInsets.all(5),
+                          child: Image.asset(
+                            images[index],
                           ),
                         ),
                         Container(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  txt[index],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: x * 0.5, color: Colors.black87),
-                                ),
-                              ]),
+                          child: Text(
+                            txt[index],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.black87),
+                          ),
                         )
                       ],
                     ),

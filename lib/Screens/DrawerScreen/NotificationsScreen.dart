@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/NotificationDetailScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
@@ -154,47 +155,54 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Material(
                             elevation: 3,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                Get.to(() => NotificationDetailScreen(
+                                    lat: message.lat, lng: message.lng, setOn: message.sentOn,));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 12.0),
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                          "assets/images/Screenshot_2022-09-17_154834-removebg-preview.png",
-                                          height: 40),
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 22.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Sent ON ${message.sentOn}",
-                                                style: TextStyle(
-                                                    color: ThemeColor.bluecolor,
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                message.message,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ],
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                            "assets/images/Screenshot_2022-09-17_154834-removebg-preview.png",
+                                            height: 40),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 22.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Sent ON ${message.sentOn}",
+                                                  style: TextStyle(
+                                                      color:
+                                                          ThemeColor.bluecolor,
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  message.message,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -230,11 +238,15 @@ class NotificationMessage {
   final String msgStatus;
   final String message;
   final String sentOn;
+  final double lat;
+  final double lng;
 
   NotificationMessage({
     required this.id,
     required this.msgStatus,
     required this.message,
     required this.sentOn,
+    required this.lat,
+    required this.lng,
   });
 }

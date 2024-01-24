@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -18,6 +19,7 @@ class _IdleSummaryState extends State<IdleSummary> {
   List<String> selectedVehicle = [];
   List<String> selectedVehicleIds = [];
   List<String> selectedGroups = [];
+  Map<String, dynamic> addresses = Map();
   String startDate = "";
   String endDate = "";
   bool isApply = false;
@@ -303,9 +305,30 @@ class _IdleSummaryState extends State<IdleSummary> {
                 color: Colors.blue[300],
                 fontWeight: FontWeight.bold),
           ),
-          Text(
-            "Get Address",
-            style: TextStyle(fontSize: 16, color: Colors.black),
+          InkWell(
+            onTap: () async {
+              if (e["idle_latitude"] == "N/A" || e["idle_longitude"] == "N/A") {
+                return;
+              }
+              placemarkFromCoordinates(
+                      double.parse(e["idle_latitude"].toString()),
+                      double.parse(e["idle_longitude"].toString()))
+                  .then((List<Placemark> placemarks) async {
+                Placemark place = placemarks[0];
+                setState(() {
+                  addresses[e["sys_service_id"].toString()] =
+                      '${place.street ?? ""}, ${place.name ?? ""} ${place.subLocality ?? ""}, ${place.subAdministrativeArea ?? ""}, ${place.postalCode ?? ""}, ${place.country ?? ""}';
+                });
+              }).catchError((e) {
+                print(e);
+              });
+            },
+            child: Text(
+              addresses[e["sys_service_id"]] != null
+                  ? addresses[e["sys_service_id"].toString()]
+                  : "Get Address",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
           ),
           SizedBox(
             height: 8,
@@ -334,10 +357,10 @@ class _IdleSummaryState extends State<IdleSummary> {
                     children: [
                       Text("Idle Lat"),
                       Text(
-                          "${e["idle_latitude"] != "N/A" ? double.parse(e["idle_latitude"] + "").toStringAsFixed(2) : "N/A"}"),
+                          "${e["idle_latitude"] != "N/A" ? double.parse(e["idle_latitude"].toString()).toStringAsFixed(5) : "N/A"}"),
                       Text("Idle Lng"),
                       Text(
-                          "${e["idle_longitude"] != "N/A" ? double.parse(e["idle_longitude"] + "").toStringAsFixed(2) : "N/A"}"),
+                          "${e["idle_longitude"] != "N/A" ? double.parse(e["idle_longitude"].toString()).toStringAsFixed(5) : "N/A"}"),
                     ],
                   ),
                 ),
@@ -362,7 +385,8 @@ class _IdleSummaryState extends State<IdleSummary> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text("Total Distance"),
-                      Text("${e["total_distance"] ?? "N/A"}"),
+                      Text(
+                          "${double.parse(e["total_distance"].toString()).toStringAsFixed(1)}"),
                     ],
                   ),
                 ),

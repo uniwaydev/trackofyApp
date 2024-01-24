@@ -31,7 +31,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       LatLng(19.018255973653343, 72.84793849278007);
 
   static final CameraPosition _kInitialPosition =
-      CameraPosition(target: _kMapCenter, zoom: 14.0, tilt: 0, bearing: 0);
+      CameraPosition(target: _kMapCenter, zoom: 7.0, tilt: 0, bearing: 0);
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Map<String, dynamic>> data = [];
@@ -59,7 +59,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   @override
   void initState() {
     super.initState();
-    SmartDialog.showLoading(msg: "Loading...");
     fetchData();
   }
 
@@ -80,15 +79,18 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   onTracking() async {
+    if (!isTracking) {
+      return;
+    }
     print("==== TRACKING START ====");
     data = await ApiService.liveTracking(widget.serviceId.toString());
-    SmartDialog.dismiss();
     _markers.clear();
     if (data.isNotEmpty) {
       var e = data[0];
       vehicleData = e;
       LatLng ePos = LatLng(double.parse(e["lat"]), double.parse(e["lng"]));
-      BitmapDescriptor markerIcon = await MapHelper.getMarkerImageFromUrl(e["icon"]);
+      BitmapDescriptor markerIcon =
+          await MapHelper.getMarkerImageFromUrl(e["icon"]);
       _markers.add(Marker(
           markerId: MarkerId(e["vehicle_name"]),
           icon: markerIcon,
@@ -197,9 +199,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       await Get.to(() => PlaybackScreen(
                             serviceId: widget.serviceId,
                           ));
-                      // setState(() {
-                      //   isTracking = true;
-                      // });
+                      setState(() {
+                        isTracking = true;
+                        fetchData();
+                      });
                     },
                     child: Column(
                       children: [
@@ -222,13 +225,20 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     width: 8,
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Get.to(() => AlertSettingScreen(
+                    onTap: () async {
+                      setState(() {
+                        isTracking = false;
+                      });
+                      await Get.to(() => AlertSettingScreen(
                             serviceId: widget.serviceId,
                             vehicleName: vehicleData != null
                                 ? vehicleData["vehicle_name"]
                                 : "",
                           ));
+                      setState(() {
+                        isTracking = true;
+                        fetchData();
+                      });
                     },
                     child: Column(
                       children: [
@@ -442,8 +452,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/meter.png",
                                                     width: 15,
@@ -471,8 +482,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_distance.png",
                                                     width: 15,
@@ -500,8 +512,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_speed_new.PNG",
                                                     width: 15,
@@ -539,8 +552,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_last_parking.png",
                                                     width: 15,
@@ -568,8 +582,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_idle.png",
                                                     width: 15,
@@ -597,8 +612,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_today_halt_new.png",
                                                     width: 15,
@@ -636,8 +652,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_car_status.png",
                                                     width: 15,
@@ -666,8 +683,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_car_battery.png",
                                                     width: 15,
@@ -695,10 +713,11 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
-                                                    "assets/images/Untitled_design__10_-removebg-preview.png",
+                                                    "assets/images/permit.png",
                                                     width: 15,
                                                   ),
                                                   SizedBox(width: 5),
@@ -735,8 +754,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                               children: [
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                      MainAxisAlignment.start,
                                                   children: [
+                                                    SizedBox(width: 8),
                                                     Image.asset(
                                                       "assets/images/Untitled_design__4_-removebg-preview.png",
                                                       width: 15,
@@ -764,8 +784,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                               children: [
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                      MainAxisAlignment.start,
                                                   children: [
+                                                    SizedBox(width: 8),
                                                     Image.asset(
                                                       "assets/images/ic_co2.png",
                                                       width: 15,
@@ -810,8 +831,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_today_halt_new.png",
                                                     width: 15,
@@ -839,8 +861,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_idle.png",
                                                     width: 15,
@@ -868,8 +891,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/meter.png",
                                                     width: 15,
@@ -908,8 +932,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment.start,
                                               children: [
+                                                SizedBox(width: 8),
                                                 Image.asset(
                                                   "assets/images/meter.png",
                                                   width: 15,
@@ -937,8 +962,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment.start,
                                               children: [
+                                                SizedBox(width: 8),
                                                 Image.asset(
                                                   "assets/images/ic_equator.png",
                                                   width: 15,
@@ -966,8 +992,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment.start,
                                               children: [
+                                                SizedBox(width: 8),
                                                 RotatedBox(
                                                   quarterTurns: 90,
                                                   child: Image.asset(
@@ -1009,8 +1036,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(width: 8),
                                                   Image.asset(
                                                     "assets/images/ic_fitness.png",
                                                     width: 15,
@@ -1447,35 +1475,36 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   onBatteryData() {
-    if (vehicleData == null) {
+    var value = vehicleData == null
+        ? 0
+        : double.parse(vehicleData["battery_percent_val"].toString());
+    if (value == 0) {
       return Icon(
         Icons.battery_0_bar,
         color: Colors.red,
         size: 20,
       );
-    } else if (vehicleData["battery_percent_val"] <= 30 &&
-        vehicleData["battery_percent_val"] >= 1) {
+    } else if (value <= 30 && value >= 1) {
       return Icon(
         Icons.battery_2_bar,
         color: Colors.red,
         size: 20,
       );
-    } else if (vehicleData["battery_percent_val"] <= 70 &&
-        vehicleData["battery_percent_val"] >= 30) {
+    } else if (value <= 70 && value >= 30) {
       return Icon(
         Icons.battery_3_bar,
         color: Colors.orange,
         size: 20,
       );
-    } else if (vehicleData["battery_percent_val"] >= 70) {
+    } else if (value >= 70 && value < 100) {
       return Icon(
         Icons.battery_5_bar,
         color: Colors.green,
         size: 20,
       );
-    } else if (vehicleData["battery_percent_val"] == 100) {
+    } else if (value == 100) {
       return Icon(
-        Icons.battery_6_bar,
+        Icons.battery_full,
         color: Colors.green,
         size: 20,
       );
@@ -1491,7 +1520,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   onACData() {
     String acTxt = "freezer-safe";
     if (vehicleData == null) {
-      acTxt = "rsz_battery_no_data";
+      acTxt = "freezer-safe";
     } else if (vehicleData["ac"] == "OFF") {
       acTxt = "freezer-safe1";
     } else if (vehicleData["ac"] == "ON") {

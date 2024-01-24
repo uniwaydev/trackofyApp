@@ -10,6 +10,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/MapHelper.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/MapMarker.dart';
+import 'package:trackofyapp/Screens/DrawerScreen/VehicleDetailScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
@@ -88,6 +89,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
     final List<MapMarker> markers = [];
     // _markers.clear();
     for (int i = 0; i < vehicles.length; i++) {
+      if (!isTracking) {
+        return;
+      }
       if (selected == null ||
           selected["serviceId"] == vehicles[i]["serviceId"]) {
         print(vehicles[i]);
@@ -105,7 +109,19 @@ class _TrackingScreenState extends State<TrackingScreen> {
                 position: LatLng(double.parse(trackingInfo["lat"]),
                     double.parse(trackingInfo["lng"])),
                 icon: markerImage,
-                rotation: double.parse(trackingInfo["angle"])),
+                rotation: double.parse(trackingInfo["angle"]),
+                onClick: () async {
+                  setState(() {
+                    isTracking = false;
+                  });
+                  await Get.to(() => VehicleDetailScreen(
+                      serviceId: vehicles[i]["serviceId"].toString()));
+                  setState(() {
+                    isTracking = true;
+
+                    _initMarkers();
+                  });
+                }),
           );
 
           // if (i == vehicles.length - 1) {
@@ -170,25 +186,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void fetchData(serviceId) async {
-    print("==== Start Tracking ====");
-    data = await ApiService.liveTracking(serviceId);
-    var e = data[0];
-    _markers.clear();
-    BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/images/red_car.png");
-    _markers.add(Marker(
-      markerId: MarkerId(e["vehicle_name"]),
-      icon: markerIcon,
-      position: LatLng(double.parse(e["lat"]), double.parse(e["lng"])),
-    ));
-
-    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(double.parse(e["lat"]), double.parse(e["lng"])), 14));
-    setState(() {});
-    print("==== End Tracking ====");
   }
 
   @override
