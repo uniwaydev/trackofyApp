@@ -1,4 +1,5 @@
 import 'package:circular_chart_flutter/circular_chart_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -222,7 +223,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromRGBO(34, 37, 46, 1),
           automaticallyImplyLeading: false,
           leading: GestureDetector(
               onTap: () {
@@ -230,11 +231,12 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
               },
               child: Icon(
                 Icons.menu,
-                color: Color(0xff1574a4),
+                color: Colors.white70,
               )),
           centerTitle: true,
           title: Image.asset(
-            "assets/images/logo.png",
+            "assets/images/logo_color.png",
+            color: Colors.white70,
             height: 50,
           ),
           actions: [
@@ -248,7 +250,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                       },
                       child: Icon(
                         Icons.home,
-                        color: Color(0xff1574a4),
+                        color: Colors.white70,
                         size: 30,
                       )),
                   SizedBox(
@@ -262,7 +264,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                         "assets/images/globe-512.png",
                         height: 30,
                         width: 30,
-                        color: ThemeColor.primarycolor,
+                        color: Colors.white70,
                       )),
                 ],
               ),
@@ -271,2059 +273,2272 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
         ),
       ),
       body: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (vehicleStatusCount != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 200,
-                      child: PieChart(
-                        PieChartData(
-                          sections: [
-                            PieChartSectionData(
-                              color: Colors.blueGrey[400],
-                              value:
-                                  vehicleStatusCount["nodata"]["total"] * 1.0,
-                              radius: 40,
-                              title:
-                                  "${double.parse((vehicleStatusCount["nodata"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
-                            ),
-                            PieChartSectionData(
-                              color: Colors.green[400],
-                              value:
-                                  vehicleStatusCount["running"]["total"] * 1.0,
-                              radius: 40,
-                              title:
-                                  "${double.parse((vehicleStatusCount["running"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
-                            ),
-                            PieChartSectionData(
-                              color: Colors.red[400],
-                              value: vehicleStatusCount["stop"]["total"] * 1.0,
-                              radius: 40,
-                              title:
-                                  "${double.parse((vehicleStatusCount["stop"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
-                            ),
-                            PieChartSectionData(
-                              color: Colors.yellow[400],
-                              value: vehicleStatusCount["idle"]["total"] * 1.0,
-                              radius: 40,
-                              title:
-                                  "${double.parse((vehicleStatusCount["idle"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
-                            ),
-                          ],
-                          centerSpaceRadius: 48,
-                          sectionsSpace: 8,
+        //  backgroundColor: Color.fromRGBO(46, 46, 72, 1),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(46, 46, 80, 1),
+                Color.fromRGBO(66, 70, 120, 1),
+              ],
+              tileMode: TileMode.mirror,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [
+                0.6,
+                0.9,
+              ],
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                if (vehicleStatusCount != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 200,
+                        height: 200,
+                        child: PieChart(
+                          PieChartData(
+                            sections: [
+                              PieChartSectionData(
+                                  color: Colors.blueGrey[400],
+                                  value: vehicleStatusCount["nodata"]["total"] *
+                                      1.0,
+                                  radius: 40,
+                                  title:
+                                      "${double.parse((vehicleStatusCount["nodata"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
+                                  titleStyle: TextStyle(color: Colors.white)),
+                              PieChartSectionData(
+                                  color: Colors.green[400],
+                                  value: vehicleStatusCount["running"]
+                                          ["total"] *
+                                      1.0,
+                                  radius: 40,
+                                  title:
+                                      "${double.parse((vehicleStatusCount["running"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
+                                  titleStyle: TextStyle(color: Colors.white)),
+                              PieChartSectionData(
+                                  color: Colors.red[400],
+                                  value:
+                                      vehicleStatusCount["stop"]["total"] * 1.0,
+                                  radius: 40,
+                                  title:
+                                      "${double.parse((vehicleStatusCount["stop"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
+                                  titleStyle: TextStyle(color: Colors.white)),
+                              PieChartSectionData(
+                                  color: Colors.yellow[400],
+                                  value:
+                                      vehicleStatusCount["idle"]["total"] * 1.0,
+                                  radius: 40,
+                                  title:
+                                      "${double.parse((vehicleStatusCount["idle"]["total"] / vehicleStatusCountTotal * 100).toString()).toStringAsFixed(1)}%",
+                                  titleStyle: TextStyle(color: Colors.white)),
+                            ],
+                            centerSpaceRadius: 48,
+                            sectionsSpace: 8,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                SizedBox(
+                  height: 10,
                 ),
-              SizedBox(
-                height: 10,
-              ),
-              if (vehicleStatusCount != null)
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.green,
-                              blurRadius: 20,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          color: Colors.green.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.directions_walk,
-                                color: Colors.green[100], size: 24),
-                            SizedBox(height: 8),
-                            Text(
-                              "Running",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "${vehicleStatusCount["running"]["total"]}",
-                              style: TextStyle(
-                                color: Colors.green[100],
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
+                if (vehicleStatusCount != null)
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 8,
                       ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.red,
-                              blurRadius: 20,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          color: Colors.red.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.directions_walk,
-                                color: Colors.red[100], size: 24),
-                            SizedBox(height: 8),
-                            Text(
-                              "Stopped",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                      Expanded(
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.green,
+                                blurRadius: 20,
+                                offset: Offset(0, 0),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "${vehicleStatusCount["stop"]["total"]}",
-                              style: TextStyle(
-                                color: Colors.red[100],
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.yellow,
-                              blurRadius: 20,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          color: Colors.yellow[800]?.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.directions_walk,
-                                color: Colors.yellow[100], size: 24),
-                            SizedBox(height: 8),
-                            Text(
-                              "Idle",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "${vehicleStatusCount["idle"]["total"]}",
-                              style: TextStyle(
-                                color: Colors.yellow[100],
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 20,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          color: Colors.grey[800]?.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.wifi_off,
-                                color: Colors.grey[300], size: 24),
-                            SizedBox(height: 8),
-                            Text(
-                              "No Data",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "${vehicleStatusCount["nodata"]["total"]}",
-                              style: TextStyle(
-                                color: Colors.grey[300],
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                  ],
-                ),
-              SizedBox(height: 20),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(width: 8),
-                    Container(
-                      width: 160,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Halt",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            print(startDate);
-                                            print(endDate);
-                                            SmartDialog.showLoading(
-                                                msg: 'loading');
-                                            haltDurationfunc(
-                                                startDate, endDate);
-                                            SmartDialog.dismiss();
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            SmartDialog.showLoading(
-                                                msg: 'loading');
-                                            print(startDate);
-                                            print(endDate);
-                                            haltDurationfunc(
-                                                startDate, endDate);
-                                            SmartDialog.dismiss();
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            haltDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now().add(
-                                                        Duration(
-                                                            days: DateTime
-                                                                    .daysPerWeek -
-                                                                DateTime.now()
-                                                                    .weekday))) +
-                                                " 23:59:59";
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            SmartDialog.showLoading(
-                                                msg: 'loading');
-                                            print(startDate);
-                                            print(endDate);
-                                            haltDurationfunc(
-                                                startDate, endDate);
-                                            SmartDialog.dismiss();
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
                             ],
+                            color: Colors.green.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                          SizedBox(height: 20),
-                          Row(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Max",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      haltDuration != null
-                                          ? haltDuration["max_halt_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.timer_outlined,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Duration",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      haltDuration != null
-                                          ? haltDuration["total_halt_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 160,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
+                              Icon(Icons.directions_walk,
+                                  color: Colors.green[100], size: 24),
+                              SizedBox(height: 8),
                               Text(
                                 "Running",
                                 style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "${vehicleStatusCount["running"]["total"]}",
+                                style: TextStyle(
+                                  color: Colors.green[100],
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    // padding:
-                                    //     EdgeInsets.symmetric(horizontal: 5),
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        //  alignment: Alignment.centerRight,
-                                        value: items,
-                                        child: Container(
-                                          width: 200,
-                                          child: Text(items),
-                                        ),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-17 12:00:00";
-                                            print(startDate);
-                                            print(endDate);
-                                            runningDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            print(startDate);
-                                            print(endDate);
-                                            runningDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            print(startDate);
-                                            print(endDate);
-                                            runningDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            print(startDate);
-                                            print(endDate);
-                                            runningDurationfunc(
-                                                startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
                             ],
                           ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Max",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      runningDuration != null
-                                          ? runningDuration["max_halt_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.timer_outlined,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Duration",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      runningDuration != null
-                                          ? runningDuration[
-                                                  "total_halt_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 160,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
+                      SizedBox(
+                        width: 8,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
+                      Expanded(
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red,
+                                blurRadius: 20,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                            color: Colors.red.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Icon(Icons.directions_walk,
+                                  color: Colors.red[100], size: 24),
+                              SizedBox(height: 8),
+                              Text(
+                                "Stopped",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "${vehicleStatusCount["stop"]["total"]}",
+                                style: TextStyle(
+                                  color: Colors.red[100],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.yellow,
+                                blurRadius: 20,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                            color: Colors.yellow[800]?.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.directions_walk,
+                                  color: Colors.yellow[100], size: 24),
+                              SizedBox(height: 8),
                               Text(
                                 "Idle",
                                 style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "${vehicleStatusCount["idle"]["total"]}",
+                                style: TextStyle(
+                                  color: Colors.yellow[100],
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            idleDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            idleDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            idleDurationfunc(
-                                                startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            idleDurationfunc(
-                                                startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
                             ],
                           ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Max",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      idleDuration != null
-                                          ? idleDuration["max_idle_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.timer_outlined,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Duration",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      idleDuration != null
-                                          ? idleDuration["total_idle_duration"]
-                                              .toString()
-                                          : "N/A",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 220,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
+                      SizedBox(
+                        width: 8,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
+                      Expanded(
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 20,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                            color: Colors.grey[800]?.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Icon(Icons.wifi_off,
+                                  color: Colors.grey[300], size: 24),
+                              SizedBox(height: 8),
                               Text(
-                                "Alert",
+                                "No Data",
                                 style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "${vehicleStatusCount["nodata"]["total"]}",
+                                style: TextStyle(
+                                  color: Colors.grey[300],
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            alertDatafunc(startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-11-03 00:00:00";
-                                            // endDate = "2023-11-03 23:59:5";
-                                            alertDatafunc(startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            alertDatafunc(startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            alertDatafunc(startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  )
-                                ],
-                              ))
                             ],
                           ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 20),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 8),
+                      Container(
+                        width: 160,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          //  color: Color.fromRGBO(51, 57, 95, 1),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 1),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Halt",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: Colors.blueGrey,
-                                          ),
-                                          child: Icon(Icons.time_to_leave,
-                                              color: Colors.blueGrey[300],
-                                              size: 24),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Max",
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
-                                            Text(
-                                                alertData != null
-                                                    ? "${alertData["max_alert_count"]}"
-                                                    : "N/A",
-                                                style: TextStyle(
-                                                    color: Colors.grey[300])),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: Colors.blueGrey,
-                                          ),
-                                          child: Icon(Icons.bar_chart,
-                                              color: Colors.blueGrey[300],
-                                              size: 24),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Count",
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
-                                            Text(
-                                                alertData != null
-                                                    ? "${alertData["notification_count"]}"
-                                                    : "N/A",
-                                                style: TextStyle(
-                                                    color: Colors.grey[300])),
-                                          ],
-                                        )
-                                      ],
+                                    DropdownButton(
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      isDense: true,
+                                      // Initial Value
+                                      //  value: dropdownvalue,
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                          onTap: () {
+                                            if (items == "Today") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now());
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              print(startDate);
+                                              print(endDate);
+                                              SmartDialog.showLoading(
+                                                  msg: 'loading');
+                                              haltDurationfunc(
+                                                  startDate, endDate);
+                                              SmartDialog.dismiss();
+                                            } else if (items == "Yesterday") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now()
+                                                      .subtract(
+                                                          Duration(days: 1)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              SmartDialog.showLoading(
+                                                  msg: 'loading');
+                                              print(startDate);
+                                              print(endDate);
+                                              haltDurationfunc(
+                                                  startDate, endDate);
+                                              SmartDialog.dismiss();
+                                            } else if (items == "This Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              haltDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "Last Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat('yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .add(Duration(
+                                                              days: DateTime
+                                                                      .daysPerWeek -
+                                                                  DateTime.now()
+                                                                      .weekday))) +
+                                                  " 23:59:59";
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              SmartDialog.showLoading(
+                                                  msg: 'loading');
+                                              print(startDate);
+                                              print(endDate);
+                                              haltDurationfunc(
+                                                  startDate, endDate);
+                                              SmartDialog.dismiss();
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
                                     ),
                                   ],
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Image.asset("assets/images/new-message.png",
-                                  width: 80),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 160,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "OverSpeed",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    isDense: true,
-                                    // Initial Value
-                                    //  value: dropdownvalue,
-                                    // Down Arrow Icon
-                                    icon: const Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    // Array list of items
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(items),
-                                        onTap: () {
-                                          if (items == "Today") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now());
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            overSpeedfunc(startDate, endDate);
-                                          } else if (items == "Yesterday") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: 1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().subtract(
-                                                    Duration(days: 1)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            overSpeedfunc(startDate, endDate);
-                                          } else if (items == "This Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            overSpeedfunc(startDate, endDate);
-                                          } else if (items == "Last Week") {
-                                            startDate = DateFormat('yyyy-MM-dd')
-                                                    .format(DateTime.now()
-                                                        .subtract(Duration(
-                                                            days: DateTime.now()
-                                                                    .weekday -
-                                                                1))) +
-                                                " 00:00:00";
-                                            endDate = DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now().add(
-                                                    Duration(
-                                                        days: DateTime
-                                                                .daysPerWeek -
-                                                            DateTime.now()
-                                                                .weekday)));
-                                            // startDate = "2023-10-12 00:00:00";
-                                            // endDate = "2023-10-12 12:00:00";
-                                            overSpeedfunc(startDate, endDate);
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    // After selecting the desired option,it will
-                                    // change button value to selected value
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownvalue = newValue!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ))
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.speed,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Max",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${overSpeed != null ? overSpeed["max_overspeed"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.speed,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Count",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${overSpeed != null ? overSpeed["overspeed_count"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 180,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Maintenance",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              // Expanded(
-                              //     child: Column(
-                              //   crossAxisAlignment: CrossAxisAlignment.end,
-                              //   children: [
-                              //     DropdownButton(
-                              //       underline: SizedBox(),
-                              //       isExpanded: true,
-                              //       isDense: true,
-                              //       // Initial Value
-                              //       //  value: dropdownvalue,
-                              //       // Down Arrow Icon
-                              //       icon: const Icon(
-                              //         Icons.more_vert,
-                              //         color: Colors.white,
-                              //       ),
-                              //       // Array list of items
-                              //       items: items.map((String items) {
-                              //         return DropdownMenuItem(
-                              //           value: items,
-                              //           child: Text(items),
-                              //           onTap: () {
-                              //             if (items == "Today") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now());
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "Yesterday") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: 1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().subtract(
-                              //                       Duration(days: 1)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "This Week") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: DateTime.now()
-                              //                                       .weekday -
-                              //                                   1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().add(
-                              //                       Duration(
-                              //                           days: DateTime
-                              //                                   .daysPerWeek -
-                              //                               DateTime.now()
-                              //                                   .weekday)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "Last Week") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: DateTime.now()
-                              //                                       .weekday -
-                              //                                   1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().add(
-                              //                       Duration(
-                              //                           days: DateTime
-                              //                                   .daysPerWeek -
-                              //                               DateTime.now()
-                              //                                   .weekday)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             }
-                              //           },
-                              //         );
-                              //       }).toList(),
-                              //       // After selecting the desired option,it will
-                              //       // change button value to selected value
-                              //       onChanged: (String? newValue) {
-                              //         setState(() {
-                              //           dropdownvalue = newValue!;
-                              //         });
-                              //       },
-                              //     ),
-                              //   ],
-                              // ))
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Expired",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${maintenance != null ? maintenance["expired_maintainence_count"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.speed,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Count",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${maintenance != null ? maintenance["maintainence_count"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 160,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[900],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Renewal",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              // Expanded(
-                              //     child: Column(
-                              //   crossAxisAlignment: CrossAxisAlignment.end,
-                              //   children: [
-                              //     DropdownButton(
-                              //       underline: SizedBox(),
-                              //       isExpanded: true,
-                              //       isDense: true,
-                              //       // Initial Value
-                              //       //  value: dropdownvalue,
-                              //       // Down Arrow Icon
-                              //       icon: const Icon(
-                              //         Icons.more_vert,
-                              //         color: Colors.white,
-                              //       ),
-                              //       // Array list of items
-                              //       items: items.map((String items) {
-                              //         return DropdownMenuItem(
-                              //           value: items,
-                              //           child: Text(items),
-                              //           onTap: () {
-                              //             if (items == "Today") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now());
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "Yesterday") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: 1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().subtract(
-                              //                       Duration(days: 1)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "This Week") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: DateTime.now()
-                              //                                       .weekday -
-                              //                                   1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().add(
-                              //                       Duration(
-                              //                           days: DateTime
-                              //                                   .daysPerWeek -
-                              //                               DateTime.now()
-                              //                                   .weekday)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             } else if (items == "Last Week") {
-                              //               startDate = DateFormat('yyyy-MM-dd')
-                              //                       .format(DateTime.now()
-                              //                           .subtract(Duration(
-                              //                               days: DateTime.now()
-                              //                                       .weekday -
-                              //                                   1))) +
-                              //                   " 00:00:00";
-                              //               endDate = DateFormat(
-                              //                       'yyyy-MM-dd HH:mm:ss')
-                              //                   .format(DateTime.now().add(
-                              //                       Duration(
-                              //                           days: DateTime
-                              //                                   .daysPerWeek -
-                              //                               DateTime.now()
-                              //                                   .weekday)));
-                              //               // startDate = "2023-10-12 00:00:00";
-                              //               // endDate = "2023-10-12 12:00:00";
-                              //               //  fetchData(startDate, endDate);
-                              //             }
-                              //           },
-                              //         );
-                              //       }).toList(),
-                              //       // After selecting the desired option,it will
-                              //       // change button value to selected value
-                              //       onChanged: (String? newValue) {
-                              //         setState(() {
-                              //           dropdownvalue = newValue!;
-                              //         });
-                              //       },
-                              //     ),
-                              //   ],
-                              // ))
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.time_to_leave,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Expired",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${deviceRenewal != null ? deviceRenewal["expired_count"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blueGrey,
-                                ),
-                                child: Icon(Icons.timer_outlined,
-                                    color: Colors.blueGrey[300], size: 24),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Expiring",
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      "${deviceRenewal != null ? deviceRenewal["expiry_count"] : "N/A"}",
-                                      style:
-                                          TextStyle(color: Colors.grey[300])),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey[900],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Geofence",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Inside",
-                                style: TextStyle(
-                                  color: Colors.blueGrey[300],
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                "${geoFenceAlert != null ? geoFenceAlert["inside_count"] : "0"}",
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(width: 1, height: 50, color: Colors.orange),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Outside",
-                                style: TextStyle(
-                                  color: Colors.blueGrey[300],
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                "${geoFenceAlert != null ? geoFenceAlert["outside_count"] : "0"}",
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(width: 1, height: 50, color: Colors.orange),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Count",
-                                style: TextStyle(
-                                  color: Colors.blueGrey[300],
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                "${geoFenceAlert != null ? geoFenceAlert["notification_count"] : "0"}",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey[900],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Service Limit",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: Get.size.width * 0.22,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey[700],
-                              borderRadius: BorderRadius.circular(16),
+                                ))
+                              ],
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            SizedBox(height: 20),
+                            Row(
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.blueGrey,
+                                    color: Color.fromRGBO(76, 84, 122, 1),
                                   ),
-                                  child: Icon(Icons.settings,
+                                  child: Icon(Icons.time_to_leave,
                                       color: Colors.blueGrey[300], size: 24),
                                 ),
-                                SizedBox(height: 10),
-                                Text("Device",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 16)),
-                                SizedBox(height: 8),
-                                Text(
-                                    "${serviceLimitCount != null ? serviceLimitCount["device_limit_left"] + "/" + serviceLimitCount["device_limit"] : "N/A"}",
-                                    style: TextStyle(color: Colors.grey[300])),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Max",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        haltDuration != null
+                                            ? haltDuration["max_halt_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
                               ],
                             ),
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: Get.size.width * 0.22,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey[700],
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            SizedBox(height: 20),
+                            Row(
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.blueGrey,
+                                    color: Color.fromRGBO(76, 84, 122, 1),
                                   ),
-                                  child: Icon(Icons.group,
+                                  child: Icon(Icons.timer_outlined,
                                       color: Colors.blueGrey[300], size: 24),
                                 ),
-                                SizedBox(height: 10),
-                                Text("Subuser",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 16)),
-                                SizedBox(height: 8),
-                                Text(
-                                    "${serviceLimitCount != null ? serviceLimitCount["user_limit_left"] + "/" + serviceLimitCount["user_limit"] : "N/A"}",
-                                    style: TextStyle(color: Colors.grey[300])),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Duration",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        haltDuration != null
+                                            ? haltDuration[
+                                                    "total_halt_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
                               ],
                             ),
-                          ),
+                            SizedBox(height: 20),
+                          ],
                         ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: Get.size.width * 0.22,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey[700],
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.blueGrey,
-                                  ),
-                                  child: Icon(Icons.sms,
-                                      color: Colors.blueGrey[300], size: 24),
-                                ),
-                                SizedBox(height: 10),
-                                Text("SMS",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 16)),
-                                SizedBox(height: 8),
-                                Text(
-                                    "${serviceLimitCount != null ? serviceLimitCount["message_limit_left"] + "/" + serviceLimitCount["message_limit"] : "N/A"}",
-                                    style: TextStyle(color: Colors.grey[300])),
-                              ],
-                            ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 160,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
                           ),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: Get.size.width * 0.22,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey[700],
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.blueGrey,
-                                  ),
-                                  child: Icon(Icons.email,
-                                      color: Colors.blueGrey[300], size: 24),
-                                ),
-                                SizedBox(height: 10),
-                                Text("Email",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 16)),
-                                SizedBox(height: 8),
-                                Text(
-                                    "${serviceLimitCount != null ? serviceLimitCount["email_limit_left"] + "/" + serviceLimitCount["email_limit"] : "N/A"}",
-                                    style: TextStyle(color: Colors.grey[300])),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Halt Status",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(height: 300, child: LineChart(mainData()))
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Control Location",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      height: 300,
-                      child: SfCartesianChart(
-                          primaryXAxis: CategoryAxis(),
-                          primaryYAxis: NumericAxis(
-                              minimum: 0,
-                              maximum: locationMaxDist.toDouble(),
-                              interval: 1),
-                          tooltipBehavior: _tooltip,
-                          series: <ColumnSeries<_ChartData, String>>[
-                            ColumnSeries<_ChartData, String>(
-                                dataSource: locationData,
-                                yValueMapper: (_ChartData data, _) => data.y,
-                                xValueMapper: (_ChartData data, _) => data.x,
-                                name: 'Control Location',
-                                color: ThemeColor.primarycolor)
-                          ]),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Vehicle Performance",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Column(
+                            Row(
                               children: [
-                                Container(
-                                  height: 150,
-                                  child: FAProgressBar(
-                                    direction: Axis.vertical,
-                                    verticalDirection: VerticalDirection.up,
-                                    currentValue: vehiclePerformance != null
-                                        ? vehiclePerformance["Excellent"] * 1.0
-                                        : 0,
-                                    displayText: '',
-                                    border: Border.all(color: Colors.blue),
-                                    progressColor: Colors.blue,
+                                Text(
+                                  "Running",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 8),
-                                Text("Excellent")
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    DropdownButton(
+                                      // padding:
+                                      //     EdgeInsets.symmetric(horizontal: 5),
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      isDense: true,
+                                      // Initial Value
+                                      //  value: dropdownvalue,
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          //  alignment: Alignment.centerRight,
+                                          value: items,
+                                          child: Container(
+                                            width: 200,
+                                            child: Text(items),
+                                          ),
+                                          onTap: () {
+                                            if (items == "Today") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now());
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-17 12:00:00";
+                                              print(startDate);
+                                              print(endDate);
+                                              runningDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "Yesterday") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now()
+                                                      .subtract(
+                                                          Duration(days: 1)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              print(startDate);
+                                              print(endDate);
+                                              runningDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "This Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              print(startDate);
+                                              print(endDate);
+                                              runningDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "Last Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              print(startDate);
+                                              print(endDate);
+                                              runningDurationfunc(
+                                                  startDate, endDate);
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ))
                               ],
                             ),
-                            Column(
+                            SizedBox(height: 20),
+                            Row(
                               children: [
                                 Container(
-                                  height: 150,
-                                  child: FAProgressBar(
-                                    direction: Axis.vertical,
-                                    verticalDirection: VerticalDirection.up,
-                                    currentValue: vehiclePerformance != null
-                                        ? vehiclePerformance["Good"] * 1.0
-                                        : 0,
-                                    displayText: '',
-                                    border: Border.all(color: Colors.blue),
-                                    progressColor: Colors.blue,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
                                   ),
+                                  child: Icon(Icons.time_to_leave,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                SizedBox(height: 8),
-                                Text("Good")
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Max",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        runningDuration != null
+                                            ? runningDuration[
+                                                    "max_halt_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
                               ],
                             ),
-                            Column(
+                            SizedBox(height: 20),
+                            Row(
                               children: [
                                 Container(
-                                  height: 150,
-                                  child: FAProgressBar(
-                                    direction: Axis.vertical,
-                                    verticalDirection: VerticalDirection.up,
-                                    currentValue: vehiclePerformance != null
-                                        ? vehiclePerformance["Average"] * 1.0
-                                        : 0,
-                                    displayText: '',
-                                    border: Border.all(color: Colors.blue),
-                                    progressColor: Colors.blue,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
                                   ),
+                                  child: Icon(Icons.timer_outlined,
+                                      color: Colors.blueGrey[300], size: 24),
                                 ),
-                                SizedBox(height: 8),
-                                Text("Average")
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Duration",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        runningDuration != null
+                                            ? runningDuration[
+                                                    "total_halt_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
                               ],
                             ),
-                            Column(
-                              children: [
-                                Container(
-                                  height: 150,
-                                  child: FAProgressBar(
-                                    direction: Axis.vertical,
-                                    verticalDirection: VerticalDirection.up,
-                                    currentValue: vehiclePerformance != null
-                                        ? vehiclePerformance["Poor"] * 1.0
-                                        : 0,
-                                    displayText: '',
-                                    border: Border.all(color: Colors.blue),
-                                    progressColor: Colors.blue,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text("Poor")
-                              ],
-                            ),
-                          ]),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Distance",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                            SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                        height: 300, child: LineChart(mainDataForDistance()))
-                  ],
+                      SizedBox(width: 8),
+                      Container(
+                        width: 160,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Idle",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    DropdownButton(
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      isDense: true,
+                                      // Initial Value
+                                      //  value: dropdownvalue,
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                          onTap: () {
+                                            if (items == "Today") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now());
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              idleDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "Yesterday") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now()
+                                                      .subtract(
+                                                          Duration(days: 1)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              idleDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "This Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              idleDurationfunc(
+                                                  startDate, endDate);
+                                            } else if (items == "Last Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              idleDurationfunc(
+                                                  startDate, endDate);
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ))
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.time_to_leave,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Max",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        idleDuration != null
+                                            ? idleDuration["max_idle_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.timer_outlined,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Duration",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        idleDuration != null
+                                            ? idleDuration[
+                                                    "total_idle_duration"]
+                                                .toString()
+                                            : "N/A",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 220,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Alert",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    DropdownButton(
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      isDense: true,
+                                      // Initial Value
+                                      //  value: dropdownvalue,
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                          onTap: () {
+                                            if (items == "Today") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now());
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              alertDatafunc(startDate, endDate);
+                                            } else if (items == "Yesterday") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now()
+                                                      .subtract(
+                                                          Duration(days: 1)));
+                                              // startDate = "2023-11-03 00:00:00";
+                                              // endDate = "2023-11-03 23:59:5";
+                                              alertDatafunc(startDate, endDate);
+                                            } else if (items == "This Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              alertDatafunc(startDate, endDate);
+                                            } else if (items == "Last Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              alertDatafunc(startDate, endDate);
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
+                                    )
+                                  ],
+                                ))
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: Color.fromRGBO(
+                                                  76, 84, 122, 1),
+                                            ),
+                                            child: Icon(Icons.time_to_leave,
+                                                color: Colors.blueGrey[300],
+                                                size: 24),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Max",
+                                                  style: TextStyle(
+                                                      color: Colors.grey)),
+                                              Text(
+                                                  alertData != null
+                                                      ? "${alertData["max_alert_count"]}"
+                                                      : "N/A",
+                                                  style: TextStyle(
+                                                      color: Colors.grey[300])),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: Color.fromRGBO(
+                                                  76, 84, 122, 1),
+                                            ),
+                                            child: Icon(Icons.bar_chart,
+                                                color: Colors.blueGrey[300],
+                                                size: 24),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Count",
+                                                  style: TextStyle(
+                                                      color: Colors.grey)),
+                                              Text(
+                                                  alertData != null
+                                                      ? "${alertData["notification_count"]}"
+                                                      : "N/A",
+                                                  style: TextStyle(
+                                                      color: Colors.grey[300])),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Image.asset("assets/images/new-message.png",
+                                    width: 80),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 160,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "OverSpeed",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    DropdownButton(
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      isDense: true,
+                                      // Initial Value
+                                      //  value: dropdownvalue,
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                          onTap: () {
+                                            if (items == "Today") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now());
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              overSpeedfunc(startDate, endDate);
+                                            } else if (items == "Yesterday") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now()
+                                                      .subtract(
+                                                          Duration(days: 1)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              overSpeedfunc(startDate, endDate);
+                                            } else if (items == "This Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              overSpeedfunc(startDate, endDate);
+                                            } else if (items == "Last Week") {
+                                              startDate = DateFormat(
+                                                          'yyyy-MM-dd')
+                                                      .format(DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: DateTime
+                                                                          .now()
+                                                                      .weekday -
+                                                                  1))) +
+                                                  " 00:00:00";
+                                              endDate = DateFormat(
+                                                      'yyyy-MM-dd HH:mm:ss')
+                                                  .format(DateTime.now().add(
+                                                      Duration(
+                                                          days: DateTime
+                                                                  .daysPerWeek -
+                                                              DateTime.now()
+                                                                  .weekday)));
+                                              // startDate = "2023-10-12 00:00:00";
+                                              // endDate = "2023-10-12 12:00:00";
+                                              overSpeedfunc(startDate, endDate);
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ))
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.speed,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Max",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${overSpeed != null ? overSpeed["max_overspeed"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.speed,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Count",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${overSpeed != null ? overSpeed["overspeed_count"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 180,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Maintenance",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                // Expanded(
+                                //     child: Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //   children: [
+                                //     DropdownButton(
+                                //       underline: SizedBox(),
+                                //       isExpanded: true,
+                                //       isDense: true,
+                                //       // Initial Value
+                                //       //  value: dropdownvalue,
+                                //       // Down Arrow Icon
+                                //       icon: const Icon(
+                                //         Icons.more_vert,
+                                //         color: Colors.white,
+                                //       ),
+                                //       // Array list of items
+                                //       items: items.map((String items) {
+                                //         return DropdownMenuItem(
+                                //           value: items,
+                                //           child: Text(items),
+                                //           onTap: () {
+                                //             if (items == "Today") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now());
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "Yesterday") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: 1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().subtract(
+                                //                       Duration(days: 1)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "This Week") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: DateTime.now()
+                                //                                       .weekday -
+                                //                                   1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().add(
+                                //                       Duration(
+                                //                           days: DateTime
+                                //                                   .daysPerWeek -
+                                //                               DateTime.now()
+                                //                                   .weekday)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "Last Week") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: DateTime.now()
+                                //                                       .weekday -
+                                //                                   1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().add(
+                                //                       Duration(
+                                //                           days: DateTime
+                                //                                   .daysPerWeek -
+                                //                               DateTime.now()
+                                //                                   .weekday)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             }
+                                //           },
+                                //         );
+                                //       }).toList(),
+                                //       // After selecting the desired option,it will
+                                //       // change button value to selected value
+                                //       onChanged: (String? newValue) {
+                                //         setState(() {
+                                //           dropdownvalue = newValue!;
+                                //         });
+                                //       },
+                                //     ),
+                                //   ],
+                                // ))
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.time_to_leave,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Expired",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${maintenance != null ? maintenance["expired_maintainence_count"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.speed,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Count",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${maintenance != null ? maintenance["maintainence_count"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 160,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(49, 55, 95, 0.8),
+                              Color.fromRGBO(66, 70, 120, 1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.6,
+                              0.9,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Renewal",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                // Expanded(
+                                //     child: Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //   children: [
+                                //     DropdownButton(
+                                //       underline: SizedBox(),
+                                //       isExpanded: true,
+                                //       isDense: true,
+                                //       // Initial Value
+                                //       //  value: dropdownvalue,
+                                //       // Down Arrow Icon
+                                //       icon: const Icon(
+                                //         Icons.more_vert,
+                                //         color: Colors.white,
+                                //       ),
+                                //       // Array list of items
+                                //       items: items.map((String items) {
+                                //         return DropdownMenuItem(
+                                //           value: items,
+                                //           child: Text(items),
+                                //           onTap: () {
+                                //             if (items == "Today") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now());
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "Yesterday") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: 1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().subtract(
+                                //                       Duration(days: 1)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "This Week") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: DateTime.now()
+                                //                                       .weekday -
+                                //                                   1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().add(
+                                //                       Duration(
+                                //                           days: DateTime
+                                //                                   .daysPerWeek -
+                                //                               DateTime.now()
+                                //                                   .weekday)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             } else if (items == "Last Week") {
+                                //               startDate = DateFormat('yyyy-MM-dd')
+                                //                       .format(DateTime.now()
+                                //                           .subtract(Duration(
+                                //                               days: DateTime.now()
+                                //                                       .weekday -
+                                //                                   1))) +
+                                //                   " 00:00:00";
+                                //               endDate = DateFormat(
+                                //                       'yyyy-MM-dd HH:mm:ss')
+                                //                   .format(DateTime.now().add(
+                                //                       Duration(
+                                //                           days: DateTime
+                                //                                   .daysPerWeek -
+                                //                               DateTime.now()
+                                //                                   .weekday)));
+                                //               // startDate = "2023-10-12 00:00:00";
+                                //               // endDate = "2023-10-12 12:00:00";
+                                //               //  fetchData(startDate, endDate);
+                                //             }
+                                //           },
+                                //         );
+                                //       }).toList(),
+                                //       // After selecting the desired option,it will
+                                //       // change button value to selected value
+                                //       onChanged: (String? newValue) {
+                                //         setState(() {
+                                //           dropdownvalue = newValue!;
+                                //         });
+                                //       },
+                                //     ),
+                                //   ],
+                                // ))
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.time_to_leave,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Expired",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${deviceRenewal != null ? deviceRenewal["expired_count"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color.fromRGBO(76, 84, 122, 1),
+                                  ),
+                                  child: Icon(Icons.timer_outlined,
+                                      color: Colors.blueGrey[300], size: 24),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Expiring",
+                                        style: TextStyle(color: Colors.grey)),
+                                    Text(
+                                        "${deviceRenewal != null ? deviceRenewal["expiry_count"] : "N/A"}",
+                                        style:
+                                            TextStyle(color: Colors.grey[300])),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromRGBO(49, 55, 95, 0.8),
+                        Color.fromRGBO(66, 70, 120, 1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomCenter,
+                      stops: [
+                        0.6,
+                        0.9,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Geofence",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Inside",
+                                  style: TextStyle(
+                                    color: Colors.blueGrey[300],
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  "${geoFenceAlert != null ? geoFenceAlert["inside_count"] : "0"}",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(width: 1, height: 50, color: Colors.orange),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Outside",
+                                  style: TextStyle(
+                                    color: Colors.blueGrey[300],
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  "${geoFenceAlert != null ? geoFenceAlert["outside_count"] : "0"}",
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(width: 1, height: 50, color: Colors.orange),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Count",
+                                  style: TextStyle(
+                                    color: Colors.blueGrey[300],
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  "${geoFenceAlert != null ? geoFenceAlert["notification_count"] : "0"}",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromRGBO(49, 55, 95, 0.8),
+                        Color.fromRGBO(66, 70, 120, 1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomCenter,
+                      stops: [
+                        0.6,
+                        0.9,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Service Limit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: Get.size.width * 0.22,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromRGBO(46, 60, 100, 1),
+                                    Color.fromRGBO(66, 80, 120, 1),
+                                  ],
+                                  tileMode: TileMode.mirror,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [
+                                    0.6,
+                                    0.9,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color.fromRGBO(76, 84, 122, 1),
+                                    ),
+                                    child: Icon(Icons.settings,
+                                        color: Colors.blueGrey[300], size: 24),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text("Device",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 16)),
+                                  SizedBox(height: 8),
+                                  Text(
+                                      "${serviceLimitCount != null ? serviceLimitCount["device_limit_left"] + "/" + serviceLimitCount["device_limit"] : "N/A"}",
+                                      style:
+                                          TextStyle(color: Colors.grey[300])),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          SizedBox(
+                            width: Get.size.width * 0.22,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromRGBO(46, 60, 100, 1),
+                                    Color.fromRGBO(66, 80, 120, 1),
+                                  ],
+                                  tileMode: TileMode.mirror,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [
+                                    0.6,
+                                    0.9,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color.fromRGBO(76, 84, 122, 1),
+                                    ),
+                                    child: Icon(Icons.group,
+                                        color: Colors.blueGrey[300], size: 24),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text("Subuser",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 16)),
+                                  SizedBox(height: 8),
+                                  Text(
+                                      "${serviceLimitCount != null ? serviceLimitCount["user_limit_left"] + "/" + serviceLimitCount["user_limit"] : "N/A"}",
+                                      style:
+                                          TextStyle(color: Colors.grey[300])),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          SizedBox(
+                            width: Get.size.width * 0.22,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromRGBO(46, 60, 100, 1),
+                                    Color.fromRGBO(66, 80, 120, 1),
+                                  ],
+                                  tileMode: TileMode.mirror,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [
+                                    0.6,
+                                    0.9,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color.fromRGBO(76, 84, 122, 1),
+                                    ),
+                                    child: Icon(Icons.sms,
+                                        color: Colors.blueGrey[300], size: 24),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text("SMS",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 16)),
+                                  SizedBox(height: 8),
+                                  Text(
+                                      "${serviceLimitCount != null ? serviceLimitCount["message_limit_left"] + "/" + serviceLimitCount["message_limit"] : "N/A"}",
+                                      style:
+                                          TextStyle(color: Colors.grey[300])),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          SizedBox(
+                            width: Get.size.width * 0.22,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromRGBO(46, 60, 100, 1),
+                                    Color.fromRGBO(66, 80, 120, 1),
+                                  ],
+                                  tileMode: TileMode.mirror,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [
+                                    0.6,
+                                    0.9,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color.fromRGBO(76, 84, 122, 1),
+                                    ),
+                                    child: Icon(Icons.email,
+                                        color: Colors.blueGrey[300], size: 24),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text("Email",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 16)),
+                                  SizedBox(height: 8),
+                                  Text(
+                                      "${serviceLimitCount != null ? serviceLimitCount["email_limit_left"] + "/" + serviceLimitCount["email_limit"] : "N/A"}",
+                                      style:
+                                          TextStyle(color: Colors.grey[300])),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Halt Status",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Container(height: 300, child: LineChart(mainData()))
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Control Location",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Container(
+                        height: 300,
+                        child: SfCartesianChart(
+                            primaryXAxis: CategoryAxis(),
+                            primaryYAxis: NumericAxis(
+                                minimum: 0,
+                                maximum: locationMaxDist.toDouble(),
+                                interval: 1),
+                            tooltipBehavior: _tooltip,
+                            series: <ColumnSeries<_ChartData, String>>[
+                              ColumnSeries<_ChartData, String>(
+                                  dataSource: locationData,
+                                  yValueMapper: (_ChartData data, _) => data.y,
+                                  xValueMapper: (_ChartData data, _) => data.x,
+                                  name: 'Control Location',
+                                  color: ThemeColor.primarycolor)
+                            ]),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Vehicle Performance",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Container(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    child: FAProgressBar(
+                                      direction: Axis.vertical,
+                                      verticalDirection: VerticalDirection.up,
+                                      currentValue: vehiclePerformance != null
+                                          ? vehiclePerformance["Excellent"] *
+                                              1.0
+                                          : 0,
+                                      displayText: '',
+                                      border: Border.all(color: Colors.blue),
+                                      progressColor: Colors.blue,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text("Excellent")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    child: FAProgressBar(
+                                      direction: Axis.vertical,
+                                      verticalDirection: VerticalDirection.up,
+                                      currentValue: vehiclePerformance != null
+                                          ? vehiclePerformance["Good"] * 1.0
+                                          : 0,
+                                      displayText: '',
+                                      border: Border.all(color: Colors.blue),
+                                      progressColor: Colors.blue,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text("Good")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    child: FAProgressBar(
+                                      direction: Axis.vertical,
+                                      verticalDirection: VerticalDirection.up,
+                                      currentValue: vehiclePerformance != null
+                                          ? vehiclePerformance["Average"] * 1.0
+                                          : 0,
+                                      displayText: '',
+                                      border: Border.all(color: Colors.blue),
+                                      progressColor: Colors.blue,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text("Average")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    child: FAProgressBar(
+                                      direction: Axis.vertical,
+                                      verticalDirection: VerticalDirection.up,
+                                      currentValue: vehiclePerformance != null
+                                          ? vehiclePerformance["Poor"] * 1.0
+                                          : 0,
+                                      displayText: '',
+                                      border: Border.all(color: Colors.blue),
+                                      progressColor: Colors.blue,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text("Poor")
+                                ],
+                              ),
+                            ]),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Distance",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Container(
+                          height: 300, child: LineChart(mainDataForDistance()))
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
