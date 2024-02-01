@@ -96,6 +96,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
   var idleDuration;
   var engineHour;
   var alertData;
+  var alertDetailData;
   var overSpeed;
   var maintenance;
   var deviceRenewal;
@@ -199,6 +200,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
     idleDuration = await ApiService.idleDuration(s, e);
     engineHour = await ApiService.engineHour(s, e);
     alertData = await ApiService.alertData(s, e);
+    alertDetailData = await ApiService.alertDetailData(s, e);
     overSpeed = await ApiService.overSpeed(s, e);
     maintenance = await ApiService.maintenance();
     deviceRenewal = await ApiService.deviceRenewal();
@@ -1440,122 +1442,129 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                         ),
                       ),
                       SizedBox(width: 8),
-                      Container(
-                        width: 220,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromRGBO(49, 55, 95, 0.8),
-                              Color.fromRGBO(66, 70, 120, 1),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomCenter,
-                            stops: [
-                              0.6,
-                              0.9,
+                      InkWell(
+                        onTap: () {
+                          showAlertDetail();
+                        },
+                        child: Container(
+                          width: 220,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromRGBO(49, 55, 95, 0.8),
+                                Color.fromRGBO(66, 70, 120, 1),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomCenter,
+                              stops: [
+                                0.6,
+                                0.9,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Alert",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: Color.fromRGBO(
+                                                    76, 84, 122, 1),
+                                              ),
+                                              child: Icon(Icons.time_to_leave,
+                                                  color: Colors.blueGrey[300],
+                                                  size: 24),
+                                            ),
+                                            SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Max",
+                                                    style: TextStyle(
+                                                        color: Colors.grey)),
+                                                Text(
+                                                    alertData != null
+                                                        ? "${alertData["max_alert_count"]}"
+                                                        : "N/A",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[300])),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(height: 20),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: Color.fromRGBO(
+                                                    76, 84, 122, 1),
+                                              ),
+                                              child: Icon(Icons.bar_chart,
+                                                  color: Colors.blueGrey[300],
+                                                  size: 24),
+                                            ),
+                                            SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Count",
+                                                    style: TextStyle(
+                                                        color: Colors.grey)),
+                                                Text(
+                                                    alertData != null
+                                                        ? "${alertData["notification_count"]}"
+                                                        : "N/A",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[300])),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Image.asset("assets/images/new-message.png",
+                                      width: 80),
+                                ],
+                              ),
+                              SizedBox(height: 20),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Alert",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              color: Color.fromRGBO(
-                                                  76, 84, 122, 1),
-                                            ),
-                                            child: Icon(Icons.time_to_leave,
-                                                color: Colors.blueGrey[300],
-                                                size: 24),
-                                          ),
-                                          SizedBox(width: 8),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Max",
-                                                  style: TextStyle(
-                                                      color: Colors.grey)),
-                                              Text(
-                                                  alertData != null
-                                                      ? "${alertData["max_alert_count"]}"
-                                                      : "N/A",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[300])),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 20),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              color: Color.fromRGBO(
-                                                  76, 84, 122, 1),
-                                            ),
-                                            child: Icon(Icons.bar_chart,
-                                                color: Colors.blueGrey[300],
-                                                size: 24),
-                                          ),
-                                          SizedBox(width: 8),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Count",
-                                                  style: TextStyle(
-                                                      color: Colors.grey)),
-                                              Text(
-                                                  alertData != null
-                                                      ? "${alertData["notification_count"]}"
-                                                      : "N/A",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[300])),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Image.asset("assets/images/new-message.png",
-                                    width: 80),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                          ],
                         ),
                       ),
                       SizedBox(width: 8),
@@ -2447,7 +2456,185 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                       ),
                       SizedBox(height: 16),
                       Container(
-                          height: 300, child: LineChart(mainDataForDistance()))
+                          height: 300, child: LineChart(mainDataForDistance())),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("below_100");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                    Text("100",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("below_200");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                    Text("200",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("below_300");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                    Text("300",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("below_400");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                    Text("400",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("below_500");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                    Text("500",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                showDistanceDetail("above_500");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: ThemeColor.primarycolor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("500",
+                                        style: TextStyle(
+                                            color: ThemeColor.primarycolor,
+                                            fontSize: 12)),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: ThemeColor.primarycolor,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -2647,6 +2834,124 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
         ),
       ],
     );
+  }
+
+  showDistanceDetail(dist) {
+    String title = "";
+    if (dist == "below_100") {
+      title = "100 kms Detail";
+    } else if (dist == "below_200") {
+      title = "200 kms Detail";
+    } else if (dist == "below_300") {
+      title = "300 kms Detail";
+    } else if (dist == "below_400") {
+      title = "400 kms Detail";
+    } else if (dist == "below_500") {
+      title = "500 kms Detail";
+    } else if (dist == "above_500") {
+      title = "Above 500 kms Detail";
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: Border(bottom: BorderSide.none, top: BorderSide.none),
+            backgroundColor: Colors.white,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    for (var distDetail in distanceDetail[dist])
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Vehicle ID : ${distDetail["vehicleid"]}",
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Average : ${distDetail["average"].toString()}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Totaldistance : ${distDetail["totaldistance"]}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                          SizedBox(height: 24),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  showAlertDetail() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: Border(bottom: BorderSide.none, top: BorderSide.none),
+            backgroundColor: Colors.white,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        "Alert Details",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    for (var distDetail in alertDetailData)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Vehicle Name : ${distDetail["veh_reg"]}",
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Sent on : ${distDetail["sent_on"]}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                          SizedBox(height: 24),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 

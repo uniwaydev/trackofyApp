@@ -107,18 +107,18 @@ class _PlaybackScreenState extends State<PlaybackScreen>
       }
     }
 
-    setOverspeedPath();
+    setOverspeedPath(overspeedLimit);
     await setStoppageMarker();
 
     SmartDialog.dismiss();
   }
 
-  setOverspeedPath() {
+  setOverspeedPath(overspeedLimitP) {
     List<Polyline> tempLines = [];
     for (int i = 0; i < playbackHist.length - 1; i++) {
       var histItem = playbackHist[i];
       LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
-      if (histItem["speed"] >= overspeedLimit) {
+      if (histItem["speed"] >= overspeedLimitP) {
         tempLines.add(Polyline(
           polylineId: PolylineId('${tempLines.length}'),
           points: [
@@ -282,7 +282,7 @@ class _PlaybackScreenState extends State<PlaybackScreen>
                             setState(() {
                               overspeedLimit =
                                   value.isEmpty ? 0 : int.parse(value);
-                              setOverspeedPath();
+                              setOverspeedPath(overspeedLimit);
                             });
                           },
                           inputFormatters: <TextInputFormatter>[

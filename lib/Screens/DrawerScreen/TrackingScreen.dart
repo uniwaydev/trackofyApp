@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:fluster/fluster.dart';
@@ -39,37 +40,20 @@ class _TrackingScreenState extends State<TrackingScreen> {
   var selected;
   late List selectedList;
 
-  /// Set of displayed markers and cluster markers on the map
-  // final Set<Marker> _markers = Set();
-
-  /// Minimum zoom at which the markers will cluster
   final int _minClusterZoom = 0;
-
-  /// Maximum zoom at which the markers will cluster
   final int _maxClusterZoom = 19;
-
-  /// [Fluster] instance used to manage the clusters
   Fluster<MapMarker>? _clusterManager;
-
-  /// Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 7;
-
-  /// Map loading flag
   bool _isMapLoading = true;
-
-  /// Markers loading flag
   bool _areMarkersLoading = true;
-
-  /// Color of the cluster circle
   final Color _clusterColor = Colors.blue;
-
-  /// Color of the cluster text
   final Color _clusterTextColor = Colors.white;
 
   bool isTracking = true;
+  List<Polyline> polylines = [];
+  List<List<LatLng>> vehicleLines = [];
+  int selectIndex = -1;
 
-  /// Called when the Google Map widget is created. Updates the map loading state
-  /// and inits the markers.
   void _onMapCreated(GoogleMapController controller) async {
     mapCtrl = controller;
     mapCtrl
@@ -80,6 +64,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
     });
 
     vehicles = await ApiService.vehicles();
+    vehicleLines = List.filled(vehicles.length, []);
     _initMarkers();
   }
 
@@ -88,12 +73,17 @@ class _TrackingScreenState extends State<TrackingScreen> {
     print("==== START TRACKING(tracking) ====");
     final List<MapMarker> markers = [];
     // _markers.clear();
+    selectIndex = -1;
     for (int i = 0; i < vehicles.length; i++) {
       if (!isTracking) {
         return;
       }
       if (selected == null ||
           selected["serviceId"] == vehicles[i]["serviceId"]) {
+        if (selected != null &&
+            selected["serviceId"] == vehicles[i]["serviceId"]) {
+          selectIndex = i;
+        }
         print(vehicles[i]);
         var trackingRes =
             await ApiService.liveTracking(vehicles[i]["serviceId"].toString());
@@ -102,6 +92,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
           print(trackingInfo);
           final BitmapDescriptor markerImage =
               await MapHelper.getMarkerImageFromUrl(trackingInfo["icon"]);
+
+          vehicleLines[i].add(LatLng(double.parse(trackingInfo["lat"]),
+              double.parse(trackingInfo["lng"])));
 
           markers.add(
             MapMarker(
@@ -139,6 +132,26 @@ class _TrackingScreenState extends State<TrackingScreen> {
     print('===========');
     print(markers.length);
     print('===========');
+    polylines.clear();
+    if (selectIndex != -1) {
+      int colorTemp = (255 / vehicleLines.length).toInt() * selectIndex;
+      polylines.add(Polyline(
+        polylineId: PolylineId(selectIndex.toString()),
+        points: vehicleLines[selectIndex],
+        color: Color.fromARGB(255, colorTemp, colorTemp, colorTemp),
+        width: 2,
+      ));
+    } else {
+      for (int i = 0; i < vehicleLines.length; i++) {
+        int colorTemp = (255 / vehicleLines.length).toInt() * i;
+        polylines.add(Polyline(
+          polylineId: PolylineId(i.toString()),
+          points: vehicleLines[i],
+          color: Color.fromARGB(255, colorTemp, colorTemp, colorTemp),
+          width: 2,
+        ));
+      }
+    }
 
     _clusterManager = await MapHelper.initClusterManager(
       markers,
@@ -150,7 +163,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
     print("==== END TRACKING(tracking) ====");
 
     if (isTracking) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 10), () {
         _initMarkers();
       });
     }
@@ -263,11 +276,15 @@ class _TrackingScreenState extends State<TrackingScreen> {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: [
-                            Text(
-                                selected == null
-                                    ? "Select Vehicle"
-                                    : selected["vehReg"],
-                                style: TextStyle(fontSize: 16)),
+                            Expanded(
+                              child: Text(
+                                  selected == null
+                                      ? "Select Vehicle"
+                                      : selected["vehReg"],
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      overflow: TextOverflow.ellipsis)),
+                            ),
                             SizedBox(width: 8),
                             Icon(
                               Icons.arrow_drop_down,
@@ -314,6 +331,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
         child: Stack(
           children: [
             GoogleMap(
+              polylines: polylines.toSet(),
               mapToolbarEnabled: true,
               zoomGesturesEnabled: true,
               myLocationButtonEnabled: true,

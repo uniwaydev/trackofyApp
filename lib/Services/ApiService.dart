@@ -341,6 +341,34 @@ class ApiService {
     }
   }
 
+  static Future alertDetailData(sdate, edate) async {
+    try {
+      var response = await http.post(
+          Uri.parse(
+              BASE_URL + "/API/dashboard_api.php?method=alert_count_detail"),
+          body: {
+            "user_id": currentUser?.id.toString(),
+            "start_date": sdate,
+            "end_date": edate,
+            "alert_type": "All"
+          });
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print(data);
+        return List.from(data);
+      } else {
+        // showMessage('Network Error',
+        //     'An error occurred while communicating with the server.');
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      // showMessage('Network Error', 'Something went wrong.');
+      return null;
+    }
+  }
+
   static Future overSpeed(sdate, edate) async {
     try {
       var response = await http.post(

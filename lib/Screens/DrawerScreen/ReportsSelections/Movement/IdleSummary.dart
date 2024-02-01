@@ -35,6 +35,7 @@ class _IdleSummaryState extends State<IdleSummary> {
   void fetchVehicle() async {
     SmartDialog.showLoading(msg: "Loading...");
     vehicles = await ApiService.vehiclesByGroup();
+    print(vehicles);
     SmartDialog.dismiss();
   }
 
@@ -403,7 +404,7 @@ class _IdleSummaryState extends State<IdleSummary> {
                           style:
                               TextStyle(fontSize: 12, color: Colors.black54)),
                       Text(
-                          "${double.parse(e["total_distance"].toString()).toStringAsFixed(1)}",
+                          "${e["total_distance"] == "N/A" ? "N/A" : double.parse(e["total_distance"].toString()).toStringAsFixed(1)}",
                           style:
                               TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
