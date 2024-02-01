@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -8,12 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackofyapp/Models/User.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Screens/OnboardingScreen/LoginScreen.dart';
+import 'package:trackofyapp/Screens/SplashScreen/SplashScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // await Permission.notification.isDenied.then((value) {
   //   if (value) {
   //     Permission.notification.request();
@@ -26,6 +27,7 @@ void main() async {
     ApiService.currentUser = user;
   }
 
+  // HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -47,16 +49,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
+    // FlutterNativeSplash.remove();
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: ApiService.currentUser == null ? LoginScreen() : HomeScreen(),
+      home: SplashScreen(),//ApiService.currentUser == null ? LoginScreen() : HomeScreen(),
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

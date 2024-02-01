@@ -110,18 +110,21 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     double.parse(trackingInfo["lng"])),
                 icon: markerImage,
                 rotation: double.parse(trackingInfo["angle"]),
-                onClick: () async {
-                  setState(() {
-                    isTracking = false;
-                  });
-                  await Get.to(() => VehicleDetailScreen(
-                      serviceId: vehicles[i]["serviceId"].toString()));
-                  setState(() {
-                    isTracking = true;
+                info: InfoWindow(
+                    title: trackingInfo["vehicle_name"],
+                    onTap: () async {
+                      setState(() {
+                        isTracking = false;
+                      });
+                      await Get.to(() => VehicleDetailScreen(
+                          serviceId: vehicles[i]["serviceId"].toString()));
+                      setState(() {
+                        isTracking = true;
 
-                    _initMarkers();
-                  });
-                }),
+                        _initMarkers();
+                      });
+                    }),
+                onClick: () async {}),
           );
 
           // if (i == vehicles.length - 1) {
@@ -229,7 +232,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
           centerTitle: false,
           titleSpacing: 0,
           title: Container(
-            width: Get.width * 0.9,
             child: Row(
               children: [
                 Text(
@@ -240,14 +242,14 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     color: ThemeColor.primarycolor,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                SizedBox(width: 16),
+                Expanded(
                   child: Container(
-                    width: Get.width * 0.4,
                     child: PopupMenuButton(
                       onSelected: (item) {
                         setState(() {
                           print(item);
+                          _areMarkersLoading = true;
                           selected = item;
                         });
                       },
@@ -258,12 +260,21 @@ class _TrackingScreenState extends State<TrackingScreen> {
                               ))
                           .toList(),
                       child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                            selected == null
-                                ? "Select Name"
-                                : selected["vehReg"],
-                            style: TextStyle(fontSize: 16)),
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                                selected == null
+                                    ? "Select Vehicle"
+                                    : selected["vehReg"],
+                                style: TextStyle(fontSize: 16)),
+                            SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.grey,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -271,27 +282,30 @@ class _TrackingScreenState extends State<TrackingScreen> {
               ],
             ),
           ),
-          // actions: [
-          //   Padding(
-          //     padding: const EdgeInsets.only(right: 12.0),
-          //     child: Row(
-          //       children: [
-          //         GestureDetector(
-          //             onTap: () {
-          //               Get.to(() => HomeScreen());
-          //             },
-          //             child: Icon(
-          //               Icons.home,
-          //               color: ThemeColor.primarycolor,
-          //               size: 27,
-          //             )),
-          //         SizedBox(
-          //           width: Get.size.width * 0.04,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ],
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Row(
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isTracking = false;
+                        });
+                        Get.offAll(() => HomeScreen());
+                      },
+                      child: Icon(
+                        Icons.home,
+                        color: ThemeColor.primarycolor,
+                        size: 27,
+                      )),
+                  SizedBox(
+                    width: Get.size.width * 0.04,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       body: Container(

@@ -280,7 +280,6 @@ class _TripReportState extends State<TripReport> {
               ],
             ),
           ),
-          SizedBox(height: 8),
           Expanded(
             child: !isApply
                 ? Column(
@@ -300,107 +299,101 @@ class _TripReportState extends State<TripReport> {
                       )
                     ],
                   )
-                : ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: Get.width,
-                            padding: EdgeInsets.all(10),
-                            color: Colors.blue[900],
-                            child: Center(
-                              child: Text(
-                                data[index]["tripName"],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
+                : SingleChildScrollView(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: Get.width,
+                                padding: EdgeInsets.all(10),
+                                color: Colors.blue[900],
+                                child: Center(
+                                  child: Text(
+                                    data[index]["tripName"],
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                color: Colors.white,
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.location_pin,
-                                            color: Colors.green,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.location_pin,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    data[index]
+                                                        ["start_address"],
+                                                    style: TextStyle(
+                                                        color: Colors.green)),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            width: 8,
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.location_pin,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    data[index]["end_address"],
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                              ),
+                                            ],
                                           ),
-                                          Expanded(
-                                            child: Text(
-                                                data[index]["start_address"],
-                                                style: TextStyle(
-                                                    color: Colors.green)),
-                                          ),
-                                        ],
-                                      ),
+                                        )
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.location_pin,
-                                            color: Colors.red,
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                                data[index]["end_address"],
-                                                style: TextStyle(
-                                                    color: Colors.red)),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                    SizedBox(height: 8),
+                                    Text(
+                                        "${data[index]["start_time"]} to ${data[index]["tripEndTime"]}"),
+                                    Text("${data[index]["avg_speed"]} Km/Hr"),
+                                    Text("${data[index]["distance"]} KM"),
+                                    Text("${data[index]["idle"]}"),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                    "${data[index]["start_time"]} to ${data[index]["tripEndTime"]}"),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text("${data[index]["avg_speed"]} Km/Hr"),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text("${data[index]["distance"]} KM"),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text("${data[index]["idle"]}"),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                              ),
+                            ],
+                          );
+                        }),
+                  ),
           )
         ],
       ),

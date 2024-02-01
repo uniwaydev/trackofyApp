@@ -15,18 +15,22 @@ import 'package:trackofyapp/Services/ApiService.dart';
 import 'package:trackofyapp/Widgets/drawer.dart';
 import 'package:trackofyapp/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vector_math/vector_math.dart' as vmath;
 
 class PlaybackScreen extends StatefulWidget {
   var serviceId;
-  PlaybackScreen({Key? key, required this.serviceId}) : super(key: key);
+  var vehicleName;
+  PlaybackScreen({Key? key, required this.serviceId, required this.vehicleName})
+      : super(key: key);
 
   @override
   State<PlaybackScreen> createState() => _PlaybackScreenState();
 }
 
-class _PlaybackScreenState extends State<PlaybackScreen> {
+class _PlaybackScreenState extends State<PlaybackScreen>
+    with TickerProviderStateMixin {
   static final LatLng _kMapCenter =
-      LatLng(19.018255973653343, 72.84793849278007);
+      LatLng(37.42796133580664, -122.085749655962);
 
   static final CameraPosition _kInitialPosition =
       CameraPosition(target: _kMapCenter, zoom: 14.0, tilt: 0, bearing: 0);
@@ -47,50 +51,128 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
   TextEditingController stoppageCtrl = TextEditingController();
   TextEditingController overspeedCtrl = TextEditingController();
   bool isPlay = false;
-  int playbackSeep = 1;
+
   List<Map<String, dynamic>> playbackHist = [];
   List<LatLng> points = [];
+  List<List<LatLng>> redPoints = [];
 
-  Set<Polyline> polylines = Set.from([]);
+  List<Polyline> polylines = [];
   int backIndex = 0;
   var curPlayHist;
+  int stoppageLimit = 10;
+  int overspeedLimit = 60;
+  String playbackSpeed = "1x";
+
+  var icon;
 
   @override
   void initState() {
     super.initState();
-    stoppageCtrl.text = "10";
-    overspeedCtrl.text = "60";
-    startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    stoppageCtrl.text = stoppageLimit.toString();
+    overspeedCtrl.text = overspeedLimit.toString();
+    startDate = DateFormat('yyyy-MM-dd ').format(DateTime.now()) + "00:00";
+    endDate = DateFormat('yyyy-MM-dd ').format(DateTime.now()) + "23:59";
+    // startDate = "2024-01-25 00:00";
+    // endDate = "2024-01-25 23:59";
   }
 
   void fetchData() async {
+    setState(() {
+      polylines.clear();
+      _markers.clear();
+      isPlay = false;
+      curIndex = 0;
+    });
     SmartDialog.showLoading(msg: "Loading...");
     playbackHist = await ApiService.playback(
         widget.serviceId.toString(), startDate, endDate);
-    SmartDialog.dismiss();
+    print(playbackHist);
     for (int i = 0; i < playbackHist.length; i++) {
       var histItem = playbackHist[i];
       LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
       points.add(histPos);
       if (i == 0) {
-        BitmapDescriptor markerIcon = await MapHelper.getMarkerImageFromUrl(
-            histItem["rotation_full_url"]);
+        BitmapDescriptor markerIcon =
+            await MapHelper.getMarkerImageFromUrl(histItem["icon_url"]);
+        icon = markerIcon;
         _markers.add(Marker(
-            markerId: MarkerId(i.toString()),
+            markerId: MarkerId(widget.vehicleName),
             icon: markerIcon,
+            anchor: Offset(0.5, 0.5),
+            infoWindow: InfoWindow(title: widget.vehicleName),
+            rotation: (histItem["angle"] as int).toDouble(),
             position: histPos));
-        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
+        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 15));
         curPlayHist = histItem;
       }
     }
-    polylines = Set.from([
-      Polyline(
-        polylineId: PolylineId('1'),
-        points: points,
-        color: Colors.black,
-        width: 4,
-      )
-    ]);
+
+    setOverspeedPath();
+    await setStoppageMarker();
+
+    SmartDialog.dismiss();
+  }
+
+  setOverspeedPath() {
+    List<Polyline> tempLines = [];
+    for (int i = 0; i < playbackHist.length - 1; i++) {
+      var histItem = playbackHist[i];
+      LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
+      if (histItem["speed"] >= overspeedLimit) {
+        tempLines.add(Polyline(
+          polylineId: PolylineId('${tempLines.length}'),
+          points: [
+            histPos,
+            LatLng(playbackHist[i + 1]["lat"], playbackHist[i + 1]["lng"])
+          ],
+          color: Colors.red,
+          width: 4,
+        ));
+      }
+    }
+    tempLines.add(Polyline(
+      polylineId: PolylineId('0'),
+      points: points,
+      color: Colors.teal,
+      width: 4,
+    ));
+    print("=========");
+    print(tempLines.length);
+    print("=========");
+    polylines.clear();
+    polylines.addAll(tempLines);
+
+    setState(() {});
+  }
+
+  setStoppageMarker() async {
+    List<Marker> tempMarkers = [];
+    for (int i = 0; i < playbackHist.length - 1; i++) {
+      var histItem = playbackHist[i];
+      LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
+      DateTime prevDate =
+          DateFormat("yyyy-MM-dd HH:mm:ss").parse(histItem["date"]);
+      DateTime nextDate =
+          DateFormat("yyyy-MM-dd HH:mm:ss").parse(playbackHist[i + 1]["date"]);
+      var diff = nextDate.difference(prevDate);
+      if (diff.inMinutes >= stoppageLimit) {
+        BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(30, 30)),
+            "assets/images/stop-sign.png");
+        tempMarkers.add(Marker(
+            markerId: MarkerId(i.toString()),
+            icon: markerIcon,
+            infoWindow: InfoWindow(
+                snippet: "Duration: ${_printDuration(diff)}",
+                title:
+                    "From: ${playbackHist[i]["date"]} To: ${playbackHist[i + 1]["date"]}"),
+            position: histPos));
+      }
+    }
+    if (_markers.length > 0) {
+      _markers.removeRange(1, _markers.length);
+    }
+    _markers.addAll(tempMarkers);
     setState(() {});
   }
 
@@ -98,31 +180,9 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
     isPlay = !isPlay;
 
     if (isPlay) {
-      onBackTracking();
+      transition(curIndex);
     }
     setState(() {});
-  }
-
-  onBackTracking() async {
-    backIndex += playbackSeep * 2;
-
-    var histItem = playbackHist[backIndex];
-    curPlayHist = histItem;
-    LatLng histPos = LatLng(histItem["lat"], histItem["lng"]);
-    BitmapDescriptor markerIcon =
-        await MapHelper.getMarkerImageFromUrl(histItem["rotation_full_url"]);
-    _markers.clear();
-    _markers.add(Marker(
-        markerId: MarkerId(backIndex.toString()),
-        icon: markerIcon,
-        position: histPos,
-        anchor: Offset(0.5, 0.5)));
-    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 14));
-    setState(() {});
-
-    Future.delayed(Duration(seconds: 1), () {
-      onBackTracking();
-    });
   }
 
   @override
@@ -183,6 +243,13 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                           controller: stoppageCtrl,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              stoppageLimit =
+                                  value.isEmpty ? 0 : int.parse(value);
+                              setStoppageMarker();
+                            });
+                          },
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -211,6 +278,13 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                           controller: overspeedCtrl,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              overspeedLimit =
+                                  value.isEmpty ? 0 : int.parse(value);
+                              setOverspeedPath();
+                            });
+                          },
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -279,6 +353,7 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                               (endPickedTime == null
                                   ? "00:00"
                                   : '${endPickedTime.hour.toString().padLeft(2, '0')}:${endPickedTime.minute.toString().padLeft(2, '0')}');
+                          fetchData();
                         });
                       } else {
                         print("Date is not selected");
@@ -310,7 +385,23 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                   PopupMenuButton(
                     onSelected: (item) {
                       setState(() {
-                        playbackSeep = int.parse(item.substring(0, 1));
+                        playbackSpeed = item;
+                        if (item == "1x") {
+                          numDeltas = 10;
+                          delay = 100;
+                        } else if (item == "2x") {
+                          numDeltas = 10;
+                          delay = 80;
+                        } else if (item == "3x") {
+                          numDeltas = 10;
+                          delay = 60;
+                        } else if (item == "4x") {
+                          numDeltas = 10;
+                          delay = 30;
+                        } else if (item == "5x") {
+                          numDeltas = 10;
+                          delay = 10;
+                        }
                       });
                     },
                     itemBuilder: (BuildContext context) =>
@@ -324,8 +415,8 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       color: Colors.white,
                       alignment: Alignment.center,
-                      child: Text("${playbackSeep}x",
-                          style: TextStyle(fontSize: 16)),
+                      child:
+                          Text(playbackSpeed, style: TextStyle(fontSize: 16)),
                     ),
                   ),
                   InkWell(
@@ -348,18 +439,26 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
               child: curPlayHist == null
                   ? SizedBox.shrink()
                   : Text(
-                      "Date: ${curPlayHist["date"]} Speed: ${curPlayHist["speed"]} ${"\n"} Odometer: ${curPlayHist["odometer"]}",
-                      style: TextStyle(fontSize: 12, color: Colors.white)),
+                      "Date: ${curPlayHist["date"]} Speed: ${curPlayHist["speed"]} Odometer: ${double.parse(curPlayHist["odometer"].toString() == "" ? "0" : curPlayHist["odometer"].toString()).toStringAsFixed(2)} Distance: ${calculateDistance()}km Time: ${getDuration()}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 11, color: Colors.white)),
             ),
             Expanded(
               child: GoogleMap(
+                mapType: MapType.normal,
                 initialCameraPosition: _kInitialPosition,
-                markers: Set<Marker>.of(_markers),
-                polylines: polylines,
-                onMapCreated: (controller) {
+                rotateGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                mapToolbarEnabled: true,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                zoomControlsEnabled: true,
+                polylines: polylines.toSet(),
+                onMapCreated: (GoogleMapController controller) {
                   mapCtrl = controller;
                   fetchData();
                 },
+                markers: _markers.toSet(),
               ),
             ),
           ],
@@ -368,24 +467,114 @@ class _PlaybackScreenState extends State<PlaybackScreen> {
     );
   }
 
-  // double getBearing(LatLng begin, LatLng end) {
-  //   double lat = (begin.latitude - end.latitude).abs();
+  int numDeltas = 10; //number of delta to devide total distance
+  int delay = 100; //milliseconds of delay to pass each delta
+  var i = 0;
+  double deltaLat = 0;
+  double deltaLng = 0;
+  LatLng? curPosition;
+  var curIndex = 0;
 
-  //   double lng = (begin.longitude - end.longitude).abs();
+  transition(index) {
+    var sItem = playbackHist[index];
+    var tItem = playbackHist[index + 1];
+    curPlayHist = sItem;
+    LatLng sPos = LatLng(sItem["lat"], sItem["lng"]);
+    LatLng tPos = LatLng(tItem["lat"], tItem["lng"]);
+    i = 0;
+    deltaLat = (tPos.latitude - sPos.latitude) / numDeltas;
+    deltaLng = (tPos.longitude - sPos.longitude) / numDeltas;
+    curPosition = sPos;
+    moveMarker();
+  }
 
-  //   if (begin.latitude < end.latitude && begin.longitude < end.longitude) {
-  //     return degrees(atan(lng / lat));
-  //   } else if (begin.latitude >= end.latitude &&
-  //       begin.longitude < end.longitude) {
-  //     return (90 - degrees(atan(lng / lat))) + 90;
-  //   } else if (begin.latitude >= end.latitude &&
-  //       begin.longitude >= end.longitude) {
-  //     return degrees(atan(lng / lat)) + 180;
-  //   } else if (begin.latitude < end.latitude &&
-  //       begin.longitude >= end.longitude) {
-  //     return (90 - degrees(atan(lng / lat))) + 270;
-  //   }
+  moveMarker() async {
+    if (!isPlay) {
+      return;
+    }
+    curPosition = LatLng(
+        curPosition!.latitude + deltaLat, curPosition!.longitude + deltaLng);
 
-  //   return -1;
-  // }
+    _markers[0] = Marker(
+        markerId: MarkerId(widget.vehicleName),
+        position: curPosition!,
+        icon: icon,
+        anchor: Offset(0.5, 0.5),
+        infoWindow: InfoWindow(title: widget.vehicleName),
+        rotation: (playbackHist[curIndex]["angle"] as int).toDouble());
+    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(curPosition!, 15));
+
+    setState(() {
+      //refresh UI
+    });
+
+    if (i != numDeltas) {
+      i++;
+      Future.delayed(Duration(milliseconds: delay), () {
+        moveMarker();
+      });
+    } else {
+      curIndex++;
+      if (curIndex <= playbackHist.length - 1) {
+        transition(curIndex);
+      } else {
+        print("~~~~~~~~~~~~~~~");
+        print("END BACK");
+        print("~~~~~~~~~~~~~~~");
+        setState(() {
+          isPlay = false;
+          curIndex = 0;
+        });
+      }
+    }
+  }
+
+  String calculateDistance() {
+    var lat1, lon1, lat2, lon2;
+    if (curIndex >= playbackHist.length) {
+      return "0.00";
+    }
+    lat1 = playbackHist[curIndex]["lat"];
+    lon1 = playbackHist[curIndex]["lng"];
+    lat2 = playbackHist[curIndex + 1]["lat"];
+    lon2 = playbackHist[curIndex + 1]["lng"];
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return (12742 * asin(sqrt(a))).toStringAsFixed(2);
+  }
+
+  String getDuration() {
+    if (curIndex >= playbackHist.length) {
+      return "";
+    }
+    DateTime prevDate =
+        DateFormat("yyyy-MM-dd HH:mm:ss").parse(playbackHist[curIndex]["date"]);
+    DateTime nextDate = DateFormat("yyyy-MM-dd HH:mm:ss")
+        .parse(playbackHist[curIndex + 1]["date"]);
+    var diff = nextDate.difference(prevDate);
+
+    return _printDuration(diff);
+  }
+
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+    String resultHour = "";
+    String resultMins = "";
+    String resultSecs = "";
+    if (duration.inHours != 0) {
+      resultHour = twoDigits(duration.inHours) + " hour";
+    }
+    if (twoDigitMinutes != "00") {
+      resultMins = twoDigitMinutes + " min";
+    }
+    if (twoDigitSeconds != "00") {
+      resultSecs = twoDigitSeconds + " sec";
+    }
+    return "$resultHour $resultMins $resultSecs";
+  }
 }

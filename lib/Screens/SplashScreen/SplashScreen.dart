@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
     return GetBuilder(
       builder: (_) => Scaffold(
         body: Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             body: Stack(
               children: [
                 Container(
@@ -31,20 +31,14 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Center(
-                  child: Positioned(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/logo.png",
-                          height: Get.size.height * 0.1,
-                        )
-                      ],
+                Positioned(
+                  child: Center(
+                    child: Image.asset(
+                      "assets/images/logo.png",
+                      width: size.width * 0.6,
                     ),
                   ),
-                )
+                ),
               ],
             )),
       ),

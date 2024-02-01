@@ -75,7 +75,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(() => HomeScreen());
+                      Get.offAll(() => HomeScreen());
                     },
                     child: Icon(
                       Icons.home,
@@ -106,10 +106,11 @@ class _ParkingScreenState extends State<ParkingScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         final vehicle = vehicles[index];
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
+                          padding: const EdgeInsets.only(bottom: 8.0),
                           child: Container(
-                            height: Get.size.height * 0.08,
+                            // height: Get.size.height * 0.08,
                             width: Get.size.width * 0.95,
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
                             decoration: BoxDecoration(
                                 color: Color(0xffCde3f7),
                                 borderRadius: BorderRadius.circular(05)),

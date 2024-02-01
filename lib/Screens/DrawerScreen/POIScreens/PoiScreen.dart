@@ -128,7 +128,7 @@ class _PoiScreenState extends State<PoiScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => HomeScreen());
+                        Get.offAll(() => HomeScreen());
                       },
                       child: Icon(
                         Icons.home,

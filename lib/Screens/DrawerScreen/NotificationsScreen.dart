@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:trackofyapp/Screens/DrawerScreen/NotificationDetailScreen.dart';
 import 'package:trackofyapp/Screens/HomeScreen/HomeScreen.dart';
 import 'package:trackofyapp/Services/ApiService.dart';
@@ -95,7 +96,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Get.to(() => HomeScreen());
+                        Get.offAll(() => HomeScreen());
                       },
                       child: Icon(
                         Icons.home,
@@ -156,9 +157,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: Material(
                             elevation: 3,
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                await Permission.locationAlways.isDenied.then((value) {
+                                  if (value) {
+                                    Permission.locationAlways.request();
+                                  }
+                                });
                                 Get.to(() => NotificationDetailScreen(
-                                    lat: message.lat, lng: message.lng, setOn: message.sentOn,));
+                                      lat: message.lat,
+                                      lng: message.lng,
+                                      setOn: message.sentOn,
+                                    ));
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -234,7 +243,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 }
 
 class NotificationMessage {
-  final int id;
+  var id;
   final String msgStatus;
   final String message;
   final String sentOn;

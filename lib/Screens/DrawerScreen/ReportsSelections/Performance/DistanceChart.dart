@@ -27,7 +27,8 @@ class _DistanceChartState extends State<DistanceChart> {
     super.initState();
 
     // Call the API when the widget is first created
-    startDate = endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     fetchData();
   }
 
@@ -63,6 +64,7 @@ class _DistanceChartState extends State<DistanceChart> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(55.0),
         child: AppBar(

@@ -56,6 +56,7 @@ class _FleetSummaryState extends State<FleetSummary> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(55.0),
         child: AppBar(
@@ -131,7 +132,8 @@ class _FleetSummaryState extends State<FleetSummary> {
                     itemBuilder: (BuildContext context, int index) {
                       final vehicle = filteredItems[index];
                       return Container(
-                        margin: EdgeInsets.all(10),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration:
                             BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
@@ -177,7 +179,7 @@ class _FleetSummaryState extends State<FleetSummary> {
                                 vehicle['address'],
                                 style: TextStyle(
                                   color: Color(0xff2f9df4),
-                                  fontSize: 15,
+                                  fontSize: 14,
                                 ),
                               ),
                               Container(
@@ -240,9 +242,8 @@ class _FleetSummaryState extends State<FleetSummary> {
                                               ),
                                               Text(
                                                 double.parse(vehicle['distance']
-                                                        .truncate()
                                                         .toString())
-                                                    .toStringAsFixed(1),
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
                                                   color: Color(0xff828282),
                                                   fontSize: 15,

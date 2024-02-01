@@ -27,7 +27,8 @@ class _VehicleSummaryState extends State<VehicleSummary> {
   void initState() {
     super.initState();
 
-    startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    startDate = DateFormat('yyyy-MM-dd 00:00').format(DateTime.now());
+    endDate = DateFormat('yyyy-MM-dd 23:59').format(DateTime.now());
     fetchData();
   }
 
@@ -43,7 +44,8 @@ class _VehicleSummaryState extends State<VehicleSummary> {
       return;
     }
     SmartDialog.showLoading(msg: "Loading...");
-    data = await ApiService.vehicleSummaryReport(selectedVehicleIds.join(","), startDate, endDate);
+    data = await ApiService.vehicleSummaryReport(
+        selectedVehicleIds.join(","), startDate, endDate);
     SmartDialog.dismiss();
     print(data);
     setState(() {
@@ -254,48 +256,48 @@ class _VehicleSummaryState extends State<VehicleSummary> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: SizedBox(
-                height: Get.size.height * 0.65,
-                child: SingleChildScrollView(
-                  child: Container(
-                      //  height: Get.size.height,
-                      width: Get.size.width * 0.92,
-                      color: Colors.white,
-                      child: !isApply
-                          ? Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  "assets/images/bluecar-removebg-preview.png",
-                                  height: 30,
-                                ),
-                                Text(
-                                  "Please apply to see vehicle Summary",
-                                  style: TextStyle(
-                                      color: Color(
-                                        0xff757575,
-                                      ),
-                                      fontSize: 15),
-                                )
-                              ],
-                            )
-                          : ListView.builder(
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              color: Colors.white,
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: !isApply
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/bluecar-removebg-preview.png",
+                          height: 30,
+                        ),
+                        Text(
+                          "Please apply to see vehicle Summary",
+                          style: TextStyle(
+                              color: Color(
+                                0xff757575,
+                              ),
+                              fontSize: 15),
+                        )
+                      ],
+                    )
+                  : SingleChildScrollView(
+                      child: Container(
+                          color: Colors.white,
+                          child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
-                                  padding: EdgeInsets.all(16),
+                                  padding: EdgeInsets.all(8),
                                   child: Column(
                                     children: [
                                       Row(
                                         children: [
                                           Container(
-                                            width: 24,
+                                            width: 20,
                                             height: 4,
                                             decoration: BoxDecoration(
                                               color: Colors.red,
@@ -309,15 +311,15 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                                           Text(
                                             data[index]["vehiclename"],
                                             style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           )
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.all(16),
+                                        padding: EdgeInsets.all(10),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -331,26 +333,26 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                                                 Text(
                                                   "Run Time",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.green),
                                                 ),
                                                 Text(
                                                   "${data[index]["totalrunningtime"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                                 Text(
                                                   "Distance",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.blue),
                                                 ),
                                                 Text(
                                                   "${data[index]["total_distance"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -361,26 +363,26 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                                                 Text(
                                                   "Idle Time",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.orange),
                                                 ),
                                                 Text(
                                                   "${data[index]["totalidletime"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                                 Text(
                                                   "Avg Speed",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.blue),
                                                 ),
                                                 Text(
                                                   "${data[index]["avg_speed"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -391,26 +393,26 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                                                 Text(
                                                   "Stop Time",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.red),
                                                 ),
                                                 Text(
                                                   "${data[index]["totalhalttime"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                                 Text(
                                                   "Max Speed",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,
                                                       color: Colors.blue),
                                                 ),
                                                 Text(
                                                   "${data[index]["max_speed"]}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[300]),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -421,12 +423,14 @@ class _VehicleSummaryState extends State<VehicleSummary> {
                                   ),
                                 );
                               })),
-                )),
+                    ),
+            ),
           ),
         ],
       ),
     );
   }
+
   onSelectVehicleDialog() {
     showDialog(
         context: context,

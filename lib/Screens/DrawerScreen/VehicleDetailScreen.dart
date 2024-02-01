@@ -72,7 +72,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   fetchData() async {
     await onTracking();
     if (isTracking) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 10), () {
         fetchData();
       });
     }
@@ -193,16 +193,21 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      setState(() {
-                        isTracking = false;
-                      });
+                      // setState(() {
+                      //   isTracking = false;
+                      // });
+                      if(vehicleData == null){
+                        return ;
+                      }
                       await Get.to(() => PlaybackScreen(
                             serviceId: widget.serviceId,
+                            vehicleName:
+                                "${vehicleData != null ? vehicleData["vehicle_name"] : "Vehicle"}",
                           ));
-                      setState(() {
-                        isTracking = true;
-                        fetchData();
-                      });
+                      // setState(() {
+                      //   isTracking = true;
+                      //   fetchData();
+                      // });
                     },
                     child: Column(
                       children: [
@@ -226,19 +231,15 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      setState(() {
-                        isTracking = false;
-                      });
+                      // setState(() {
+                      //   isTracking = false;
+                      // });
                       await Get.to(() => AlertSettingScreen(
                             serviceId: widget.serviceId,
                             vehicleName: vehicleData != null
                                 ? vehicleData["vehicle_name"]
                                 : "",
                           ));
-                      setState(() {
-                        isTracking = true;
-                        fetchData();
-                      });
                     },
                     child: Column(
                       children: [
@@ -1484,19 +1485,19 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         color: Colors.red,
         size: 20,
       );
-    } else if (value <= 30 && value >= 1) {
+    } else if (value < 30 && value >= 1) {
       return Icon(
         Icons.battery_2_bar,
         color: Colors.red,
         size: 20,
       );
-    } else if (value <= 70 && value >= 30) {
+    } else if (value < 50 && value >= 30) {
       return Icon(
         Icons.battery_3_bar,
         color: Colors.orange,
         size: 20,
       );
-    } else if (value >= 70 && value < 100) {
+    } else if (value >= 50 && value < 100) {
       return Icon(
         Icons.battery_5_bar,
         color: Colors.green,

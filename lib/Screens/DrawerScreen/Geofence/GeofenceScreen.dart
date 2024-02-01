@@ -86,7 +86,7 @@ class _GeofenceScreenState extends State<GeofenceScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => HomeScreen());
+                        Get.offAll(() => HomeScreen());
                       },
                       child: Icon(
                         Icons.home,

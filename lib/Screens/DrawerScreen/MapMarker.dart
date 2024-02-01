@@ -13,6 +13,7 @@ class MapMarker extends Clusterable {
   double rotation;
   BitmapDescriptor? icon;
   void Function()? onClick;
+  InfoWindow? info;
 
   MapMarker({
     required this.id,
@@ -20,6 +21,7 @@ class MapMarker extends Clusterable {
     required this.rotation,
     this.onClick,
     this.icon,
+    this.info,
     isCluster = false,
     clusterId,
     pointsSize,
@@ -39,6 +41,7 @@ class MapMarker extends Clusterable {
         position.latitude,
         position.longitude,
       ),
+      infoWindow: info == null ? InfoWindow(title: "") : info!,
       rotation: rotation,
       icon: icon!,
       onTap: onClick);

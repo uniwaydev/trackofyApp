@@ -25,7 +25,8 @@ class _MaximumSpeedChartState extends State<MaximumSpeedChart> {
   void initState() {
     super.initState();
 
-    startDate = endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     // Call the API when the widget is first created
     fetchData();
   }

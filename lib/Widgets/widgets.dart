@@ -78,7 +78,8 @@ class SwitchScreen extends StatefulWidget {
   bool isSwitched = false;
   void Function(bool value) onSwitch;
 
-  SwitchScreen({Key? key, required this.isSwitched, required this.onSwitch}) : super(key: key);
+  SwitchScreen({Key? key, required this.isSwitched, required this.onSwitch})
+      : super(key: key);
 
   @override
   SwitchClass createState() => new SwitchClass();
@@ -109,14 +110,11 @@ class SwitchClass extends State<SwitchScreen> {
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Transform.scale(
-          scale: 1,
+          scale: 0.7,
           child: Switch(
             onChanged: toggleSwitch,
             value: widget.isSwitched,
-            activeColor: Color(0xff524f54),
-            activeTrackColor: Color(0xffa8b8c7),
-            inactiveThumbColor: Color(0xffececec),
-            inactiveTrackColor: Color(0xff8ea0ad),
+            activeColor: ThemeColor.primarycolor,
           )),
     ]);
   }

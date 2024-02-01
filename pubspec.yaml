@@ -57,6 +57,7 @@ dependencies:
   flutter_cache_manager: ^3.3.1
   flutter_native_splash: ^2.3.9
   geocoding: ^2.1.1
+  vector_math: ^2.1.4
 
 dev_dependencies:
   flutter_test:

@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => HomeScreen());
+                        Get.offAll(() => HomeScreen());
                       },
                       child: Icon(
                         Icons.home,

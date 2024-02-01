@@ -21,6 +21,7 @@ class AlertSettingScreen extends StatefulWidget {
 class _AlertSettingScreenState extends State<AlertSettingScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Map<String, dynamic>> data = [];
+  List<Map<String, dynamic>> allAlerts = [];
 
   @override
   void initState() {
@@ -34,9 +35,22 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
     print("======");
     SmartDialog.showLoading(msg: "Loading...");
     data = await ApiService.getVehicleAlerts(widget.serviceId.toString());
+    var resAllAlerts = await ApiService.getAllAlerts();
+    allAlerts = resAllAlerts.map((e) {
+      var res =
+          data.where((element) => element["alert_type_id"] == e["alert_id"]);
+      if (res.isNotEmpty) {
+        print("~~~~~~");
+        print(res.first);
+        print("~~~~~~");
+        return {...e, "is_notification": res.first["is_notification"]};
+      }
+      return {...e, "is_notification": 0};
+    }).toList();
+    print("====== Alert Data");
+    print(allAlerts);
     print("======");
-    print(data);
-    print("======");
+
     SmartDialog.dismiss();
 
     setState(() {});
@@ -108,67 +122,68 @@ class _AlertSettingScreenState extends State<AlertSettingScreen> {
               scrollDirection: Axis.vertical,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: data.length,
+              itemCount: allAlerts.length,
               itemBuilder: (context, index) {
-                var alertData = data[index];
+                var alertData = allAlerts[index];
                 return Container(
-                  margin: EdgeInsets.only(bottom: 8),
-                  padding: EdgeInsets.all(8),
+                  margin: EdgeInsets.only(bottom: 2),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: index % 2 == 0
+                        ? Colors.white
+                        : Color.fromARGB(255, 207, 216, 221),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 1,
                       )
                     ],
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.grey.withOpacity(0.3)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
+                          SizedBox(width: 8),
                           Builder(builder: (context) {
                             String img = "assets/images/information.png";
-                            if (alertData["alert_type"] == null) {
+                            if (alertData["alert_name"] == null) {
                               img = "assets/images/information.png";
-                            } else if (alertData["alert_type"] == "Door") {
+                            } else if (alertData["alert_name"] == "Door") {
                               img = "assets/images/ic_door_new.PNG";
-                            } else if (alertData["alert_type"] == "AC") {
+                            } else if (alertData["alert_name"] == "AC") {
                               img = "assets/images/ic_ac_new.PNG";
-                            } else if (alertData["alert_type"] == "Ignition") {
+                            } else if (alertData["alert_name"] == "Ignition") {
                               img = "assets/images/ic_ignition_new.PNG";
-                            } else if (alertData["alert_type"] ==
+                            } else if (alertData["alert_name"] ==
                                 "Main Power") {
                               img = "assets/images/plug.png";
-                            } else if (alertData["alert_type"] == "Panic") {
+                            } else if (alertData["alert_name"] == "Panic") {
                               img = "assets/images/ic_speed_new.PNG";
-                            } else if (alertData["alert_type"] == "Speed") {
+                            } else if (alertData["alert_name"] == "Speed") {
                               img = "assets/images/stop-sign.png";
                             }
                             return Image.asset(img, width: 20);
                           }),
                           SizedBox(width: 8),
-                          Text(alertData["alert_type"] ?? ""),
+                          Text(alertData["alert_name"] ?? ""),
                         ],
                       ),
-                      Switch(
-                        onChanged: (value) async {
-                          var res = await updateAlert(
-                              alertData["alert_setting_id"],
-                              value ? "true" : "false");
-                          if (res) {
-                            setState(() {
-                              alertData["is_notification"] = value ? 1 : 0;
-                            });
-                          }
-                        },
-                        value: alertData["is_notification"] == 1,
-                        activeColor: Color(0xff524f54),
-                        activeTrackColor: Color(0xffa8b8c7),
-                        inactiveThumbColor: Color(0xffececec),
-                        inactiveTrackColor: Color(0xff8ea0ad),
+                      Transform.scale(
+                        scale: 0.7,
+                        child: Switch(
+                          onChanged: (value) async {
+                            var res = await updateAlert(
+                                alertData["alert_id"], value ? 1 : 0);
+                            if (res) {
+                              setState(() {
+                                alertData["is_notification"] = value ? 1 : 0;
+                              });
+                            }
+                          },
+                          value: alertData["is_notification"] == 1,
+                          activeColor: ThemeColor.primarycolor,
+                        ),
                       ),
                     ],
                   ),

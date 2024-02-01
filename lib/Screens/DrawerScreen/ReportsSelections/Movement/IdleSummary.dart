@@ -27,7 +27,8 @@ class _IdleSummaryState extends State<IdleSummary> {
   void initState() {
     super.initState();
 
-    startDate = endDate = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    startDate = DateFormat('yyyy-MM-dd 00:00').format(DateTime.now());
+    endDate = DateFormat('yyyy-MM-dd 23:59').format(DateTime.now());
     fetchVehicle();
   }
 
@@ -301,33 +302,29 @@ class _IdleSummaryState extends State<IdleSummary> {
           Text(
             e["vehiclename"],
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 15,
                 color: Colors.blue[300],
                 fontWeight: FontWeight.bold),
           ),
           InkWell(
             onTap: () async {
               if (e["idle_latitude"] == "N/A" || e["idle_longitude"] == "N/A") {
+                SmartDialog.showToast("Latitude or Longitutde is invalid.");
                 return;
               }
-              placemarkFromCoordinates(
-                      double.parse(e["idle_latitude"].toString()),
-                      double.parse(e["idle_longitude"].toString()))
-                  .then((List<Placemark> placemarks) async {
-                Placemark place = placemarks[0];
-                setState(() {
-                  addresses[e["sys_service_id"].toString()] =
-                      '${place.street ?? ""}, ${place.name ?? ""} ${place.subLocality ?? ""}, ${place.subAdministrativeArea ?? ""}, ${place.postalCode ?? ""}, ${place.country ?? ""}';
-                });
-              }).catchError((e) {
-                print(e);
+              var resAddress = await ApiService.getAddress(
+                  double.parse(e["idle_latitude"].toString()),
+                  double.parse(e["idle_longitude"].toString()));
+              print(resAddress);
+              setState(() {
+                addresses[e["sys_service_id"].toString()] = resAddress;
               });
             },
             child: Text(
               addresses[e["sys_service_id"]] != null
                   ? addresses[e["sys_service_id"].toString()]
                   : "Get Address",
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 13, color: Colors.black),
             ),
           ),
           SizedBox(
@@ -339,76 +336,106 @@ class _IdleSummaryState extends State<IdleSummary> {
             children: [
               TableRow(children: [
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Total Halt Time"),
-                      Text("${e["totalhalttime"] ?? "N/A"}"),
+                      Text("Total Halt Time",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
+                      Text("${e["totalhalttime"] ?? "N/A"}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Idle Lat"),
+                      Text("Idle Lat",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                       Text(
-                          "${e["idle_latitude"] != "N/A" ? double.parse(e["idle_latitude"].toString()).toStringAsFixed(5) : "N/A"}"),
-                      Text("Idle Lng"),
+                          "${e["idle_latitude"] != "N/A" ? double.parse(e["idle_latitude"].toString()).toStringAsFixed(5) : "N/A"}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
+                      Text("Idle Lng",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                       Text(
-                          "${e["idle_longitude"] != "N/A" ? double.parse(e["idle_longitude"].toString()).toStringAsFixed(5) : "N/A"}"),
+                          "${e["idle_longitude"] != "N/A" ? double.parse(e["idle_longitude"].toString()).toStringAsFixed(5) : "N/A"}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Idle Duration"),
-                      Text("${e["idle_start_time"] ?? "N/A"} - "),
-                      Text("${e["idle_end_time"] ?? "N/A"}"),
+                      Text("Idle Duration",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
+                      Text("${e["idle_start_time"] ?? "N/A"} - ",
+                          style:
+                              TextStyle(fontSize: 11, color: Colors.black54)),
+                      Text("${e["idle_end_time"] ?? "N/A"}",
+                          style:
+                              TextStyle(fontSize: 11, color: Colors.black54)),
                     ],
                   ),
                 ),
               ]),
               TableRow(children: [
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Total Distance"),
+                      Text("Total Distance",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                       Text(
-                          "${double.parse(e["total_distance"].toString()).toStringAsFixed(1)}"),
+                          "${double.parse(e["total_distance"].toString()).toStringAsFixed(1)}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Total Running Time"),
-                      Text("${e["totalrunningtime"] ?? "N/A"}"),
+                      Text("Total Running Time",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
+                      Text("${e["totalrunningtime"] ?? "N/A"}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Total Idle Time"),
-                      Text("${e["totalidletime"] ?? "N/A"}"),
+                      Text("Total Idle Time",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
+                      Text("${e["totalidletime"] ?? "N/A"}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.black54)),
                     ],
                   ),
                 ),

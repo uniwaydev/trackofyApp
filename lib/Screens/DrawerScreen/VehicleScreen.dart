@@ -171,7 +171,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
               padding: const EdgeInsets.only(right: 12.0),
               child: GestureDetector(
                   onTap: () {
-                    Get.to(() => HomeScreen());
+                    Get.offAll(() => HomeScreen());
                   },
                   child: Icon(
                     Icons.home,
@@ -229,13 +229,13 @@ class _VehicleScreenState extends State<VehicleScreen> {
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  top: 14.0, left: 09),
+                                                  top: 4.0, left: 8),
                                               child: Text(
                                                 vehicle['vehReg'],
                                                 style: TextStyle(
                                                     color: ThemeColor.logocolor,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 13),
+                                                    fontSize: 14),
                                               ),
                                             ),
                                             Padding(

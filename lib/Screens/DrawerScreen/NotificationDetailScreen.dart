@@ -36,25 +36,12 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     super.initState();
     _kInitialPosition = CameraPosition(
         target: LatLng(widget.lat, widget.lng), zoom: 7, tilt: 0, bearing: 0);
-
-    fetchPoiLocations();
   }
 
-  void fetchPoiLocations() async {
+  fetchPoiLocations() async {
     SmartDialog.showLoading(msg: "Loading...");
-    placemarkFromCoordinates(widget.lat, widget.lng)
-        .then((List<Placemark> placemarks) async {
-      SmartDialog.dismiss();
-      Placemark place = placemarks[0];
-      print(place);
-      setState(() {
-        address =
-            '${place.street}, ${place.name} ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}, ${place.country}';
-      });
-    }).catchError((e) async {
-      print(e);
-      SmartDialog.dismiss();
-    });
+    address = await ApiService.getAddress(widget.lat, widget.lng);
+    SmartDialog.dismiss();
   }
 
   @override
@@ -114,6 +101,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
               markers: Set<Marker>.of(_markers),
               onMapCreated: (controller) async {
                 mapCtrl = controller;
+                await fetchPoiLocations();
                 await onAddMarker(LatLng(widget.lat, widget.lng));
               },
               mapType: MapType.normal,
@@ -137,8 +125,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       ),
     );
     _markers.add(marker);
-    setState(() {});
-    await mapCtrl.showMarkerInfoWindow(MarkerId("marker1"));
     setState(() {});
   }
 }

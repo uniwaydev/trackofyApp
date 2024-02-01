@@ -124,7 +124,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => HomeScreen());
+                        Get.offAll(() => HomeScreen());
                       },
                       child: Icon(
                         Icons.home,
