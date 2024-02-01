@@ -652,7 +652,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print(data);
+        //  print(data);
         return List<Map<String, dynamic>>.from(data);
       } else {
         // showMessage('Network Error',
