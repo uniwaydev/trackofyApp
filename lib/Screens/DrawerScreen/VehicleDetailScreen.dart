@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 
@@ -17,6 +18,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:vector_math/vector_math.dart' as vMath;
 
 class VehicleDetailScreen extends StatefulWidget {
   var serviceId;
@@ -26,7 +28,8 @@ class VehicleDetailScreen extends StatefulWidget {
   State<VehicleDetailScreen> createState() => _VehicleDetailScreenState();
 }
 
-class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
+class _VehicleDetailScreenState extends State<VehicleDetailScreen>
+    with TickerProviderStateMixin {
   static final LatLng _kMapCenter =
       LatLng(19.018255973653343, 72.84793849278007);
 
@@ -55,6 +58,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   PageController _pageController = PageController();
   Set<Polyline> polylines = Set.from([]);
+
+  final _mapMarkerSC = StreamController<List<Marker>>();
+  StreamSink<List<Marker>> get _mapMarkerSink => _mapMarkerSC.sink;
+  Stream<List<Marker>> get mapMarkerStream => _mapMarkerSC.stream;
+  var carIcon;
+  Animation<double>? _animation;
 
   @override
   void initState() {
@@ -91,17 +100,30 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       LatLng ePos = LatLng(double.parse(e["lat"]), double.parse(e["lng"]));
       BitmapDescriptor markerIcon =
           await MapHelper.getMarkerImageFromUrl(e["icon"]);
-      _markers.add(Marker(
-          markerId: MarkerId(e["vehicle_name"]),
-          icon: markerIcon,
-          position: ePos,
-          rotation: double.parse(e["angle"])));
+      carIcon = markerIcon;
       mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(ePos, 14));
       vLat = double.parse(e["lat"]);
       vLng = double.parse(e["lng"]);
 
       if (points.indexOf(ePos) == -1) {
         points.add(ePos);
+      }
+      if (points.length >= 2) {
+        animateCar(
+          points[points.length - 2].latitude,
+          points[points.length - 2].longitude,
+          points[points.length - 1].latitude,
+          points[points.length - 1].longitude,
+          _mapMarkerSink,
+          this,
+          mapCtrl,
+        );
+      } else {
+        _markers.add(Marker(
+            markerId: MarkerId(e["vehicle_name"]),
+            icon: markerIcon,
+            position: ePos,
+            rotation: double.parse(e["angle"])));
       }
       polylines = Set.from([
         Polyline(
@@ -112,6 +134,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         )
       ]);
       print("$vLat, $vLng");
+      _mapMarkerSink.add(_markers);
       setState(() {});
     }
     print("==== TRACKING END ====");
@@ -196,8 +219,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       // setState(() {
                       //   isTracking = false;
                       // });
-                      if(vehicleData == null){
-                        return ;
+                      if (vehicleData == null) {
+                        return;
                       }
                       await Get.to(() => PlaybackScreen(
                             serviceId: widget.serviceId,
@@ -1334,16 +1357,37 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   onMap() {
     if (selectedMap == "Google") {
-      return GoogleMap(
-        initialCameraPosition: _kInitialPosition,
-        markers: Set<Marker>.of(_markers),
-        mapType: mapType,
-        polylines: polylines,
-        onMapCreated: (controller) {
-          mapCtrl = controller;
-          fetchData();
-        },
-      );
+      // return GoogleMap(
+      //   initialCameraPosition: _kInitialPosition,
+      //   markers: Set<Marker>.of(_markers),
+      //   mapType: mapType,
+      //   polylines: polylines,
+      //   onMapCreated: (controller) {
+      //     mapCtrl = controller;
+      //     fetchData();
+      //   },
+      // );
+      return StreamBuilder<List<Marker>>(
+          stream: mapMarkerStream,
+          builder: (context, snapshot) {
+            return GoogleMap(
+              initialCameraPosition: _kInitialPosition,
+              mapType: mapType,
+              polylines: polylines,
+              rotateGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              mapToolbarEnabled: true,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: true,
+              onMapCreated: (GoogleMapController controller) {
+                mapCtrl = controller;
+                fetchData();
+              },
+              markers: Set<Marker>.of(snapshot.data ?? []),
+              padding: EdgeInsets.all(8),
+            );
+          });
     } else if (selectedMap == "Bing") {
       return FutureBuilder(
           future: getBingUrlTemplate(
@@ -1532,5 +1576,95 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       "assets/images/$acTxt.png",
       width: 20,
     );
+  }
+
+  animateCar(
+    double fromLat, //Starting latitude
+    double fromLong, //Starting longitude
+    double toLat, //Ending latitude
+    double toLong, //Ending longitude
+    StreamSink<List<Marker>>
+        mapMarkerSink, //Stream build of map to update the UI
+    TickerProvider
+        provider, //Ticker provider of the widget. This is used for animation
+    GoogleMapController controller, //Google map controller of our widget
+  ) async {
+    final double bearing =
+        getBearing(LatLng(fromLat, fromLong), LatLng(toLat, toLong));
+
+    _markers.clear();
+
+    var carMarker = Marker(
+        markerId: MarkerId(vehicleData["vehicle_name"]),
+        position: LatLng(fromLat, fromLong),
+        icon: carIcon,
+        anchor: const Offset(0.5, 0.5),
+        flat: true,
+        rotation: bearing,
+        draggable: false);
+
+    //Adding initial marker to the start location.
+    _markers.add(carMarker);
+    mapMarkerSink.add(_markers);
+
+    final animationController = AnimationController(
+      duration: const Duration(seconds: 8), //Animation duration of marker
+      vsync: provider, //From the widget
+    );
+
+    Tween<double> tween = Tween(begin: 0, end: 1);
+
+    _animation = tween.animate(animationController)
+      ..addListener(() async {
+        //We are calculating new latitude and logitude for our marker
+        final v = _animation!.value;
+        double lng = v * toLong + (1 - v) * fromLong;
+        double lat = v * toLat + (1 - v) * fromLat;
+        LatLng newPos = LatLng(lat, lng);
+
+        //Removing old marker if present in the marker array
+        if (_markers.contains(carMarker)) _markers.remove(carMarker);
+
+        //New marker location
+        carMarker = Marker(
+            markerId: MarkerId(vehicleData["vehicle_name"]),
+            position: newPos,
+            icon: carIcon,
+            anchor: const Offset(0.5, 0.5),
+            flat: true,
+            rotation: bearing,
+            draggable: false);
+
+        //Adding new marker to our list and updating the google map UI.
+        _markers.add(carMarker);
+        mapMarkerSink.add(_markers);
+
+        var zoomLevel = await mapCtrl.getZoomLevel();
+        //Moving the google camera to the new animated location.
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(target: newPos, zoom: zoomLevel)));
+      });
+
+    //Starting the animation
+    animationController.forward();
+  }
+
+  double getBearing(LatLng begin, LatLng end) {
+    double lat = (begin.latitude - end.latitude).abs();
+    double lng = (begin.longitude - end.longitude).abs();
+
+    if (begin.latitude < end.latitude && begin.longitude < end.longitude) {
+      return vMath.degrees(atan(lng / lat));
+    } else if (begin.latitude >= end.latitude &&
+        begin.longitude < end.longitude) {
+      return (90 - vMath.degrees(atan(lng / lat))) + 90;
+    } else if (begin.latitude >= end.latitude &&
+        begin.longitude >= end.longitude) {
+      return vMath.degrees(atan(lng / lat)) + 180;
+    } else if (begin.latitude < end.latitude &&
+        begin.longitude >= end.longitude) {
+      return (90 - vMath.degrees(atan(lng / lat))) + 270;
+    }
+    return -1;
   }
 }

@@ -49,7 +49,7 @@ class _VehicleState extends State<Vehicle> {
   }
 
   void fetchData() async {
-    // SmartDialog.showLoading(msg: 'Loading...');
+    SmartDialog.showLoading(msg: 'Loading...');
     if (!isUpdating) {
       return;
     }
@@ -60,7 +60,7 @@ class _VehicleState extends State<Vehicle> {
     // }).toList();
     // print(filteredItems);
     setState(() {});
-    // SmartDialog.dismiss();
+    SmartDialog.dismiss();
     Future.delayed(Duration(seconds: 30), () {
       fetchData();
     });

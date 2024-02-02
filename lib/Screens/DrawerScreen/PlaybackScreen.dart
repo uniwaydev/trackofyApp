@@ -102,7 +102,8 @@ class _PlaybackScreenState extends State<PlaybackScreen>
             infoWindow: InfoWindow(title: widget.vehicleName),
             rotation: (histItem["angle"] as int).toDouble(),
             position: histPos));
-        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, 15));
+        var zoomLevel = await mapCtrl.getZoomLevel();
+        mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(histPos, zoomLevel));
         curPlayHist = histItem;
       }
     }
@@ -387,19 +388,19 @@ class _PlaybackScreenState extends State<PlaybackScreen>
                       setState(() {
                         playbackSpeed = item;
                         if (item == "1x") {
-                          numDeltas = 10;
+                          numDeltas = 20;
                           delay = 100;
                         } else if (item == "2x") {
-                          numDeltas = 10;
+                          numDeltas = 20;
                           delay = 80;
                         } else if (item == "3x") {
-                          numDeltas = 10;
+                          numDeltas = 20;
                           delay = 60;
                         } else if (item == "4x") {
-                          numDeltas = 10;
+                          numDeltas = 20;
                           delay = 30;
                         } else if (item == "5x") {
-                          numDeltas = 10;
+                          numDeltas = 20;
                           delay = 10;
                         }
                       });
@@ -467,7 +468,7 @@ class _PlaybackScreenState extends State<PlaybackScreen>
     );
   }
 
-  int numDeltas = 10; //number of delta to devide total distance
+  int numDeltas = 20; //number of delta to devide total distance
   int delay = 100; //milliseconds of delay to pass each delta
   var i = 0;
   double deltaLat = 0;
@@ -502,7 +503,8 @@ class _PlaybackScreenState extends State<PlaybackScreen>
         anchor: Offset(0.5, 0.5),
         infoWindow: InfoWindow(title: widget.vehicleName),
         rotation: (playbackHist[curIndex]["angle"] as int).toDouble());
-    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(curPosition!, 15));
+    var zoomLevel = await mapCtrl.getZoomLevel();
+    mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(curPosition!, zoomLevel));
 
     setState(() {
       //refresh UI
@@ -515,7 +517,7 @@ class _PlaybackScreenState extends State<PlaybackScreen>
       });
     } else {
       curIndex++;
-      if (curIndex <= playbackHist.length - 1) {
+      if (curIndex < playbackHist.length - 1) {
         transition(curIndex);
       } else {
         print("~~~~~~~~~~~~~~~");

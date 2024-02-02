@@ -51,7 +51,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
 
   bool isTracking = true;
   List<Polyline> polylines = [];
-  List<List<LatLng>> vehicleLines = [];
+  Map<String, List<LatLng>> vehicleLines = Map();
   int selectIndex = -1;
 
   void _onMapCreated(GoogleMapController controller) async {
@@ -64,7 +64,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
     });
 
     vehicles = await ApiService.vehicles();
-    vehicleLines = List.filled(vehicles.length, []);
     _initMarkers();
   }
 
@@ -78,29 +77,37 @@ class _TrackingScreenState extends State<TrackingScreen> {
       if (!isTracking) {
         return;
       }
+
+      print("===================");
+      print(
+          "${vehicles[i]["serviceId"]}, ${vehicleLines[vehicles[i]["serviceId"].toString()]}");
+      print("===================");
       if (selected == null ||
           selected["serviceId"] == vehicles[i]["serviceId"]) {
-        if (selected != null &&
-            selected["serviceId"] == vehicles[i]["serviceId"]) {
-          selectIndex = i;
-        }
-        print(vehicles[i]);
         var trackingRes =
             await ApiService.liveTracking(vehicles[i]["serviceId"].toString());
         if (trackingRes.isNotEmpty) {
           var trackingInfo = trackingRes[0];
           print(trackingInfo);
+          var vehPos = LatLng(double.parse(trackingInfo["lat"]),
+              double.parse(trackingInfo["lng"]));
           final BitmapDescriptor markerImage =
               await MapHelper.getMarkerImageFromUrl(trackingInfo["icon"]);
 
-          vehicleLines[i].add(LatLng(double.parse(trackingInfo["lat"]),
-              double.parse(trackingInfo["lng"])));
+          if (vehicleLines[vehicles[i]["serviceId"].toString()] == null) {
+            vehicleLines[vehicles[i]["serviceId"].toString()] = [vehPos];
+          } else {
+            List<LatLng> temp =
+                vehicleLines[vehicles[i]["serviceId"].toString()]!;
+            if (temp[temp.length - 1] != vehPos) {
+              vehicleLines[vehicles[i]["serviceId"].toString()]!.add(vehPos);
+            }
+          }
 
           markers.add(
             MapMarker(
                 id: (i + 1).toString(),
-                position: LatLng(double.parse(trackingInfo["lat"]),
-                    double.parse(trackingInfo["lng"])),
+                position: vehPos,
                 icon: markerImage,
                 rotation: double.parse(trackingInfo["angle"]),
                 info: InfoWindow(
@@ -129,28 +136,26 @@ class _TrackingScreenState extends State<TrackingScreen> {
         }
       }
     }
-    print('===========');
-    print(markers.length);
-    print('===========');
+    // print('===========');
+    // print("${markers.length} ${selectIndex}");
+    // print('===========');
     polylines.clear();
-    if (selectIndex != -1) {
-      int colorTemp = (255 / vehicleLines.length).toInt() * selectIndex;
-      polylines.add(Polyline(
-        polylineId: PolylineId(selectIndex.toString()),
-        points: vehicleLines[selectIndex],
-        color: Color.fromARGB(255, colorTemp, colorTemp, colorTemp),
-        width: 2,
-      ));
-    } else {
-      for (int i = 0; i < vehicleLines.length; i++) {
-        int colorTemp = (255 / vehicleLines.length).toInt() * i;
+    if (selected == null) {
+      for (int i = 0; i < vehicles.length; i++) {
         polylines.add(Polyline(
           polylineId: PolylineId(i.toString()),
-          points: vehicleLines[i],
-          color: Color.fromARGB(255, colorTemp, colorTemp, colorTemp),
+          points: vehicleLines[vehicles[i]["serviceId"].toString()] ?? [],
+          color: Colors.black,
           width: 2,
         ));
       }
+    } else {
+      polylines.add(Polyline(
+        polylineId: PolylineId(selected["serviceId"].toString()),
+        points: vehicleLines[selected["serviceId"].toString()] ?? [],
+        color: Colors.black,
+        width: 2,
+      ));
     }
 
     _clusterManager = await MapHelper.initClusterManager(
