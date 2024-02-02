@@ -101,7 +101,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen>
       BitmapDescriptor markerIcon =
           await MapHelper.getMarkerImageFromUrl(e["icon"]);
       carIcon = markerIcon;
-      mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(ePos, 14));
+      var zoomLevel = await mapCtrl.getZoomLevel();
+      mapCtrl.animateCamera(CameraUpdate.newLatLngZoom(ePos, zoomLevel));
       vLat = double.parse(e["lat"]);
       vLng = double.parse(e["lng"]);
 
